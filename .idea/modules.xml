@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/RevTethering/RevTethering.iml" filepath="$PROJECT_DIR$/RevTethering/RevTethering.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SayCommonStack/SayCommonStack.iml" filepath="$PROJECT_DIR$/SayCommonStack/SayCommonStack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SayRevTethering.iml" filepath="$PROJECT_DIR$/SayRevTethering.iml" />
+    </modules>
+  </component>
+</project>
+
