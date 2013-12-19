@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="logback-android-1.0.10-3-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/SayCommonStack/libs/logback-android-1.0.10-3-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

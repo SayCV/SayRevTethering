@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="RootCommands">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/SayCommonStack/libs/RootCommands.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

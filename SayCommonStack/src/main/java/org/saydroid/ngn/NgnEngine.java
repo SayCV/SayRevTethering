@@ -20,6 +20,7 @@
 */
 package org.saydroid.ngn;
 
+import org.saydroid.log.Log;
 import org.saydroid.ngn.media.NgnProxyPluginMgr;
 import org.saydroid.ngn.services.INgnConfigurationService;
 import org.saydroid.ngn.services.INgnContactService;
@@ -55,7 +56,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Vibrator;
-import android.util.Log;
 
 /**
  * Next Generation Network Engine.
@@ -83,14 +83,7 @@ public class NgnEngine {
 	protected INgnSoundService mSoundService;
 	
 	public static void initialize(){
-		ProxyVideoProducer.registerPlugin();
-		ProxyVideoConsumer.registerPlugin();
-		ProxyAudioProducer.registerPlugin();
-		ProxyAudioConsumer.registerPlugin();
-		
-		SipStack.initialize();
-		
-		NgnProxyPluginMgr.Initialize();
+
 	}
 	
 	/**
@@ -121,74 +114,7 @@ public class NgnEngine {
 		}
 		mVibrator = null;
 		
-		// Initialize SIP stack
-		SipStack.initialize();
-		// Set codec priorities
-		int prio = 0;
-		SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_g722, prio++);
-		SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_speex_wb, prio++);
-		SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_speex_uwb, prio++);
-		SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_speex_nb, prio++);
-		SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_pcma, prio++);
-		SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_pcmu, prio++);
-		SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_ilbc, prio++);
-        SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_gsm, prio++);
-        SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_g729ab, prio++);
-        SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_amr_nb_oa, prio++);
-        SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_amr_nb_be, prio++);
-        
-        SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_h264_bp30, prio++);
-        SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_h264_bp20, prio++);
-        SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_h264_bp10, prio++);
-        SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_vp8, prio++);
-        SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_mp4ves_es, prio++);
-        SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_theora, prio++);
-        SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_h263, prio++);
-        SipStack.setCodecPriority(tdav_codec_id_t.tdav_codec_id_h261, prio++);
-        
-        // Profile
-        MediaSessionMgr.defaultsSetProfile(tmedia_profile_t.valueOf(configurationService.getString(
-				NgnConfigurationEntry.MEDIA_PROFILE,
-				NgnConfigurationEntry.DEFAULT_MEDIA_PROFILE)));
-        // Set default mediaType to use when receiving bodiless INVITE
-        MediaSessionMgr.defaultsSetMediaType(twrap_media_type_t.twrap_media_audiovideo);
-		// Preferred video size
-		MediaSessionMgr.defaultsSetPrefVideoSize(tmedia_pref_video_size_t.valueOf(configurationService.getString(
-				NgnConfigurationEntry.QOS_PREF_VIDEO_SIZE,
-				NgnConfigurationEntry.DEFAULT_QOS_PREF_VIDEO_SIZE)));
-		// SRTP mode
-		MediaSessionMgr.defaultsSetSRtpMode(tmedia_srtp_mode_t.valueOf(configurationService.getString(
-				NgnConfigurationEntry.SECURITY_SRTP_MODE,
-				NgnConfigurationEntry.DEFAULT_SECURITY_SRTP_MODE)));
-		// ICE
-		MediaSessionMgr.defaultsSetIceEnabled(configurationService.getBoolean(NgnConfigurationEntry.NATT_USE_ICE, NgnConfigurationEntry.DEFAULT_NATT_USE_ICE));
-		
-		
-		// codecs, AEC, NoiseSuppression, Echo cancellation, ....
-		boolean aec         = configurationService.getBoolean(NgnConfigurationEntry.GENERAL_AEC, NgnConfigurationEntry.DEFAULT_GENERAL_AEC) ;
-		boolean vad        = configurationService.getBoolean(NgnConfigurationEntry.GENERAL_VAD, NgnConfigurationEntry.DEFAULT_GENERAL_VAD) ;
-		boolean nr          = configurationService.getBoolean(NgnConfigurationEntry.GENERAL_NR, NgnConfigurationEntry.DEFAULT_GENERAL_NR) ;
-		int         echo_tail = configurationService.getInt(NgnConfigurationEntry.GENERAL_ECHO_TAIL,NgnConfigurationEntry.DEFAULT_GENERAL_ECHO_TAIL);
-		
-		Log.d(TAG,"Configure AEC["+aec+"/"+echo_tail+"] NoiseSuppression["+nr+"], Voice activity detection["+vad+"]");
-		
-		if (aec){
-			MediaSessionMgr.defaultsSetEchoSuppEnabled(true);
-			// Very Important: EchoTail is in milliseconds
-			// When using WebRTC AEC, the maximum value is 500ms
-			// When using Speex-DSP, any number is valid but you should choose a multiple of 20ms.
-			MediaSessionMgr.defaultsSetEchoTail(echo_tail);
-			MediaSessionMgr.defaultsSetEchoSkew(0);
-		}
-		else{
-			MediaSessionMgr.defaultsSetEchoSuppEnabled(false);
-			MediaSessionMgr.defaultsSetEchoTail(0); 
-		}
-		MediaSessionMgr.defaultsSetAgcEnabled(true);
-		MediaSessionMgr.defaultsSetVadEnabled(vad);
-		MediaSessionMgr.defaultsSetNoiseSuppEnabled(nr);
-		MediaSessionMgr.defaultsSetJbMargin(0);
-		MediaSessionMgr.defaultsSetJbMaxLateRate(0);
+
 	}
 	
 	/**
@@ -208,9 +134,6 @@ public class NgnEngine {
 		success &= getNetworkService().start();
 		success &= getHttpClientService().start();
 		success &= getHistoryService().start();
-		success &= getContactService().start();
-		success &= getSipService().start();
-		success &= getSoundService().start();
 		
 		if(success){
 			success &= getHistoryService().load();
