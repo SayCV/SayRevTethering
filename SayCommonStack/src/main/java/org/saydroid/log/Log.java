@@ -31,100 +31,60 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.FileAppender;
 
 public final class Log {
-	// private final static String TAG = NgnTimer.class.getCanonicalName();
+	// private final static String TAG = Log.class.getCanonicalName();
+    private final static String TAG_TOKEN = ":";
 
-    protected static Log sInstance = null;
+    public static org.slf4j.Logger sLogger = LogConfiguration.getInstance().getLogger();
 
-    public static org.slf4j.Logger sLogger = null;
-    protected static Activity mMainActivity = null;
-    protected static String mLogFile = null;
-    protected static boolean mDebugEnabled = false;
+    protected static boolean checkDebuggingEnabled(){
+        if(sLogger!=null && LogConfiguration.getInstance().isInternalDebugging())
+            return true;
 
-    public static void initialize(){
-        if(sLogger == null && mMainActivity != null) {
-            sLogger = LoggerFactory.getLogger(mMainActivity.getClass());
-        }
-
-        if(mLogFile == null && sLogger != null) {
-            sLogger = LoggerFactory.getLogger(mMainActivity.getClass());
-        }
-    }
-
-    public void setLogger(org.slf4j.Logger logger){
-        sLogger = logger;
-    }
-    public org.slf4j.Logger getLogger() { return sLogger; }
-
-    public void setMainActivity(Activity mainActivity){
-        mMainActivity = mainActivity;
-    }
-    public Activity getMainActivity(){
-        return mMainActivity;
-    }
-
-    public void setLogFile(String logFile){ mLogFile = logFile; }
-    public String getLogFile() { return mLogFile; }
-
-    public static Log getInstance(){
-        if(sInstance == null){
-            sInstance = new Log();
-        }
-        return sInstance;
-    }
-
-    protected Log(){
-
-    }
-
-    protected static boolean checkArgsSettingIsOK(){
-        if(sLogger==null || mDebugEnabled==true)
-            return false;
-
-        return true;
+        return false;
     }
 
     public static void v(String tag, String msg) {
-        if (checkArgsSettingIsOK()) {
-            sLogger.debug(tag + " " +msg);
+        if (checkDebuggingEnabled()) {
+            sLogger.debug(tag + TAG_TOKEN +msg);
         }
     }
 
     public static void v(String tag, String msg, Throwable tr) {
-        if (checkArgsSettingIsOK()) {
-            sLogger.debug(tag + " " +msg, tr);
+        if (checkDebuggingEnabled()) {
+            sLogger.debug(tag + TAG_TOKEN +msg, tr);
         }
     }
 
     public static void d(String tag, String msg) {
-        if (checkArgsSettingIsOK()) {
-            sLogger.debug(tag + " " +msg);
+        if (checkDebuggingEnabled()) {
+            sLogger.debug(tag + TAG_TOKEN +msg);
         }
     }
 
     public static void d(String tag, String msg, Throwable tr) {
-        if (checkArgsSettingIsOK()) {
-            sLogger.debug(tag + " " +msg, tr);
+        if (checkDebuggingEnabled()) {
+            sLogger.debug(tag + TAG_TOKEN +msg, tr);
         }
     }
 
     public static void i(String tag, String msg) {
-        if (checkArgsSettingIsOK()) {
-            sLogger.info(tag + " " +msg);
+        if (checkDebuggingEnabled()) {
+            sLogger.info(tag + TAG_TOKEN +msg);
         }
     }
 
     public static void i(String tag, String msg, Throwable tr) {
-        if (checkArgsSettingIsOK()) {
-            sLogger.info(tag + " " +msg, tr);
+        if (checkDebuggingEnabled()) {
+            sLogger.info(tag + TAG_TOKEN +msg, tr);
         }
     }
 
     public static void w(String tag, String msg) {
-        sLogger.warn(tag + " " +msg);
+        sLogger.warn(tag + TAG_TOKEN +msg);
     }
 
     public static void w(String tag, String msg, Throwable tr) {
-        sLogger.warn(tag + " " +msg, tr);
+        sLogger.warn(tag + TAG_TOKEN +msg, tr);
     }
 
     public static void w(String tag, Throwable tr) {
@@ -132,10 +92,10 @@ public final class Log {
     }
 
     public static void e(String tag, String msg) {
-        sLogger.error(tag + " " +msg);
+        sLogger.error(tag + TAG_TOKEN +msg);
     }
 
     public static void e(String tag, String msg, Throwable tr) {
-        sLogger.error(tag + " " +msg, tr);
+        sLogger.error(tag + TAG_TOKEN +msg, tr);
     }
 }

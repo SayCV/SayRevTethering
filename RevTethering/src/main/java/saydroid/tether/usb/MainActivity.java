@@ -11,10 +11,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 
+import org.saydroid.log.Log;
+import org.saydroid.log.LogConfiguration;
+import org.saydroid.ngn.NgnEngine;
+import org.slf4j.LoggerFactory;
+
 public class MainActivity extends ActionBarActivity {
+    private final static String TAG = MainActivity.class.getCanonicalName();
+
+    //final NgnEngine mEngine = NgnEngine.getInstance();
+    private final static org.slf4j.Logger sLogger = LoggerFactory.getLogger(MainActivity.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Start log to file from here
+        LogConfiguration.getInstance().setLoggerName(MainActivity.class.getCanonicalName());
+        LogConfiguration.getInstance().setFileName(this.getFileStreamPath("SayRevTethering.log").getAbsolutePath());
+        LogConfiguration.getInstance().configure();
+
+        Log.d(TAG, "Calling onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
