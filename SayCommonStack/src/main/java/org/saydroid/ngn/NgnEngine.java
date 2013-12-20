@@ -20,7 +20,7 @@
 */
 package org.saydroid.ngn;
 
-import org.saydroid.log.Log;
+import org.saydroid.common.logger.Log;
 import org.saydroid.ngn.media.NgnProxyPluginMgr;
 import org.saydroid.ngn.services.INgnConfigurationService;
 import org.saydroid.ngn.services.INgnContactService;

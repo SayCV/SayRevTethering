@@ -85,8 +85,11 @@
     <orderEntry type="jdk" jdkName="Android 4.3 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="ComAndroidSupportGridlayoutV71900.aar" level="project" />
+    <orderEntry type="library" exported="" name="slf4j-api-1.7.5" level="project" />
     <orderEntry type="module" module-name="SayCommonStack" exported="" />
     <orderEntry type="library" exported="" name="support-v4-19.0.0" level="project" />
+    <orderEntry type="library" exported="" name="logback-android-1.0.10-3-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="RootCommands" level="project" />
     <orderEntry type="library" exported="" name="simple-xml-2.3.4" level="project" />
     <orderEntry type="library" exported="" name="ComAndroidSupportAppcompatV71900.aar" level="project" />
   </component>

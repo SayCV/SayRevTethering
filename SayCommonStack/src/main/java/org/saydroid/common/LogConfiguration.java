@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-package org.saydroid.log;
+package org.saydroid.common;
 
 import android.app.Activity;
 

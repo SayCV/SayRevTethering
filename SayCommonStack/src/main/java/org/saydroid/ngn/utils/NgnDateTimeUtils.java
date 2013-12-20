@@ -19,11 +19,18 @@
 */
 package org.saydroid.ngn.utils;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class NgnDateTimeUtils {
 	static final DateFormat sDefaultDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -55,6 +62,50 @@ public class NgnDateTimeUtils {
 	}
 	
 	public static boolean isSameDay(Date d1, Date d2){
-		return d1.getDay() == d2.getDay() && d1.getMonth() == d2.getMonth() && d1.getYear() == d2.getYear();
+		return d1.getTime() == d2.getTime();
 	}
+
+    public static String getDate(String dateFormat) {
+        Calendar calendar = Calendar.getInstance();
+        return new SimpleDateFormat(dateFormat, Locale.getDefault())
+                .format(calendar.getTime());
+    }
+
+    public static String getDate(String dateFormat, long currentTimeMillis) {
+        return new SimpleDateFormat(dateFormat, Locale.getDefault())
+                .format(currentTimeMillis);
+    }
+
+    public static long getBuildDate(Context context) {
+
+        try {
+            ApplicationInfo ai = context.getPackageManager()
+                    .getApplicationInfo(context.getPackageName(), 0);
+            ZipFile zf = new ZipFile(ai.sourceDir);
+            ZipEntry ze = zf.getEntry("classes.dex");
+            long time = ze.getTime();
+
+            return time;
+
+        } catch (Exception e) {
+        }
+
+        return 0l;
+    }
+
+    public static long getInstallDate(Context context) {
+
+        try {
+            PackageInfo pi = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+
+            long time = pi.lastUpdateTime;
+
+            return time;
+
+        } catch (Exception e) {
+        }
+
+        return 0l;
+    }
 }
