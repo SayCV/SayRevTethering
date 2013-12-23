@@ -1,4 +1,4 @@
-package saydroid.tether.usb;
+package org.saydroid.tether.usb;
 
 import android.support.v4.app.Fragment;
 
@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 
 import org.saydroid.common.logger.LogView;
+
+import org.saydroid.tether.usb.R;
 
 /**
  * Simple fragment that contains a LogView and uses it to output log data it receives

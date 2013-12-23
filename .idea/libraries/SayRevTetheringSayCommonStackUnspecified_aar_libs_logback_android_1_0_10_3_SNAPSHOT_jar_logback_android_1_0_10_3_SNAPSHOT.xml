@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="SayRevTetheringSayCommonStackUnspecified.aar-libs-logback-android-1.0.10-3-SNAPSHOT.jar-logback-android-1.0.10-3-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/RevTethering/build/exploded-bundles/SayRevTetheringSayCommonStackUnspecified.aar/libs/logback-android-1.0.10-3-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,4 +1,4 @@
-package saydroid.tether.usb;
+package org.saydroid.tether.usb;
 
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +15,8 @@ import org.saydroid.common.SimpleTextFragment;
 import org.saydroid.common.logger.Log;
 import org.saydroid.common.logger.LogWrapper;
 import org.saydroid.common.logger.MessageOnlyLogFilter;
+
+import org.saydroid.tether.usb.R;
 
 //import org.slf4j.LoggerFactory;
 
@@ -39,21 +41,21 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*if (savedInstanceState == null) {
+        if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
             // Initialize the logging framework.
             initializeLogging();
-        }*/
+        }
         // Initialize text fragment that displays intro text.
-        SimpleTextFragment introFragment = (SimpleTextFragment)
+        /*SimpleTextFragment introFragment = (SimpleTextFragment)
                 getSupportFragmentManager().findFragmentById(R.id.intro_fragment);
         introFragment.setText(R.string.intro_message);
         introFragment.getTextView().setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16.0f);
 
         // Initialize the logging framework.
-        initializeLogging();
+        initializeLogging();*/
     }
 
 
