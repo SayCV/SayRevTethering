@@ -32,9 +32,10 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.PowerManager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+
+import org.saydroid.logger.Log;
 
 /** @mainpage Foreword
  * 

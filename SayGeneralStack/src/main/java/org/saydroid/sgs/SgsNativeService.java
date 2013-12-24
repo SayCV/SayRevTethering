@@ -19,7 +19,7 @@ package org.saydroid.sgs;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
+import org.saydroid.logger.Log;
 
 /**
  * Android native service running in the background. This service is started but the engine.

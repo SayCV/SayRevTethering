@@ -1,5 +1,9 @@
 package org.saydroid.tether.usb;
 
+import android.app.ActivityGroup;
+import android.content.Intent;
+import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -11,17 +15,62 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 
-public class MainActivity extends ActionBarActivity {
+import org.saydroid.logger.Log;
+import org.saydroid.sgs.utils.SgsStringUtils;
+
+
+import org.saydroid.tether.usb.Screens.BaseScreen;
+import org.saydroid.tether.usb.Screens.BaseScreen.SCREEN_TYPE;
+import org.saydroid.tether.usb.Screens.IBaseScreen;
+import org.saydroid.tether.usb.Screens.ScreenHome;
+import org.saydroid.tether.usb.Screens.ScreenSplash;
+import org.saydroid.tether.usb.Services.IScreenService;
+
+public class MainActivity extends ActivityGroup {
+    private static String TAG = MainActivity.class.getCanonicalName();
+
+    public static final int ACTION_NONE = 0;
+    public static final int ACTION_RESTORE_LAST_STATE = 1;
+    public static final int ACTION_SHOW_AVSCREEN = 2;
+    public static final int ACTION_SHOW_CONTSHARE_SCREEN = 3;
+    public static final int ACTION_SHOW_SMS = 4;
+    public static final int ACTION_SHOW_CHAT_SCREEN = 5;
+
+    private static final int RC_SPLASH = 0;
+
+    private Handler mHandler;
+    private final Engine mEngine;
+    private final IScreenService mScreenService;
+
+    public MainActivity(){
+        super();
+
+        // Sets main activity (should be done before starting services)
+        mEngine = (Engine)Engine.getInstance();
+        mEngine.setMainActivity(this);
+        mScreenService = ((Engine)Engine.getInstance()).getScreenService();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
+        if(!Engine.getInstance().isStarted()){
+            startActivityForResult(new Intent(this, ScreenSplash.class), MainActivity.RC_SPLASH);
+            return;
+        }
+
+        Bundle bundle = savedInstanceState;
+        if(bundle == null){
+            Intent intent = getIntent();
+            bundle = intent == null ? null : intent.getExtras();
+        }
+        if(bundle != null && bundle.getInt("action", MainActivity.ACTION_NONE) != MainActivity.ACTION_NONE){
+            handleAction(bundle);
+        }
+        else if(mScreenService != null){
+            mScreenService.show(ScreenHome.class);
         }
     }
 
@@ -62,4 +111,57 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    public void exit(){
+        mHandler.post(new Runnable() {
+            public void run() {
+                if (!Engine.getInstance().stop()) {
+                    Log.e(TAG, "Failed to stop engine");
+                }
+                finish();
+            }
+        });
+    }
+
+    private void handleAction(Bundle bundle){
+        final String id;
+        switch(bundle.getInt("action", MainActivity.ACTION_NONE)){
+            // Default or ACTION_RESTORE_LAST_STATE
+            default:
+            case ACTION_RESTORE_LAST_STATE:
+                id = bundle.getString("screen-id");
+                final String screenTypeStr = bundle.getString("screen-type");
+                final SCREEN_TYPE screenType = SgsStringUtils.isNullOrEmpty(screenTypeStr) ? BaseScreen.SCREEN_TYPE.HOME_T :
+                        SCREEN_TYPE.valueOf(screenTypeStr);
+                switch(screenType){
+                    default:
+                        if(!mScreenService.show(id)){
+                            mScreenService.show(ScreenHome.class);
+                        }
+                        break;
+                }
+                break;
+
+            // Notify for new SMSs
+            case ACTION_SHOW_SMS:
+                //mScreenService.show(ScreenTabMessages.class);
+                break;
+
+            // Show Audio/Video Calls
+            case ACTION_SHOW_AVSCREEN:
+                Log.d(TAG, "Main.ACTION_SHOW_AVSCREEN");
+
+
+                break;
+
+            // Show Content Share Queue
+            case ACTION_SHOW_CONTSHARE_SCREEN:
+                //mScreenService.show(ScreenFileTransferQueue.class);
+                break;
+
+            // Show Chat Queue
+            case ACTION_SHOW_CHAT_SCREEN:
+                //mScreenService.show(ScreenChatQueue.class);
+                break;
+        }
+    }
 }

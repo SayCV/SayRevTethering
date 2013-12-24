@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.util.Log;
+import org.saydroid.logger.Log;
 
 public class SgsTimer extends Timer{
 	private final static String TAG = SgsTimer.class.getCanonicalName();
