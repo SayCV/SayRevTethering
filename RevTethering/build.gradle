@@ -35,4 +35,22 @@ dependencies {
     compile 'com.android.support:gridlayout-v7:19.0.0'
     compile 'com.android.support:appcompat-v7:+'
     compile project(':SayGeneralStack')
+    compile files('libs/native-libs.jar')
 }
+
+task nativeLibsToJar(
+        type: Zip,
+        description: 'create a jar archive of the native libs') {
+    destinationDir file('./libs')
+    baseName 'native-libs'
+    extension 'jar'
+    from 'libs/armeabi'
+    include '**/*.so'
+    into 'lib/armeabi'
+}
+
+tasks.withType(Compile) {
+    compileTask -> compileTask.dependsOn(nativeLibsToJar)
+}
+
+clean.dependsOn 'cleanNativeLibsToJar'
