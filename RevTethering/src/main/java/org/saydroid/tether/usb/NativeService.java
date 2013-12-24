@@ -42,7 +42,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.util.Log;
+import org.saydroid.logger.Log;
 
 public class NativeService extends SgsNativeService {
 	private final static String TAG = NativeService.class.getCanonicalName();

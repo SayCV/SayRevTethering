@@ -33,12 +33,12 @@ import org.saydroid.utils.AndroidUtils;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.util.Log;
+import org.saydroid.logger.Log;
 
 public class Engine extends SgsEngine{
 	private final static String TAG = Engine.class.getCanonicalName();
 	
-	private static final String CONTENT_TITLE = "IMSDroid";
+	private static final String CONTENT_TITLE = "SRTDroid";
 	
 	private static final int NOTIF_AVCALL_ID = 19833892;
 	private static final int NOTIF_SMS_ID = 19833893;
