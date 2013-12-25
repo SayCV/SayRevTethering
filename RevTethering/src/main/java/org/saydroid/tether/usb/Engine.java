@@ -55,14 +55,14 @@ public class Engine extends SgsEngine{
 		// Load Android utils library (required to detect CPU features)
 		System.load(String.format("%s/%s", Engine.LIBS_FOLDER, "libutils_armv5te.so"));
 		Log.d(TAG,"CPU_Feature="+AndroidUtils.getCpuFeatures());
-		if(SgsApplication.isCpuNeon()){
+		/*if(SgsApplication.isCpuNeon()){
 			Log.d(TAG,"isCpuNeon()=YES");
 			System.load(String.format("%s/%s", Engine.LIBS_FOLDER, "libtinyWRAP_armv7-a.so"));
 		}
 		else{
 			Log.d(TAG,"isCpuNeon()=NO");
 			System.load(String.format("%s/%s", Engine.LIBS_FOLDER, "libtinyWRAP_armv5te.so"));
-		}
+		}*/
 		// Initialize the engine
 		SgsEngine.initialize();
 	}

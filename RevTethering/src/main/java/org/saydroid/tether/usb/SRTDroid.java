@@ -38,4 +38,19 @@ public class SRTDroid extends SgsApplication{
 
     	Log.d(TAG, "SRTDroid()");
     }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
+    public int startTether() {
+        return 1;
+    }
+
+    public boolean stopTether() {
+        return true;
+    }
+
+
 }
