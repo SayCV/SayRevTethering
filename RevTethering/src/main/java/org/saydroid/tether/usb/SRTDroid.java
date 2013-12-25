@@ -32,9 +32,9 @@ public class SRTDroid extends SgsApplication{
         LogConfiguration.getInstance().setLoggerName(SRTDroid.class.getCanonicalName());
         LogConfiguration.getInstance().setFileName(String.format("/data/data/%s/%s", MainActivity.class.getPackage().getName(),"SRTDroid.log"));
         LogConfiguration.getInstance().setInternalDebugging(true);
-        LogConfiguration.getInstance().setInternalDebugging(true);
         //LogConfiguration.getInstance().setFilePattern("%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n");
         LogConfiguration.getInstance().setFilePattern("%msg%n");
+        LogConfiguration.getInstance().configure();
 
     	Log.d(TAG, "IMSDroid()");
     }

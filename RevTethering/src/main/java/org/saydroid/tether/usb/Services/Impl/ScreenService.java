@@ -134,7 +134,7 @@ public class ScreenService extends SgsBaseService implements IScreenService {
 		if(window != null){
 			View view = mainActivity.getLocalActivityManager().startActivity(screen_id, intent).getDecorView();
 
-            FrameLayout layout = (FrameLayout) mainActivity.findViewById(R.id.main_linearLayout_principal);
+            LinearLayout layout = (LinearLayout) mainActivity.findViewById(R.id.main_linearLayout_principal);
 			layout.removeAllViews();
 			layout.addView(view, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 			
