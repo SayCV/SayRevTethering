@@ -36,6 +36,6 @@ public class SRTDroid extends SgsApplication{
         LogConfiguration.getInstance().setFilePattern("%msg%n");
         LogConfiguration.getInstance().configure();
 
-    	Log.d(TAG, "IMSDroid()");
+    	Log.d(TAG, "SRTDroid()");
     }
 }
