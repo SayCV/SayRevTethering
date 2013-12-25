@@ -252,7 +252,14 @@ public class ScreenHome extends BaseScreen {
 			}
 			
 			if(position == ScreenHomeItem.ITEM_SIGNIN_SIGNOUT_POS){
-
+                if(true){
+                    ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Start tethering");
+                    ((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(R.drawable.start_48);
+                }
+                else{
+                    ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Stop tethering");
+                    ((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(R.drawable.stop_48);
+                }
 			}
 			else{				
 				((TextView) view.findViewById(R.id.screen_home_item_text)).setText(item.mText);
