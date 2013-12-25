@@ -25,12 +25,13 @@ import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsStringUtils;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+
+import org.saydroid.logger.Log;
 
 public class ScreenNetwork extends BaseScreen {
 	private final static String TAG = ScreenNetwork.class.getCanonicalName();

@@ -30,7 +30,6 @@ import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import android.content.Context;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -49,6 +48,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import org.saydroid.logger.Log;
 
 public class ScreenPresence  extends BaseScreen{
 	private static String TAG = ScreenPresence.class.getCanonicalName();

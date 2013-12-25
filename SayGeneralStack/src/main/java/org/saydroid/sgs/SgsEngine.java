@@ -119,6 +119,9 @@ public class SgsEngine {
 		success &= getNetworkService().start();
 		success &= getHttpClientService().start();
 		success &= getHistoryService().start();
+        //success &= getContactService().start();
+        //success &= getSipService().start();
+        //success &= getSoundService().start();
 		
 		if(success){
 			success &= getHistoryService().load();
@@ -145,15 +148,15 @@ public class SgsEngine {
 		}
 		
 		boolean success = true;
-		
-		success &= getConfigurationService().stop();
-		success &= getHttpClientService().stop();
-		success &= getHistoryService().stop();
-		success &= getStorageService().stop();
-		success &= getContactService().stop();
-		success &= getSipService().stop();
-		success &= getSoundService().stop();
-		success &= getNetworkService().stop();
+
+        success &= getConfigurationService().stop();
+        success &= getHttpClientService().stop();
+        success &= getHistoryService().stop();
+        success &= getStorageService().stop();
+        //success &= getContactService().stop();
+        //success &= getSipService().stop();
+        //success &= getSoundService().stop();
+        success &= getNetworkService().stop();
 		
 		if(!success){
 			Log.e(TAG, "Failed to stop services");

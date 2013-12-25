@@ -2,12 +2,14 @@ package org.saydroid.tether.usb;
 
 import android.app.ActivityGroup;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 import android.os.Build;
 
 import org.saydroid.logger.Log;
+import org.saydroid.logger.LogConfiguration;
 import org.saydroid.sgs.utils.SgsStringUtils;
 
 
@@ -56,6 +59,9 @@ public class MainActivity extends ActivityGroup {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mHandler = new Handler();
+        setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
+
         if(!Engine.getInstance().isStarted()){
             startActivityForResult(new Intent(this, ScreenSplash.class), MainActivity.RC_SPLASH);
             return;
@@ -74,13 +80,34 @@ public class MainActivity extends ActivityGroup {
         }
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        Bundle bundle = intent.getExtras();
+        if(bundle != null){
+            handleAction(bundle);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+
+        if(mScreenService.getCurrentScreen().hasMenu()){
+            return mScreenService.getCurrentScreen().createOptionsMenu(menu);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu){
+        Log.d(TAG, "Krupa - onPrepareOptionsMenu");
+        if(mScreenService.getCurrentScreen().hasMenu()){
+            menu.clear();
+            return mScreenService.getCurrentScreen().createOptionsMenu(menu);
+        }
+        return false;
     }
 
     @Override
@@ -95,20 +122,48 @@ public class MainActivity extends ActivityGroup {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if(mScreenService == null){
+            super.onSaveInstanceState(outState);
+            return;
         }
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
+        IBaseScreen screen = mScreenService.getCurrentScreen();
+        if(screen != null){
+            outState.putInt("action", MainActivity.ACTION_RESTORE_LAST_STATE);
+            outState.putString("screen-id", screen.getId());
+            outState.putString("screen-type", screen.getType().toString());
         }
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        this.handleAction(savedInstanceState);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d(TAG, "onActivityResult("+requestCode+","+resultCode+")");
+        if(resultCode == RESULT_OK){
+            if(requestCode == MainActivity.RC_SPLASH){
+                Log.d(TAG, "Result from splash screen");
+            }
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(!BaseScreen.processKeyDown(keyCode, event)){
+            return super.onKeyDown(keyCode, event);
+        }
+        return true;
     }
 
     public void exit(){

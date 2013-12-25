@@ -35,11 +35,13 @@ import org.saydroid.sgs.services.impl.SgsBaseService;
 import android.app.Activity;
 import android.app.LocalActivityManager;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+
+import org.saydroid.logger.Log;
 
 public class ScreenService extends SgsBaseService implements IScreenService {
 	private final static String TAG = ScreenService.class.getCanonicalName();
@@ -131,10 +133,10 @@ public class ScreenService extends SgsBaseService implements IScreenService {
 		final Window window = mainActivity.getLocalActivityManager().startActivity(screen_id, intent);
 		if(window != null){
 			View view = mainActivity.getLocalActivityManager().startActivity(screen_id, intent).getDecorView();
-			
-			LinearLayout layout = (LinearLayout) mainActivity.findViewById(R.id.container);
+
+            FrameLayout layout = (FrameLayout) mainActivity.findViewById(R.id.main_linearLayout_principal);
 			layout.removeAllViews();
-			layout.addView(view, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+			layout.addView(view, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 			
 			// add to stack
 			this.mLastScreens[(++this.mLastScreensIndex % this.mLastScreens.length)] = screen_id;

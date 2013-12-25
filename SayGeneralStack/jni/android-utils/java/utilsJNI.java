@@ -6,7 +6,7 @@
  * the SWIG interface file instead.
  * ----------------------------------------------------------------------------- */
 
-package org.doubango.utils;
+package org.saydroid.utils;
 
 public class utilsJNI {
   public final static native long new_AndroidUtils();

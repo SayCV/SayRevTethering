@@ -28,12 +28,27 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.FileAppender;
 
 public final class Log {
+    protected static Log sInstance = null;
 	// private final static String TAG = Log.class.getCanonicalName();
     private final static String TAG_TOKEN = ":";
 
-    public static org.slf4j.Logger sLogger = LogConfiguration.getInstance().getLogger();
+    public static org.slf4j.Logger sLogger = null;
+
+    protected static Log getInstance(){
+        if(sInstance == null){
+            sInstance = new Log();
+        }
+        return sInstance;
+    }
+
+    protected Log() {
+        sLogger = LogConfiguration.getInstance().getLogger();
+    }
 
     protected static boolean checkDebuggingEnabled(){
+        if(sLogger==null)
+            sLogger = LogConfiguration.getInstance().getLogger();
+
         if(sLogger!=null && LogConfiguration.getInstance().isInternalDebugging())
             return true;
 

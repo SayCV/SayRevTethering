@@ -30,7 +30,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.util.Log;
+
+import org.saydroid.logger.Log;
 
 public class ScreenSplash extends BaseScreen {
 	private static String TAG = ScreenSplash.class.getCanonicalName();

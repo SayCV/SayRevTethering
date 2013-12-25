@@ -34,7 +34,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,6 +46,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import org.saydroid.logger.Log;
 
 public class ScreenHome extends BaseScreen {
 	private static String TAG = ScreenHome.class.getCanonicalName();
@@ -56,14 +56,14 @@ public class ScreenHome extends BaseScreen {
 	
 	private GridView mGridView;
 	
-	private final ISgsSipService mSipService;
+	//private final ISgsSipService mSipService;
 	
 	private BroadcastReceiver mSipBroadCastRecv;
 	
 	public ScreenHome() {
 		super(SCREEN_TYPE.HOME_T, TAG);
 		
-		mSipService = getEngine().getSipService();
+		//mSipService = getEngine().getSipService();
 	}
 	
 	@Override
@@ -78,15 +78,7 @@ public class ScreenHome extends BaseScreen {
 				final ScreenHomeItem item = (ScreenHomeItem)parent.getItemAtPosition(position);
 				if (item != null) {
 					if(position == ScreenHomeItem.ITEM_SIGNIN_SIGNOUT_POS){
-						if(mSipService.getRegistrationState() == ConnectionState.CONNECTING || mSipService.getRegistrationState() == ConnectionState.TERMINATING){
-							mSipService.stopStack();
-						}
-						else if(mSipService.isRegistered()){
-							mSipService.unRegister();
-						}
-						else{
-							mSipService.register(ScreenHome.this);
-						}
+
 					}
 					else if(position == ScreenHomeItem.ITEM_EXIT_POS){
 						CustomDialog.show(
@@ -188,7 +180,7 @@ public class ScreenHome extends BaseScreen {
 	 */
 	static class ScreenHomeItem {
 		static final int ITEM_SIGNIN_SIGNOUT_POS = 0;
-		static final int ITEM_EXIT_POS = 1;
+		static final int ITEM_EXIT_POS = 3;
 		final int mIconResId;
 		final String mText;
 		final Class<? extends Activity> mClass;
@@ -204,14 +196,15 @@ public class ScreenHome extends BaseScreen {
 	 * ScreenHomeAdapter
 	 */
 	static class ScreenHomeAdapter extends BaseAdapter{
-		static final int ALWAYS_VISIBLE_ITEMS_COUNT = 4;
+		static final int ALWAYS_VISIBLE_ITEMS_COUNT = 5;
 		static final ScreenHomeItem[] sItems =  new ScreenHomeItem[]{
 			// always visible
-    		//new ScreenHomeItem(R.drawable.sign_in_48, "Sign In", null),
-    		new ScreenHomeItem(R.drawable.exit_48, "Exit/Quit", null),
+    		new ScreenHomeItem(R.drawable.start, "Start Tethering", null),
     		new ScreenHomeItem(R.drawable.options_48, "Options", ScreenSettings.class),
     		new ScreenHomeItem(R.drawable.about_48, "About", ScreenAbout.class),
+            new ScreenHomeItem(R.drawable.exit_48, "Exit/Quit", null),
     		// visible only if connected
+    		new ScreenHomeItem(R.drawable.stop, "Stop Tethering", null),
     		//new ScreenHomeItem(R.drawable.dialer_48, "Dialer", ScreenTabDialer.class),
     		//new ScreenHomeItem(R.drawable.eab2_48, "Address Book", ScreenTabContacts.class),
     		//new ScreenHomeItem(R.drawable.history_48, "History", ScreenTabHistory.class),
@@ -232,7 +225,7 @@ public class ScreenHome extends BaseScreen {
 		
 		@Override
 		public int getCount() {
-			return mBaseScreen.mSipService.isRegistered() ? sItems.length : ALWAYS_VISIBLE_ITEMS_COUNT;
+			return ALWAYS_VISIBLE_ITEMS_COUNT;
 		}
 
 		@Override

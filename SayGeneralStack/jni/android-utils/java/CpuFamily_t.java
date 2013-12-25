@@ -6,7 +6,7 @@
  * the SWIG interface file instead.
  * ----------------------------------------------------------------------------- */
 
-package org.doubango.utils;
+package org.saydroid.utils;
 
 public enum CpuFamily_t {
   UNKNOWN(0),

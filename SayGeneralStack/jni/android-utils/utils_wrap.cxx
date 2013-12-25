@@ -418,7 +418,7 @@ namespace Swig {
 extern "C" {
 #endif
 
-SWIGEXPORT jlong JNICALL Java_org_doubango_utils_utilsJNI_new_1AndroidUtils(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jlong JNICALL Java_org_saydroid_utils_utilsJNI_new_1AndroidUtils(JNIEnv *jenv, jclass jcls) {
   jlong jresult = 0 ;
   AndroidUtils *result = 0 ;
   
@@ -430,7 +430,7 @@ SWIGEXPORT jlong JNICALL Java_org_doubango_utils_utilsJNI_new_1AndroidUtils(JNIE
 }
 
 
-SWIGEXPORT void JNICALL Java_org_doubango_utils_utilsJNI_delete_1AndroidUtils(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT void JNICALL Java_org_saydroid_utils_utilsJNI_delete_1AndroidUtils(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   AndroidUtils *arg1 = (AndroidUtils *) 0 ;
   
   (void)jenv;
@@ -440,7 +440,7 @@ SWIGEXPORT void JNICALL Java_org_doubango_utils_utilsJNI_delete_1AndroidUtils(JN
 }
 
 
-SWIGEXPORT jobject JNICALL Java_org_doubango_utils_utilsJNI_AndroidUtils_1getCpuFamily(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jobject JNICALL Java_org_saydroid_utils_utilsJNI_AndroidUtils_1getCpuFamily(JNIEnv *jenv, jclass jcls) {
   jobject jresult = 0 ;
   uint64_t result;
   
@@ -468,7 +468,7 @@ SWIGEXPORT jobject JNICALL Java_org_doubango_utils_utilsJNI_AndroidUtils_1getCpu
 }
 
 
-SWIGEXPORT jobject JNICALL Java_org_doubango_utils_utilsJNI_AndroidUtils_1getCpuFeatures(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jobject JNICALL Java_org_saydroid_utils_utilsJNI_AndroidUtils_1getCpuFeatures(JNIEnv *jenv, jclass jcls) {
   jobject jresult = 0 ;
   uint64_t result;
   
