@@ -66,16 +66,16 @@ public class NativeService extends SgsNativeService {
 		super.onCreate();
 		Log.d(TAG, "onCreate()");
 		
-		/*final PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		final PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		if(powerManager != null && mWakeLock == null){
 			mWakeLock = powerManager.newWakeLock(PowerManager.ON_AFTER_RELEASE 
 					| PowerManager.SCREEN_BRIGHT_WAKE_LOCK
 					| PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
-		}*/
-        final PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		}
+        /*final PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if(mEngine != null){
             mEngine.getInstance().getMainActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
+        }*/
 	}
 	
 	@Override
