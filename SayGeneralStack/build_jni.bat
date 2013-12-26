@@ -19,7 +19,7 @@ if not exist libs (
 cd ..
 
 cp SayGeneralStack/libs/armeabi/libutils_armv5te.so RevTethering/libs/armeabi/
-cp ../imsdroid/native-debug/libs/armeai/libtinyWRAP.so RevTethering/libs/armeabi/libtinyWRAP_armv5te.so
-cp ../imsdroid/native-debug/libs/armeabi-v7a/libtinyWRAP.so RevTethering/libs/armeabi/libtinyWRAP_armv7-a.so
+rem cp ../imsdroid/native-debug/libs/armeai/libtinyWRAP.so RevTethering/libs/armeabi/libtinyWRAP_armv5te.so
+rem cp ../imsdroid/native-debug/libs/armeabi-v7a/libtinyWRAP.so RevTethering/libs/armeabi/libtinyWRAP_armv7-a.so
 
 pause
