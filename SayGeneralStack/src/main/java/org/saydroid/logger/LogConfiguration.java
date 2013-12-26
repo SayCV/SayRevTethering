@@ -20,6 +20,7 @@ import android.app.Activity;
 
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -120,6 +121,11 @@ public final class LogConfiguration {
         // since we want to reconfigure it
         if(isResetConfiguration()) {
             getLoggerContext().reset();
+
+            File logFile = new File(getFileName());
+            if (logFile.exists() == true) {
+                logFile.delete();
+            }
         }
 
         // setInternalDebugging(isInternalDebugging());

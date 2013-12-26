@@ -33,6 +33,9 @@ import org.saydroid.utils.AndroidUtils;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.support.v4.app.NotificationCompat;
+
 import org.saydroid.logger.Log;
 
 public class Engine extends SgsEngine{
@@ -92,27 +95,35 @@ public class Engine extends SgsEngine{
 		if(!mStarted){
 			return;
 		}
+        //final Notification.Builder notificationBuilder = new Notification.Builder(SRTDroid.getContext());
+        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(SRTDroid.getContext())
+                .setWhen(System.currentTimeMillis());
+        notificationBuilder.setSmallIcon(drawableId);
         // Set the icon, scrolling text and timestamp
-        final Notification notification = new Notification(drawableId, "", System.currentTimeMillis());
+        //final Notification notification = new Notification(drawableId, "", System.currentTimeMillis());
         
         Intent intent = new Intent(SRTDroid.getContext(), MainActivity.class);
     	intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP  | Intent.FLAG_ACTIVITY_NEW_TASK);
         
         switch(notifId){
         	case NOTIF_APP_ID:
-        		notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        		//notification.flags |= Notification.FLAG_ONGOING_EVENT;
+                notificationBuilder.setOngoing(true);
         		intent.putExtra("notif-type", "reg");
         		break;
         		
         	case NOTIF_CONTSHARE_ID:
                 intent.putExtra("action", MainActivity.ACTION_SHOW_CONTSHARE_SCREEN);
-                notification.defaults |= Notification.DEFAULT_SOUND;
+                //notification.defaults |= Notification.DEFAULT_SOUND;
+                notificationBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
                 break;
                 
         	case NOTIF_SMS_ID:
-                notification.flags |= Notification.FLAG_AUTO_CANCEL;
-                notification.defaults |= Notification.DEFAULT_SOUND;
-                notification.tickerText = tickerText;
+                //notification.flags |= Notification.FLAG_AUTO_CANCEL;
+                //notification.defaults |= Notification.DEFAULT_SOUND;
+                //notification.tickerText = tickerText;
+                notificationBuilder.setAutoCancel(true);
+                notificationBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
                 intent.putExtra("action", MainActivity.ACTION_SHOW_SMS);
                 break;
                 
@@ -122,7 +133,8 @@ public class Engine extends SgsEngine{
         		break;
         		
         	case NOTIF_CHAT_ID:
-        		notification.defaults |= Notification.DEFAULT_SOUND;
+        		//notification.defaults |= Notification.DEFAULT_SOUND;
+                notificationBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
         		tickerText = String.format("%s (%d)", tickerText, SgsMsrpSession.getSize(new SgsPredicate<SgsMsrpSession>() {
 					@Override
 					public boolean apply(SgsMsrpSession session) {
@@ -140,11 +152,14 @@ public class Engine extends SgsEngine{
         PendingIntent contentIntent = PendingIntent.getActivity(SRTDroid.getContext(), notifId/*requestCode*/, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Set the info for the views that show in the notification panel.
-        notification.setLatestEventInfo(SRTDroid.getContext(), CONTENT_TITLE, tickerText, contentIntent);
+        //notification.setLatestEventInfo(SRTDroid.getContext(), CONTENT_TITLE, tickerText, contentIntent);
+        notificationBuilder.setContentTitle(CONTENT_TITLE);
+        notificationBuilder.setTicker(tickerText);
+        notificationBuilder.setContentIntent(contentIntent);
 
         // Send the notification.
         // We use a layout id because it is a unique number.  We use it later to cancel.
-        mNotifManager.notify(notifId, notification);
+        mNotifManager.notify(notifId, notificationBuilder.build());
     }
 	
 	public void showAppNotif(int drawableId, String tickerText){

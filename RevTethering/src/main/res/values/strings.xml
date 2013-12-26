@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SayRevTethering</string>
+    <string name="app_name">say Rev Tether</string>
     <string name="srt_revision">715</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -13,6 +13,8 @@
     <string name="day_today">Today</string>
     <string name="day_yesterday">Yesterday</string>
 
+    <string name="thanks_title">Thanks</string>
+    <string name="thanks_name">doubango telecom.</string>
     <string formatted="false" name="copyright">
     SRTDroid/v%s (SGS r%s), Copyright (C) 2013 sayDroid. All rights reserved.
     \n\n

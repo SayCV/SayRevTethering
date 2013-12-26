@@ -73,10 +73,9 @@ public class MainActivity extends ActivityGroup {
             Intent intent = getIntent();
             bundle = intent == null ? null : intent.getExtras();
         }
-        if(bundle != null && bundle.getInt("action", MainActivity.ACTION_NONE) != MainActivity.ACTION_NONE){
+        if(bundle != null && bundle.getInt("action", MainActivity.ACTION_NONE) != MainActivity.ACTION_NONE) {
             handleAction(bundle);
-        }
-        else if(mScreenService != null){
+        } else if (mScreenService != null) {
             mScreenService.show(ScreenHome.class);
         }
     }
@@ -103,7 +102,7 @@ public class MainActivity extends ActivityGroup {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu){
-        Log.d(TAG, "Krupa - onPrepareOptionsMenu");
+        Log.d(TAG, "sayCV - onPrepareOptionsMenu");
         if(mScreenService.getCurrentScreen().hasMenu()){
             menu.clear();
             return mScreenService.getCurrentScreen().createOptionsMenu(menu);
@@ -113,7 +112,7 @@ public class MainActivity extends ActivityGroup {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "Krupa - onOptionsItemSelected");
+        Log.d(TAG, "sayCV - onOptionsItemSelected");
         IBaseScreen baseScreen = mScreenService.getCurrentScreen();
         if(baseScreen instanceof Activity){
             return ((Activity)baseScreen).onOptionsItemSelected(item);

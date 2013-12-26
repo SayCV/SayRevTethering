@@ -55,7 +55,7 @@
             android:textColor="#ffffff" />
 
         <TextView
-            android:text="Thanks: "
+            android:text="@string/thanks_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingTop="15dp"
@@ -65,7 +65,7 @@
             android:id="@+id/textView" />
 
         <TextView
-            android:text="jason gong"
+            android:text="@string/thanks_name"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="15dp"

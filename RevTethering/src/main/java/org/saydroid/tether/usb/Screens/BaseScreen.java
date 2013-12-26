@@ -91,7 +91,7 @@ public abstract class BaseScreen extends Activity implements IBaseScreen {
 	protected final SCREEN_TYPE mType;
 	protected boolean mComputeConfiguration;
 	protected ProgressDialog mProgressDialog;
-	protected Handler mHanler;
+	protected Handler mHandler;
 	
 	protected final IScreenService mScreenService;
 
@@ -110,7 +110,7 @@ public abstract class BaseScreen extends Activity implements IBaseScreen {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mHanler = new Handler();
+        mHandler = new Handler();
 	}
 
 	@Override
@@ -245,7 +245,7 @@ public abstract class BaseScreen extends Activity implements IBaseScreen {
 	}
 
 	protected void cancelInProgressOnUiThread() {
-		mHanler.post(new Runnable() {
+        mHandler.post(new Runnable() {
 			@Override
 			public void run() {
 				cancelInProgress();
@@ -255,7 +255,7 @@ public abstract class BaseScreen extends Activity implements IBaseScreen {
 
 	protected void showInProgressOnUiThread(final String text,
 			final boolean bIndeterminate, final boolean bCancelable) {
-		mHanler.post(new Runnable() {
+        mHandler.post(new Runnable() {
 			@Override
 			public void run() {
 				showInProgress(text, bIndeterminate, bCancelable);
@@ -273,7 +273,7 @@ public abstract class BaseScreen extends Activity implements IBaseScreen {
 	}
 
 	protected void showMsgBoxOnUiThread(final String title, final String message) {
-		mHanler.post(new Runnable() {
+        mHandler.post(new Runnable() {
 			@Override
 			public void run() {
 				showMsgBox(title, message);
