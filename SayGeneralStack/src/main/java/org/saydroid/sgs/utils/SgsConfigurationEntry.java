@@ -49,8 +49,12 @@ public class SgsConfigurationEntry {
 	public static final String GENERAL_NR = "GENERAL_NR."+ TAG ;	
 	public static final String GENERAL_ECHO_TAIL = "GENERAL_ECHO_TAIL." + TAG ;
 	public static final String GENERAL_SEND_DEVICE_INFO = "GENERAL_SEND_DEVICE_INFO" + TAG;
-	
-	// Identity
+
+    public static final String GENERAL_VOC = "GENERAL_VOC."+ TAG ;
+    public static final String GENERAL_DUC = "GENERAL_DUC."+ TAG ;
+    public static final String GENERAL_DWL = "GENERAL_DWL."+ TAG ;
+
+    // Identity
 	public static final String IDENTITY_DISPLAY_NAME = "IDENTITY_DISPLAY_NAME." + TAG;
 	public static final String IDENTITY_IMPU = "IDENTITY_IMPU." + TAG;
 	public static final String IDENTITY_IMPI = "IDENTITY_IMPI." + TAG;
@@ -60,6 +64,7 @@ public class SgsConfigurationEntry {
 	public static final String NETWORK_REGISTRATION_TIMEOUT = "NETWORK_REGISTRATION_TIMEOUT." + TAG;
 	public static final String NETWORK_REALM = "NETWORK_REALM." + TAG;
 	public static final String NETWORK_USE_WIFI = "NETWORK_USE_WIFI." + TAG;
+    public static final String NETWORK_USE_FAKED_3G = "NETWORK_USE_FAKED_3G." + TAG;
 	public static final String NETWORK_USE_3G = "NETWORK_USE_3G." + TAG;
 	public static final String NETWORK_USE_EARLY_IMS = "NETWORK_USE_EARLY_IMS." + TAG;
 	public static final String NETWORK_IP_VERSION = "NETWORK_IP_VERSION." + TAG;
@@ -68,6 +73,8 @@ public class SgsConfigurationEntry {
 	public static final String NETWORK_PCSCF_PORT = "NETWORK_PCSCF_PORT." + TAG;
 	public static final String NETWORK_USE_SIGCOMP = "NETWORK_USE_SIGCOMP." + TAG;
 	public static final String NETWORK_TRANSPORT = "NETWORK_TRANSPORT." + TAG;
+
+    public static final String NETWORK_CONNECTED = "NETWORK_CONNECTED." + TAG;
 	
 	// NAT Traversal
 	public static final String NATT_HACK_AOR = "NATT_HACK_AOR." + TAG;
@@ -143,6 +150,10 @@ public class SgsConfigurationEntry {
 	public static final boolean DEFAULT_GENERAL_NR = true;
 	public static final int DEFAULT_GENERAL_ECHO_TAIL = 500;
 	public static final boolean DEFAULT_GENERAL_SEND_DEVICE_INFO = false;
+
+    public static final boolean DEFAULT_GENERAL_VOC = true;
+    public static final boolean DEFAULT_GENERAL_DUC = false;
+    public static final boolean DEFAULT_GENERAL_DWL = false;
 	
 	//	Identity
 	public static final String DEFAULT_IDENTITY_DISPLAY_NAME = "John Doe";
@@ -162,6 +173,8 @@ public class SgsConfigurationEntry {
 	public static final String DEFAULT_NETWORK_TRANSPORT = "udp";
 	public static final String DEFAULT_NETWORK_IP_VERSION = "ipv4";
 	public static final boolean DEFAULT_NETWORK_USE_EARLY_IMS = false;
+
+    public static final boolean DEFAULT_NETWORK_CONNECTED = false;
 	
 	
 	// NAT Traversal

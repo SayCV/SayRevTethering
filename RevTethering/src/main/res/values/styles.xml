@@ -1,9 +1,11 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-    </style>
+    <!-- Activity themes -->
+    <style name="App.Theme.Default" parent="android:Theme.WithActionBar"/>
+    <style name="App.Theme.Base" parent="android:Theme.Light"/>
+    <style name="App.Theme.Holo.Light" parent="android:Theme.Holo.Light" />
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="App.Theme.Default"/>
 
     <style name="Animations" />
 

@@ -22,6 +22,8 @@ import org.saydroid.tether.usb.SRTDroid;
 import org.saydroid.tether.usb.R;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 public class ScreenAbout extends BaseScreen {

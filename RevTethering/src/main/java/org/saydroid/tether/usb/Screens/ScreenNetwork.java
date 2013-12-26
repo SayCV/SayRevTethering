@@ -42,8 +42,7 @@ public class ScreenNetwork extends BaseScreen {
 	private EditText mEtProxyPort;
 	private Spinner mSpTransport;
 	private Spinner mSpProxyDiscovery;
-	private CheckBox mCbSigComp;
-	private CheckBox mCbWiFi;
+    private CheckBox mCbFaked3G;
 	private CheckBox mCb3G;
 	private RadioButton mRbIPv4;
 	private RadioButton mRbIPv6;
@@ -61,13 +60,8 @@ public class ScreenNetwork extends BaseScreen {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.screen_network);
-        
-        mEtProxyHost = (EditText)findViewById(R.id.screen_network_editText_pcscf_host);
-        mEtProxyPort = (EditText)findViewById(R.id.screen_network_editText_pcscf_port);
-        mSpTransport = (Spinner)findViewById(R.id.screen_network_spinner_transport);
-        mSpProxyDiscovery = (Spinner)findViewById(R.id.screen_network_spinner_pcscf_discovery);
-        mCbSigComp = (CheckBox)findViewById(R.id.screen_network_checkBox_sigcomp);
-        mCbWiFi = (CheckBox)findViewById(R.id.screen_network_checkBox_wifi);
+
+        mCbFaked3G = (CheckBox)findViewById(R.id.screen_network_checkBox_faked_3g_ip);
         mCb3G = (CheckBox)findViewById(R.id.screen_network_checkBox_3g);
         mRbIPv4 = (RadioButton)findViewById(R.id.screen_network_radioButton_ipv4);
         mRbIPv6 = (RadioButton)findViewById(R.id.screen_network_radioButton_ipv6);
@@ -88,21 +82,15 @@ public class ScreenNetwork extends BaseScreen {
         mSpProxyDiscovery.setSelection(super.getSpinnerIndex(
 				mConfigurationService.getString(SgsConfigurationEntry.NETWORK_PCSCF_DISCOVERY, sSpinnerProxydiscoveryItems[0]),
 				sSpinnerProxydiscoveryItems));
-        mCbSigComp.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_SIGCOMP, SgsConfigurationEntry.DEFAULT_NETWORK_USE_SIGCOMP));
-        
-        mCbWiFi.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_WIFI, SgsConfigurationEntry.DEFAULT_NETWORK_USE_WIFI));
+
+        mCbFaked3G.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_WIFI, SgsConfigurationEntry.DEFAULT_NETWORK_USE_WIFI));
         mCb3G.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_3G, SgsConfigurationEntry.DEFAULT_NETWORK_USE_3G));
         mRbIPv4.setChecked(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_IP_VERSION,
         		SgsConfigurationEntry.DEFAULT_NETWORK_IP_VERSION).equalsIgnoreCase("ipv4"));
         mRbIPv6.setChecked(!mRbIPv4.isChecked());
         
         // add listeners (for the configuration)
-        super.addConfigurationListener(mEtProxyHost);
-        super.addConfigurationListener(mEtProxyPort);
-        super.addConfigurationListener(mSpTransport);
-        super.addConfigurationListener(mSpProxyDiscovery);
-        super.addConfigurationListener(mCbSigComp);
-        super.addConfigurationListener(mCbWiFi);
+        super.addConfigurationListener(mCbFaked3G);
         super.addConfigurationListener(mCb3G);
         super.addConfigurationListener(mRbIPv4);
         super.addConfigurationListener(mRbIPv6);
@@ -111,17 +99,17 @@ public class ScreenNetwork extends BaseScreen {
 	protected void onPause() {
 		if(super.mComputeConfiguration){
 			
-			mConfigurationService.putString(SgsConfigurationEntry.NETWORK_PCSCF_HOST, 
-					mEtProxyHost.getText().toString().trim());
-			mConfigurationService.putInt(SgsConfigurationEntry.NETWORK_PCSCF_PORT, 
-					SgsStringUtils.parseInt(mEtProxyPort.getText().toString().trim(), SgsConfigurationEntry.DEFAULT_NETWORK_PCSCF_PORT) );
+			mConfigurationService.putString(SgsConfigurationEntry.NETWORK_PCSCF_HOST,
+                    mEtProxyHost.getText().toString().trim());
+			mConfigurationService.putInt(SgsConfigurationEntry.NETWORK_PCSCF_PORT,
+                    SgsStringUtils.parseInt(mEtProxyPort.getText().toString().trim(), SgsConfigurationEntry.DEFAULT_NETWORK_PCSCF_PORT));
 			mConfigurationService.putString(SgsConfigurationEntry.NETWORK_TRANSPORT, 
 					ScreenNetwork.sSpinnerTransportItems[mSpTransport.getSelectedItemPosition()]);
-			mConfigurationService.putString(SgsConfigurationEntry.NETWORK_PCSCF_DISCOVERY, 
-					ScreenNetwork.sSpinnerProxydiscoveryItems[mSpProxyDiscovery.getSelectedItemPosition()]);
-			mConfigurationService.putBoolean(SgsConfigurationEntry.NETWORK_USE_SIGCOMP,  mCbSigComp.isChecked());
-			mConfigurationService.putBoolean(SgsConfigurationEntry.NETWORK_USE_WIFI, 
-					mCbWiFi.isChecked());
+			mConfigurationService.putString(SgsConfigurationEntry.NETWORK_PCSCF_DISCOVERY,
+                    ScreenNetwork.sSpinnerProxydiscoveryItems[mSpProxyDiscovery.getSelectedItemPosition()]);
+
+			mConfigurationService.putBoolean(SgsConfigurationEntry.NETWORK_USE_FAKED_3G,
+                    mCbFaked3G.isChecked());
 			mConfigurationService.putBoolean(SgsConfigurationEntry.NETWORK_USE_3G, 
 					mCb3G.isChecked());
 			mConfigurationService.putString(SgsConfigurationEntry.NETWORK_IP_VERSION, 

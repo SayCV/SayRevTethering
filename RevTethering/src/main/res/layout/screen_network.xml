@@ -4,171 +4,186 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-<RelativeLayout
-  android:orientation="vertical"
-    android:scrollbars="vertical"
-    android:isScrollContainer="true"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:id="@+id/screen_network_linearLayout_network"
+    <RelativeLayout
+        android:orientation="vertical"
+        android:scrollbars="vertical"
+        android:isScrollContainer="true"
         android:layout_width="fill_parent"
-        android:layout_marginBottom="5px">
+        android:layout_height="fill_parent">
 
-        <CheckBox
+        <LinearLayout
             android:layout_height="wrap_content"
-            android:text="Enable WiFi"
-            android:id="@+id/screen_network_checkBox_wifi"
-            android:layout_marginLeft="5px"
-            android:layout_width="wrap_content">
-
-            </CheckBox>
-        <CheckBox
-            android:layout_height="wrap_content"
-            android:id="@+id/screen_network_checkBox_3g"
-            android:layout_marginLeft="5px"
-            android:text="Enable 4G/3G/2.5G"
-            android:layout_width="wrap_content">
-
-            </CheckBox>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:id="@+id/screen_network_linearLayout_ipversion"
-        android:layout_below="@+id/screen_network_linearLayout_network"
-        android:layout_width="fill_parent">
-
-        <RadioGroup
-            android:layout_height="wrap_content"
-            android:id="@+id/screen_network_radioGroup_ipversion"
-            android:orientation="horizontal"
+            android:id="@+id/screen_network_linearLayout_network"
             android:layout_width="fill_parent"
             android:layout_marginBottom="5px">
-            <RadioButton
-                android:layout_width="wrap_content"
+
+            <CheckBox
                 android:layout_height="wrap_content"
-                android:text="IPv4"
-                android:id="@+id/screen_network_radioButton_ipv4"
+                android:id="@+id/screen_network_checkBox_3g"
                 android:layout_marginLeft="5px"
-                android:checked="true">
-
-                </RadioButton>
-            <RadioButton
-                android:layout_width="wrap_content"
+                android:text="Enable 3G"
+                android:layout_width="wrap_content"/>
+            <CheckBox
                 android:layout_height="wrap_content"
-                android:id="@+id/screen_network_radioButton_ipv6"
-                android:text="IPv6"
-                android:layout_marginLeft="5px">
+                android:text="Faked 3G IP"
+                android:id="@+id/screen_network_checkBox_faked_3g_ip"
+                android:layout_marginLeft="5px"
+                android:layout_width="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:id="@+id/screen_network_linearLayout_ipversion"
+            android:layout_below="@+id/screen_network_linearLayout_network"
+            android:layout_width="fill_parent">
+
+            <RadioGroup
+                android:layout_height="wrap_content"
+                android:id="@+id/screen_network_radioGroup_ipversion"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_marginBottom="5px">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="IPv4"
+                    android:id="@+id/screen_network_radioButton_ipv4"
+                    android:layout_marginLeft="5px"
+                    android:checked="true">
 
                 </RadioButton>
-        </RadioGroup>
-    </LinearLayout>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/screen_network_radioButton_ipv6"
+                    android:text="IPv6"
+                    android:layout_marginLeft="5px">
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:text="Proxy-CSCF Host"
-        android:layout_width="fill_parent"
-        android:id="@+id/screen_network_textView_pcscf_host"
-        android:layout_marginLeft="5px"
-        android:layout_marginRight="5px"
-        android:layout_below="@+id/screen_network_linearLayout_ipversion"
-        android:textSize="16dp">
+                </RadioButton>
+            </RadioGroup>
+        </LinearLayout>
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:text="IP Address"
+            android:layout_width="fill_parent"
+            android:id="@+id/screen_network_textView_ip_address"
+            android:layout_marginLeft="5px"
+            android:layout_marginRight="5px"
+            android:layout_below="@+id/screen_network_linearLayout_ipversion"
+            android:textSize="16dp">
 
         </TextView>
 
-    <EditText
-        android:layout_height="wrap_content"
-        android:text="127.0.0.1"
-        android:id="@+id/screen_network_editText_pcscf_host"
-        android:layout_width="fill_parent"
-        android:layout_below="@+id/screen_network_textView_pcscf_host"
-        android:layout_marginLeft="5px"
-        android:layout_marginRight="5px">
+        <EditText
+            android:layout_height="wrap_content"
+            android:text="192.168.0.252"
+            android:id="@+id/screen_network_editText_ip_address"
+            android:layout_width="fill_parent"
+            android:layout_below="@+id/screen_network_textView_ip_address"
+            android:layout_marginLeft="5px"
+            android:layout_marginRight="5px">
 
         </EditText>
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/screen_network_editText_pcscf_host"
-        android:id="@+id/screen_network_textView_pcscf_port"
-        android:text="Proxy-CSCF Port"
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="5px"
-        android:layout_marginRight="5px"
-        android:textSize="16dp">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_network_editText_ip_address"
+            android:id="@+id/screen_network_textView_sub_mask"
+            android:text="Sub Mask"
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="5px"
+            android:layout_marginRight="5px"
+            android:textSize="16dp">
 
         </TextView>
 
-    <EditText
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/screen_network_textView_pcscf_port"
-        android:id="@+id/screen_network_editText_pcscf_port"
-        android:layout_width="fill_parent"
-        android:inputType="number"
-        android:text="5060"
-        android:layout_marginLeft="5px"
-        android:layout_marginRight="5px">
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_network_textView_sub_mask"
+            android:id="@+id/screen_network_editText_sub_mask"
+            android:layout_width="fill_parent"
+            android:inputType="number"
+            android:text="255.255.0.0"
+            android:layout_marginLeft="5px"
+            android:layout_marginRight="5px">
 
         </EditText>
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:id="@+id/screen_network_textView_transport"
-        android:text="Transport"
-        android:layout_width="fill_parent"
-        android:layout_below="@+id/screen_network_editText_pcscf_port"
-        android:layout_marginLeft="5px"
-        android:layout_marginRight="5px"
-        android:textSize="16dp">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_network_editText_sub_mask"
+            android:id="@+id/screen_network_textView_gateway"
+            android:text="Gateway"
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="5px"
+            android:layout_marginRight="5px"
+            android:textSize="16dp">
 
         </TextView>
 
-    <Spinner
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:layout_below="@+id/screen_network_textView_transport"
-        android:id="@+id/screen_network_spinner_transport"
-        android:prompt="@string/spinner_transport"
-        android:layout_marginLeft="5px"
-        android:layout_marginRight="5px">
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_network_textView_gateway"
+            android:id="@+id/screen_network_editText_gateway"
+            android:layout_width="fill_parent"
+            android:inputType="number"
+            android:text="192.168.0.1"
+            android:layout_marginLeft="5px"
+            android:layout_marginRight="5px">
 
-        </Spinner>
+        </EditText>
 
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_network_editText_gateway"
+            android:id="@+id/screen_network_textView_preferred_dns"
+            android:text="Preferred DNS"
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="5px"
+            android:layout_marginRight="5px"
+            android:textSize="16dp">
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:id="@+id/screen_network_textView_pcscf_dicovery"
-        android:text="Proxy-CSCF Discovery"
-        android:layout_below="@+id/screen_network_spinner_transport"
-        android:layout_marginLeft="5px"
-        android:layout_marginRight="5px"
-        android:textSize="16dp">
+        </TextView>
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_network_textView_preferred_dns"
+            android:id="@+id/screen_network_editText_preferred_dns"
+            android:layout_width="fill_parent"
+            android:inputType="number"
+            android:text="8.8.4.4"
+            android:layout_marginLeft="5px"
+            android:layout_marginRight="5px">
+
+        </EditText>
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_network_editText_preferred_dns"
+            android:id="@+id/screen_network_textView_Secondary_dns"
+            android:text="Secondary DNS"
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="5px"
+            android:layout_marginRight="5px"
+            android:textSize="16dp">
 
         </TextView>
 
-    <Spinner
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/screen_network_textView_pcscf_dicovery"
-        android:layout_width="fill_parent"
-        android:id="@+id/screen_network_spinner_pcscf_discovery"
-        android:prompt="@string/spinner_pcscf_discovery"
-        android:layout_marginLeft="5px"
-        android:layout_marginRight="5px"></Spinner>
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_network_textView_Secondary_dns"
+            android:id="@+id/screen_network_editText_Secondary_dns"
+            android:layout_width="fill_parent"
+            android:inputType="number"
+            android:text="8.8.8.8"
+            android:layout_marginLeft="5px"
+            android:layout_marginRight="5px">
 
-    <CheckBox android:layout_height="wrap_content"
-        android:id="@+id/screen_network_checkBox_sigcomp"
-        android:text="Enable SigComp"
-        android:layout_width="fill_parent"
-        android:layout_below="@+id/screen_network_spinner_pcscf_discovery"
-        android:layout_marginRight="5px"
-        android:layout_marginLeft="5px"></CheckBox>
+        </EditText>
 
 
-</RelativeLayout>
+    </RelativeLayout>
 
 
 </ScrollView>

@@ -5,10 +5,13 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
+        android:theme="@style/AppTheme"
         android:label="@string/app_name"
         android:persistent="true"
         android:name="SRTDroid">
+
         <service android:name=".NativeService"></service>
+
         <activity
             android:name="org.saydroid.tether.usb.MainActivity"
             android:label="@string/app_name"
