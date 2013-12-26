@@ -37,19 +37,12 @@ public class ScreenNetwork extends BaseScreen {
 	private final static String TAG = ScreenNetwork.class.getCanonicalName();
 	
 	private final ISgsConfigurationService mConfigurationService;
-	
-	private EditText mEtProxyHost;
-	private EditText mEtProxyPort;
-	private Spinner mSpTransport;
-	private Spinner mSpProxyDiscovery;
+
     private CheckBox mCbFaked3G;
 	private CheckBox mCb3G;
 	private RadioButton mRbIPv4;
 	private RadioButton mRbIPv6;
-	
-	private final static String[] sSpinnerTransportItems = new String[] {SgsConfigurationEntry.DEFAULT_NETWORK_TRANSPORT.toUpperCase(), "TCP", "TLS"/*, "SCTP"*/};
-	private final static String[] sSpinnerProxydiscoveryItems = new String[] {SgsConfigurationEntry.DEFAULT_NETWORK_PCSCF_DISCOVERY, SgsConfigurationEntry.PCSCF_DISCOVERY_DNS_SRV/*, "DHCPv4/v6", "Both"*/};
-	
+
 	public ScreenNetwork() {
 		super(SCREEN_TYPE.NETWORK_T, TAG);
 		
@@ -67,21 +60,7 @@ public class ScreenNetwork extends BaseScreen {
         mRbIPv6 = (RadioButton)findViewById(R.id.screen_network_radioButton_ipv6);
         
         // spinners
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, sSpinnerTransportItems);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpTransport.setAdapter(adapter);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, sSpinnerProxydiscoveryItems);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpProxyDiscovery.setAdapter(adapter);
-        
-        mEtProxyHost.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_PCSCF_HOST, SgsConfigurationEntry.DEFAULT_NETWORK_PCSCF_HOST));
-        mEtProxyPort.setText(Integer.toString(mConfigurationService.getInt(SgsConfigurationEntry.NETWORK_PCSCF_PORT, SgsConfigurationEntry.DEFAULT_NETWORK_PCSCF_PORT)));
-        mSpTransport.setSelection(super.getSpinnerIndex(
-				mConfigurationService.getString(SgsConfigurationEntry.NETWORK_TRANSPORT, sSpinnerTransportItems[0]),
-				sSpinnerTransportItems));
-        mSpProxyDiscovery.setSelection(super.getSpinnerIndex(
-				mConfigurationService.getString(SgsConfigurationEntry.NETWORK_PCSCF_DISCOVERY, sSpinnerProxydiscoveryItems[0]),
-				sSpinnerProxydiscoveryItems));
+
 
         mCbFaked3G.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_WIFI, SgsConfigurationEntry.DEFAULT_NETWORK_USE_WIFI));
         mCb3G.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_3G, SgsConfigurationEntry.DEFAULT_NETWORK_USE_3G));
@@ -98,15 +77,7 @@ public class ScreenNetwork extends BaseScreen {
 	
 	protected void onPause() {
 		if(super.mComputeConfiguration){
-			
-			mConfigurationService.putString(SgsConfigurationEntry.NETWORK_PCSCF_HOST,
-                    mEtProxyHost.getText().toString().trim());
-			mConfigurationService.putInt(SgsConfigurationEntry.NETWORK_PCSCF_PORT,
-                    SgsStringUtils.parseInt(mEtProxyPort.getText().toString().trim(), SgsConfigurationEntry.DEFAULT_NETWORK_PCSCF_PORT));
-			mConfigurationService.putString(SgsConfigurationEntry.NETWORK_TRANSPORT, 
-					ScreenNetwork.sSpinnerTransportItems[mSpTransport.getSelectedItemPosition()]);
-			mConfigurationService.putString(SgsConfigurationEntry.NETWORK_PCSCF_DISCOVERY,
-                    ScreenNetwork.sSpinnerProxydiscoveryItems[mSpProxyDiscovery.getSelectedItemPosition()]);
+
 
 			mConfigurationService.putBoolean(SgsConfigurationEntry.NETWORK_USE_FAKED_3G,
                     mCbFaked3G.isChecked());
