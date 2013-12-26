@@ -19,6 +19,7 @@
 */
 package org.saydroid.tether.usb.Screens;
 
+import org.saydroid.sgs.services.ISgsTetheringNetworkService;
 import org.saydroid.tether.usb.CustomDialog;
 import org.saydroid.tether.usb.MainActivity;
 import org.saydroid.tether.usb.R;
@@ -56,14 +57,14 @@ public class ScreenHome extends BaseScreen {
 	
 	private GridView mGridView;
 	
-	//private final ISgsSipService mSipService;
+	private final ISgsTetheringNetworkService mTetheringNetworkService;
 	
-	private BroadcastReceiver mSipBroadCastRecv;
+	private BroadcastReceiver mTetheringBroadCastRecv;
 	
 	public ScreenHome() {
 		super(SCREEN_TYPE.HOME_T, TAG);
-		
-		//mSipService = getEngine().getSipService();
+
+        mTetheringNetworkService = getEngine().getTetheringNetworkService();
 	}
 	
 	@Override
@@ -78,9 +79,14 @@ public class ScreenHome extends BaseScreen {
 				final ScreenHomeItem item = (ScreenHomeItem)parent.getItemAtPosition(position);
 				if (item != null) {
 					if(position == ScreenHomeItem.ITEM_SIGNIN_SIGNOUT_POS){
-
-					}
-					else if(position == ScreenHomeItem.ITEM_EXIT_POS){
+                        if(mTetheringBroadCastRecv.getRegistrationState() == ConnectionState.CONNECTING || mTetheringBroadCastRecv.getRegistrationState() == ConnectionState.TERMINATING){
+                            mTetheringBroadCastRecv.stopStack();
+                        } else if (mTetheringBroadCastRecv.isRegistered()){
+                            mTetheringBroadCastRecv.unRegister();
+                        } else {
+                            mTetheringBroadCastRecv.register(ScreenHome.this);
+                        }
+					} else if (position == ScreenHomeItem.ITEM_EXIT_POS){
 						CustomDialog.show(
 								ScreenHome.this,
 								R.drawable.exit_48,
@@ -99,15 +105,14 @@ public class ScreenHome extends BaseScreen {
 										dialog.cancel();
 									}
 								});
-					}
-					else{					
+					} else {
 						mScreenService.show(item.mClass, item.mClass.getCanonicalName());
 					}
 				}
 			}
 		});
-		
-		mSipBroadCastRecv = new BroadcastReceiver() {
+
+        mTetheringBroadCastRecv = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				final String action = intent.getAction();
@@ -135,14 +140,14 @@ public class ScreenHome extends BaseScreen {
 		};
 		final IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(SgsRegistrationEventArgs.ACTION_REGISTRATION_EVENT);
-	    registerReceiver(mSipBroadCastRecv, intentFilter);
+	    registerReceiver(mTetheringBroadCastRecv, intentFilter);
 	}
 
 	@Override
 	protected void onDestroy() {
-       if(mSipBroadCastRecv != null){
-    	   unregisterReceiver(mSipBroadCastRecv);
-    	   mSipBroadCastRecv = null;
+       if(mTetheringBroadCastRecv != null){
+    	   unregisterReceiver(mTetheringBroadCastRecv);
+           mTetheringBroadCastRecv = null;
        }
         
        super.onDestroy();
@@ -204,7 +209,7 @@ public class ScreenHome extends BaseScreen {
     		new ScreenHomeItem(R.drawable.about_48, "About", ScreenAbout.class),
             new ScreenHomeItem(R.drawable.exit_48, "Exit/Quit", null),
     		// visible only if connected
-    		new ScreenHomeItem(R.drawable.stop_48, "Stop Tethering", null),
+    		//new ScreenHomeItem(R.drawable.stop_48, "Stop Tethering", null),
     		//new ScreenHomeItem(R.drawable.dialer_48, "Dialer", ScreenTabDialer.class),
     		//new ScreenHomeItem(R.drawable.eab2_48, "Address Book", ScreenTabContacts.class),
     		//new ScreenHomeItem(R.drawable.history_48, "History", ScreenTabHistory.class),
