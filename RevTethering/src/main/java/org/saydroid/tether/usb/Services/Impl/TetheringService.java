@@ -49,7 +49,6 @@ implements ITetheringService {
 	
 	private SgsRegistrationSession mRegSession;
 	private TetheringStack mTetheringStack;
-	private final MySipCallback mSipCallback;
 	private final TetheringPrefrences mPreferences;
 	
 	private final ISgsConfigurationService mConfigurationService;
@@ -60,7 +59,7 @@ implements ITetheringService {
 	public TetheringService() {
 		super();
 		
-		mSipCallback = new MySipCallback(this);
+		//mSipCallback = new MySipCallback(this);
 		mPreferences = new TetheringPrefrences();
 		
 		mConfigurationService = SgsEngine.getInstance().getConfigurationService();
@@ -205,16 +204,12 @@ implements ITetheringService {
 		}
 		
 		// set the Password
-		mSipStack.setPassword(mConfigurationService.getString(
-				SgsConfigurationEntry.IDENTITY_PASSWORD, SgsConfigurationEntry.DEFAULT_IDENTITY_PASSWORD));
 		// Set AMF
-		mSipStack.setAMF(mConfigurationService.getString(
-				SgsConfigurationEntry.SECURITY_IMSAKA_AMF, SgsConfigurationEntry.DEFAULT_SECURITY_IMSAKA_AMF));
 		// Set Operator Id
 
 		
 		// Check stack validity
-		if (!mSipStack.isValid()) {
+		if (!mTetheringStack.isValid()) {
 			Log.e(TAG, "Trying to use invalid stack");
 			return false;
 		}
@@ -430,20 +425,7 @@ implements ITetheringService {
 		SgsApplication.getContext().sendBroadcast(intent);
 	}
 	
-	/**
-	 * MySipCallback
-	 */
-	static class MySipCallback extends SipCallback{
-		private final TetheringService mTetheringService;
-
-		private MySipCallback(TetheringService tetheringService) {
-			super();
-
-			mTetheringService = tetheringService;
-		}
-		
-
 
 		
-	}
+
 }

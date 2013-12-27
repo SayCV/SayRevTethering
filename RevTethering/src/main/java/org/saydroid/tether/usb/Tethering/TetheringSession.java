@@ -32,7 +32,7 @@ import org.saydroid.logger.Log;
 public abstract class TetheringSession extends SgsObservableObject implements Comparable<TetheringSession>{
 	private static final String TAG = TetheringSession.class.getCanonicalName();
 	
-	protected TetheringStack mSipStack;
+	protected TetheringStack mTetheringStack;
     protected boolean mOutgoing;
     protected String mFromUri;
     protected String mToUri;
@@ -58,8 +58,8 @@ public abstract class TetheringSession extends SgsObservableObject implements Co
      * Creates new SIP session
      * @param sipStack the sip stack to use to create the session
      */
-    protected TetheringSession(TetheringStack sipStack){
-        mSipStack = sipStack;
+    protected TetheringSession(TetheringStack tetheringStack){
+        mTetheringStack = tetheringStack;
         mOutgoing = false;
         mConnectionState = ConnectionState.NONE;
         /* init must be called by the child class after session_create() */
@@ -123,7 +123,7 @@ public abstract class TetheringSession extends SgsObservableObject implements Co
      * @return a SIP stack
      */
     public TetheringStack getStack(){
-        return mSipStack;
+        return mTetheringStack;
     }
 
     /**
