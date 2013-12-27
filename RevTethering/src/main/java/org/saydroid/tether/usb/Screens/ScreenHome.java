@@ -26,7 +26,7 @@ import org.saydroid.tether.usb.R;
 import org.saydroid.sgs.events.SgsEventArgs;
 import org.saydroid.sgs.events.SgsRegistrationEventArgs;
 import org.saydroid.sgs.services.ISgsSipService;
-import org.saydroid.sgs.sip.SgsSipSession.ConnectionState;
+import org.saydroid.tether.usb.Tethering.TetheringSession.ConnectionState;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -48,6 +48,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import org.saydroid.logger.Log;
+import org.saydroid.tether.usb.Services.ITetheringService;
 
 public class ScreenHome extends BaseScreen {
 	private static String TAG = ScreenHome.class.getCanonicalName();
@@ -57,14 +58,14 @@ public class ScreenHome extends BaseScreen {
 	
 	private GridView mGridView;
 	
-	private final ISgsTetheringNetworkService mTetheringNetworkService;
+	private final ITetheringService mTetheringService;
 	
 	private BroadcastReceiver mTetheringBroadCastRecv;
 	
 	public ScreenHome() {
 		super(SCREEN_TYPE.HOME_T, TAG);
 
-        mTetheringNetworkService = getEngine().getTetheringNetworkService();
+        mTetheringService = getEngine().getTetheringService();
 	}
 	
 	@Override
@@ -79,12 +80,12 @@ public class ScreenHome extends BaseScreen {
 				final ScreenHomeItem item = (ScreenHomeItem)parent.getItemAtPosition(position);
 				if (item != null) {
 					if(position == ScreenHomeItem.ITEM_SIGNIN_SIGNOUT_POS){
-                        if(mTetheringBroadCastRecv.getRegistrationState() == ConnectionState.CONNECTING || mTetheringBroadCastRecv.getRegistrationState() == ConnectionState.TERMINATING){
-                            mTetheringBroadCastRecv.stopStack();
-                        } else if (mTetheringBroadCastRecv.isRegistered()){
-                            mTetheringBroadCastRecv.unRegister();
+                        if(mTetheringService.getRegistrationState() == ConnectionState.CONNECTING || mTetheringService.getRegistrationState() == ConnectionState.TERMINATING){
+                            mTetheringService.stopStack();
+                        } else if (mTetheringService.isRegistered()){
+                            mTetheringService.unRegister();
                         } else {
-                            mTetheringBroadCastRecv.register(ScreenHome.this);
+                            mTetheringService.register(ScreenHome.this);
                         }
 					} else if (position == ScreenHomeItem.ITEM_EXIT_POS){
 						CustomDialog.show(

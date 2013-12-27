@@ -19,6 +19,7 @@
 package org.saydroid.tether.usb;
 
 import org.saydroid.tether.usb.Services.IScreenService;
+import org.saydroid.tether.usb.Services.ITetheringService;
 import org.saydroid.tether.usb.Services.Impl.ScreenService;
 import org.saydroid.sgs.SgsApplication;
 import org.saydroid.sgs.SgsEngine;
@@ -27,6 +28,7 @@ import org.saydroid.sgs.media.SgsMediaType;
 import org.saydroid.sgs.sip.SgsAVSession;
 import org.saydroid.sgs.sip.SgsMsrpSession;
 import org.saydroid.sgs.utils.SgsPredicate;
+import org.saydroid.tether.usb.Services.Impl.TetheringService;
 import org.saydroid.utils.AndroidUtils;
 
 import android.app.Notification;
@@ -51,6 +53,7 @@ public class Engine extends SgsEngine{
 	private static final String LIBS_FOLDER = String.format("%s/lib", Engine.DATA_FOLDER);
 	
 	private IScreenService mScreenService;
+    private ITetheringService mTetheringService;
 
 	static {
 		// See 'http://code.google.com/p/imsdroid/issues/detail?id=197' for more information
@@ -253,7 +256,14 @@ public class Engine extends SgsEngine{
 		}
 		return mScreenService;
 	}
-	
+
+    public ITetheringService getTetheringService(){
+        if(mTetheringService == null){
+            mTetheringService = new TetheringService();
+        }
+        return mTetheringService;
+    }
+
 	@Override
 	public Class<? extends SgsNativeService> getNativeServiceClass(){
 		return NativeService.class;
