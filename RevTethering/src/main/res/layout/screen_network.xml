@@ -79,7 +79,7 @@
         <EditText
             android:layout_height="wrap_content"
             android:text="192.168.0.252"
-            android:id="@+id/screen_network_editText_ip_address"
+            android:id="@+id/screen_network_textView_local_ip"
             android:layout_width="fill_parent"
             android:layout_below="@+id/screen_network_textView_ip_address"
             android:layout_marginLeft="5px"
@@ -89,7 +89,7 @@
 
         <TextView
             android:layout_height="wrap_content"
-            android:layout_below="@+id/screen_network_editText_ip_address"
+            android:layout_below="@+id/screen_network_textView_local_ip"
             android:id="@+id/screen_network_textView_sub_mask"
             android:text="Sub Mask"
             android:layout_width="fill_parent"
@@ -161,7 +161,7 @@
         <TextView
             android:layout_height="wrap_content"
             android:layout_below="@+id/screen_network_editText_preferred_dns"
-            android:id="@+id/screen_network_textView_Secondary_dns"
+            android:id="@+id/screen_network_textView_secondary_dns"
             android:text="Secondary DNS"
             android:layout_width="fill_parent"
             android:layout_marginLeft="5px"
@@ -172,8 +172,8 @@
 
         <EditText
             android:layout_height="wrap_content"
-            android:layout_below="@+id/screen_network_textView_Secondary_dns"
-            android:id="@+id/screen_network_editText_Secondary_dns"
+            android:layout_below="@+id/screen_network_textView_secondary_dns"
+            android:id="@+id/screen_network_editText_secondary_dns"
             android:layout_width="fill_parent"
             android:inputType="number"
             android:text="8.8.8.8"

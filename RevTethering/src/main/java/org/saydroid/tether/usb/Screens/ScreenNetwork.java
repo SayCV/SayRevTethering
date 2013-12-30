@@ -42,6 +42,11 @@ public class ScreenNetwork extends BaseScreen {
 	private CheckBox mCb3G;
 	private RadioButton mRbIPv4;
 	private RadioButton mRbIPv6;
+    private EditText mEtLocalIP;
+    private EditText mEtSubMask;
+    private EditText mEtGateWay;
+    private EditText mEtPreferredDNS;
+    private EditText mEtSecondaryDNS;
 
 	public ScreenNetwork() {
 		super(SCREEN_TYPE.NETWORK_T, TAG);
@@ -58,8 +63,11 @@ public class ScreenNetwork extends BaseScreen {
         mCb3G = (CheckBox)findViewById(R.id.screen_network_checkBox_3g);
         mRbIPv4 = (RadioButton)findViewById(R.id.screen_network_radioButton_ipv4);
         mRbIPv6 = (RadioButton)findViewById(R.id.screen_network_radioButton_ipv6);
-        
-        // spinners
+        mEtLocalIP = (EditText)findViewById(R.id.screen_network_textView_local_ip);
+        mEtSubMask = (EditText)findViewById(R.id.screen_network_editText_sub_mask);
+        mEtGateWay = (EditText)findViewById(R.id.screen_network_editText_gateway);
+        mEtPreferredDNS = (EditText)findViewById(R.id.screen_network_editText_preferred_dns);
+        mEtSecondaryDNS = (EditText)findViewById(R.id.screen_network_editText_secondary_dns);
 
 
         mCbFaked3G.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_WIFI, SgsConfigurationEntry.DEFAULT_NETWORK_USE_WIFI));
@@ -67,12 +75,22 @@ public class ScreenNetwork extends BaseScreen {
         mRbIPv4.setChecked(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_IP_VERSION,
         		SgsConfigurationEntry.DEFAULT_NETWORK_IP_VERSION).equalsIgnoreCase("ipv4"));
         mRbIPv6.setChecked(!mRbIPv4.isChecked());
+        mEtLocalIP.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_LOCAL_IP, SgsConfigurationEntry.DEFAULT_NETWORK_LOCAL_IP));
+        mEtSubMask.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_SUB_MASK, SgsConfigurationEntry.DEFAULT_NETWORK_SUB_MASK));
+        mEtGateWay.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_GATE_WAY, SgsConfigurationEntry.DEFAULT_NETWORK_GATE_WAY));
+        mEtPreferredDNS.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_PREFERRED_DNS, SgsConfigurationEntry.DEFAULT_NETWORK_PREFERRED_DNS));
+        mEtSecondaryDNS.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_SECONDARY_DNS, SgsConfigurationEntry.DEFAULT_NETWORK_SECONDARY_DNS));
         
         // add listeners (for the configuration)
         super.addConfigurationListener(mCbFaked3G);
         super.addConfigurationListener(mCb3G);
         super.addConfigurationListener(mRbIPv4);
         super.addConfigurationListener(mRbIPv6);
+        super.addConfigurationListener(mEtLocalIP);
+        super.addConfigurationListener(mEtSubMask);
+        super.addConfigurationListener(mEtGateWay);
+        super.addConfigurationListener(mEtPreferredDNS);
+        super.addConfigurationListener(mEtSecondaryDNS);
 	}
 	
 	protected void onPause() {
@@ -85,7 +103,17 @@ public class ScreenNetwork extends BaseScreen {
 					mCb3G.isChecked());
 			mConfigurationService.putString(SgsConfigurationEntry.NETWORK_IP_VERSION, 
 					mRbIPv4.isChecked() ? "ipv4" : "ipv6");
-			
+            mConfigurationService.putString(SgsConfigurationEntry.NETWORK_LOCAL_IP,
+                    mEtLocalIP.getText().toString().trim());
+            mConfigurationService.putString(SgsConfigurationEntry.NETWORK_SUB_MASK,
+                    mEtSubMask.getText().toString().trim());
+            mConfigurationService.putString(SgsConfigurationEntry.NETWORK_GATE_WAY,
+                    mEtGateWay.getText().toString().trim());
+            mConfigurationService.putString(SgsConfigurationEntry.NETWORK_PREFERRED_DNS,
+                    mEtPreferredDNS.getText().toString().trim());
+            mConfigurationService.putString(SgsConfigurationEntry.NETWORK_SECONDARY_DNS,
+                    mEtSecondaryDNS.getText().toString().trim());
+
 			// Compute
 			if(!mConfigurationService.commit()){
 				Log.e(TAG, "Failed to commit() configuration");

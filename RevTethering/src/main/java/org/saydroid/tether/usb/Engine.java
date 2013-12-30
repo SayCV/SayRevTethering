@@ -39,7 +39,9 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.media.RingtoneManager;
+import android.net.ConnectivityManager;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 
 import org.saydroid.logger.Log;
@@ -49,6 +51,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class Engine extends SgsEngine{
 	private final static String TAG = Engine.class.getCanonicalName();
@@ -504,7 +508,7 @@ public class Engine extends SgsEngine{
         command = "sqlite3 "+ this.SETTING_DB_PATH + "settings.db "+ "\"update global set value ="+ String.valueOf(iValue) + "where name = " + "\'"+stringSetting +"\'"+"\"" ;
         Log.d(TAG, "command for enable globalSetting is : " + command);
         if(RootCommands.run(command)==false){
-            Log.e(TAG, "Unable to enable the global Setting for the setting of" + stringSetting);
+            Log.e(TAG, "Unable to enable the global Setting for the setting of " + stringSetting);
             return enabled;
         };
         enabled = true;
@@ -556,7 +560,7 @@ public class Engine extends SgsEngine{
         String command;
 
         //String secureSettingFile = this.SETTING_DB_PATH+"settings.db"; //this is the dumped secure table
-        command = "sqlite3 "+ this.SETTING_DB_PATH + "settings.db "+ "\'insert into global values(" +String.valueOf(intId)+","+ "\\\""+ stringSetting +"\\\","+ String.valueOf(iValue) + ")\'" ;
+        command = "sqlite3 "+ this.SETTING_DB_PATH + "settings.db "+ "\'insert into global values(" +String.valueOf(intId)+","+ "\""+ stringSetting +"\","+ String.valueOf(iValue) + ")\'" ;
         Log.d(TAG, "command to insert" + stringSetting + "is :" + command);
         if(RootCommands.run(command)==false){
             Log.e(TAG, "Unable to insert" + stringSetting + "global Setting for the setting of" + stringSetting);
@@ -598,7 +602,7 @@ public class Engine extends SgsEngine{
             } else dumpSettingSuccess = true;
         }
         int iMaxId = -1;
-        if(!this.checkGlobalSetting(this.mGlobalSetting_tether_dun_required)){
+        if(!this.checkGlobalSetting(this.mGlobalSetting_tether_supported)){
             iMaxId = this.globalSettingMaxId();
             if (iMaxId < 0){   //error occurs during retrieve maxId of secure table, return -1 if error
                 Log.d(TAG, "cannot read system setting's max id during checking tether_supported...");
@@ -617,6 +621,84 @@ public class Engine extends SgsEngine{
         } else {
             Log.d(TAG, this.mGlobalSetting_tether_supported + " has been enabled already");
         }
+
+        if(!this.checkGlobalSetting(this.mGlobalSetting_tether_dun_required)){
+            iMaxId = this.globalSettingMaxId();
+            if (iMaxId < 0){   //error occurs during retrieve maxId of secure table, return -1 if error
+                Log.d(TAG, "cannot read system setting's max id during checking tether_dun_required...");
+            } else {	//if there is no error to retrieve maxId, then insert with new name field and maxid
+                iMaxId = iMaxId + 1;
+                if(!this.globalSettingInsertAndEnable(this.mGlobalSetting_tether_dun_required, iMaxId, 0)){
+                    setGlobalSettingFail = true;
+                    Log.d(TAG, "cannot insert and enable " + this.mGlobalSetting_tether_dun_required );
+                }
+            }
+        } else if(!this.globalSettingIsEnabled(this.mGlobalSetting_tether_dun_required, 0)){
+            if(!this.globalSettingEnable(this.mGlobalSetting_tether_dun_required, 0)){
+                setGlobalSettingFail = true;
+                Log.d(TAG, "cannot enable " + this.mGlobalSetting_tether_dun_required);
+            }
+        } else {
+            Log.d(TAG, this.mGlobalSetting_tether_dun_required + " has been enabled already");
+        }
+
+        Log.d(TAG, "dumpSettingSuccess is:" + dumpSettingSuccess);
+        Log.d(TAG, "setSecureSettingFail is:" + setGlobalSettingFail);
+        if(dumpSettingSuccess && !setGlobalSettingFail){
+
+            //Use reflection to retrieve the isTetheringSupported method from connnectivityManager
+            ConnectivityManager cm = SgsApplication.getConnectivityManager();
+            Method isTetheringSupportedLocal = null;
+            Method getTetherableUsbRegexsLocal = null;  //added temp
+            String [] tetherRegex;
+            try {
+                isTetheringSupportedLocal = cm.getClass().getMethod("isTetheringSupported");
+                getTetherableUsbRegexsLocal = cm.getClass().getMethod("getTetherableUsbRegexs");
+            } catch (SecurityException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            //Use this high level general method to make judgment
+            try {
+                mSupportedKernel = (Boolean) isTetheringSupportedLocal.invoke(cm);
+                tetherRegex = (String []) getTetherableUsbRegexsLocal.invoke(cm);
+                Log.d(TAG, "supportedKernel value is:" + mSupportedKernel);
+
+                //note: cannot use (boolean) isTetheringSupportedLocal.invoke(cm);
+            } catch (IllegalArgumentException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            if (!mSupportedKernel) {
+                //this.openUnsupportedKernelDialog();
+            }
+        }
+
+        //TODO: those lines below for debug only
+        int tetherEnabledInSettings = 0;
+        try {
+            tetherEnabledInSettings = Settings.Global.getInt(SgsApplication.getInstance().getContentResolver(),
+                    "tether_supported");
+        } catch (Settings.SettingNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Log.d(TAG, "tetherEnabledInSettings is ..." + tetherEnabledInSettings);
+
+        //SgsApplication.getInstance().checkForUpdate();
+
+        //this.toggleStartStop();
 
         startupCheckSuccess = true;
         return startupCheckSuccess;

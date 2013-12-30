@@ -75,6 +75,11 @@ public class SgsConfigurationEntry {
 	public static final String NETWORK_TRANSPORT = "NETWORK_TRANSPORT." + TAG;
 
     public static final String NETWORK_CONNECTED = "NETWORK_CONNECTED." + TAG;
+    public static final String NETWORK_LOCAL_IP = "NETWORK_LOCAL_IP." + TAG;
+    public static final String NETWORK_SUB_MASK = "NETWORK_SUB_MASK." + TAG;
+    public static final String NETWORK_GATE_WAY = "NETWORK_GATE_WAY." + TAG;
+    public static final String NETWORK_PREFERRED_DNS = "NETWORK_PREFERRED_DNS." + TAG;
+    public static final String NETWORK_SECONDARY_DNS = "NETWORK_SECONDARY_DNS." + TAG;
 	
 	// NAT Traversal
 	public static final String NATT_HACK_AOR = "NATT_HACK_AOR." + TAG;
@@ -156,9 +161,9 @@ public class SgsConfigurationEntry {
     public static final boolean DEFAULT_GENERAL_DWL = false;
 	
 	//	Identity
-	public static final String DEFAULT_IDENTITY_DISPLAY_NAME = "John Doe";
-	public static final String DEFAULT_IDENTITY_IMPU = "sip:johndoe@saydroid.org";
-	public static final String DEFAULT_IDENTITY_IMPI = "johndoe";
+	public static final String DEFAULT_IDENTITY_DISPLAY_NAME = "sayDroid";
+	public static final String DEFAULT_IDENTITY_IMPU = "sip:sayDroid@saydroid.org";
+	public static final String DEFAULT_IDENTITY_IMPI = "sayDroid";
 	public static final String DEFAULT_IDENTITY_PASSWORD = null;
 	
 	// Network
@@ -175,6 +180,11 @@ public class SgsConfigurationEntry {
 	public static final boolean DEFAULT_NETWORK_USE_EARLY_IMS = false;
 
     public static final boolean DEFAULT_NETWORK_CONNECTED = false;
+    public static final String DEFAULT_NETWORK_LOCAL_IP = "192.168.0.252";
+    public static final String DEFAULT_NETWORK_SUB_MASK = "255.255.255.0";
+    public static final String DEFAULT_NETWORK_GATE_WAY = "192.168.0.1";
+    public static final String DEFAULT_NETWORK_PREFERRED_DNS = "8.8.8.4";
+    public static final String DEFAULT_NETWORK_SECONDARY_DNS = "8.8.8.8";
 	
 	
 	// NAT Traversal

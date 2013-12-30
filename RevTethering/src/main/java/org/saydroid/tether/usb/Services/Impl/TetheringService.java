@@ -199,7 +199,7 @@ implements ITetheringService {
 				"realm='%s', impu='%s', impi='%s'", mPreferences.getRealm(), mPreferences.getIMPU(), mPreferences.getIMPI()));
 		
 		if (mTetheringStack == null) {
-            //mTetheringStack = new TetheringStack(mSipCallback, mPreferences.getRealm(), mPreferences.getIMPI(), mPreferences.getIMPU());
+            mTetheringStack = new TetheringStack();
             //mTetheringStack.setDebugCallback(new DDebugCallback());
 		} else {
 
