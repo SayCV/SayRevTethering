@@ -102,55 +102,7 @@ public class Engine extends SgsEngine{
 	
 	@Override
 	public boolean start() {
-        boolean mSupportedKernel = false;
-
-        this.checkDirs();
-
-        if (!this.hasRootPermission()){
-            mSupportedKernel = false;
-        }
-
-        if (this.binariesExists() == false) {
-            if (this.hasRootPermission()) {
-                this.installFiles();
-            }
-        }
-
-        /*
-	         * Add a function for get setting from settings.db to see if there is tether_supported
-	         * need to write a function to dump the settings.db secure table into a file and
-	         * read from this file to see if contains tether_supported. This function is defined
-	         * inside CoreTask.java
-	         */
-        boolean dumpSettingSuccess = false;
-        boolean setGlobalSettingFail = false;
-        if (this.hasRootPermission()) {
-            if ((this.dumpGlobalSettings()==false)||(this.dumpGlobalSettingsMaxID()==false)){
-                //this.openFailToDumpSecureSettingDialog();
-                dumpSettingSuccess = false;
-            } else dumpSettingSuccess = true;
-        }
-        int iMaxId = -1;
-        if(!this.checkGlobalSetting(this.mGlobalSetting_tether_dun_required)){
-            iMaxId = this.globalSettingMaxId();
-            if (iMaxId < 0){   //error occurs during retrieve maxId of secure table, return -1 if error
-                Log.d(TAG, "cannot read system setting's max id during checking tether_supported...");
-            } else {	//if there is no error to retrieve maxId, then insert with new name field and maxid
-                iMaxId = iMaxId + 1;
-                if(!this.globalSettingInsertandEnable(this.mGlobalSetting_tether_supported, iMaxId, 1)){
-                    setGlobalSettingFail = true;
-                    Log.d(TAG, "cannot insert and enable " + this.mGlobalSetting_tether_supported );
-                }
-            }
-        } else if(!this.globalSettingIsEnabled(this.mGlobalSetting_tether_supported, 1)){
-            if(!this.globalSettingEnable(this.mGlobalSetting_tether_supported, 1)){
-                setGlobalSettingFail = true;
-                Log.d(TAG, "cannot enable " + this.mGlobalSetting_tether_supported);
-            }
-        } else {
-            Log.d(TAG, this.mGlobalSetting_tether_supported + " has been enabled already");
-        }
-
+        this.startupCheck();
 		return super.start();
 	}
 	
@@ -550,7 +502,7 @@ public class Engine extends SgsEngine{
         String command;
         String secureSettingFile = this.SETTING_DB_PATH + "settings.db"; //this is the dumped secure table
         command = "sqlite3 "+ this.SETTING_DB_PATH + "settings.db "+ "\"update global set value ="+ String.valueOf(iValue) + "where name = " + "\'"+stringSetting +"\'"+"\"" ;
-        Log.d(TAG, "command for enable secureSetting is : " + command);
+        Log.d(TAG, "command for enable globalSetting is : " + command);
         if(RootCommands.run(command)==false){
             Log.e(TAG, "Unable to enable the global Setting for the setting of" + stringSetting);
             return enabled;
@@ -590,7 +542,7 @@ public class Engine extends SgsEngine{
                 intMaxId = intTmpId;
 
         }
-        Log.d(TAG, "max Id in global setting table is" + intMaxId);
+        Log.d(TAG, "max Id in global setting table is " + intMaxId);
         return intMaxId;
     }
 
@@ -599,7 +551,7 @@ public class Engine extends SgsEngine{
      * return trun if succss, otherwise false
      * sqlite3 settings.db "insert into secure values(51,'test_insert',1 or 0)"
      */
-    public synchronized boolean globalSettingInsertandEnable(String stringSetting, int intId, int iValue) {
+    public synchronized boolean globalSettingInsertAndEnable(String stringSetting, int intId, int iValue) {
         boolean insertSuccess = false;
         String command;
 
@@ -612,5 +564,61 @@ public class Engine extends SgsEngine{
         }
         insertSuccess = true;
         return insertSuccess;
+    }
+
+    public boolean startupCheck() {
+        boolean startupCheckSuccess = false;
+
+        boolean mSupportedKernel = false;
+
+        this.checkDirs();
+
+        if (!this.hasRootPermission()){
+            mSupportedKernel = false;
+        }
+
+        if (this.binariesExists() == false) {
+            if (this.hasRootPermission()) {
+                this.installFiles();
+            }
+        }
+
+        /*
+	         * Add a function for get setting from settings.db to see if there is tether_supported
+	         * need to write a function to dump the settings.db secure table into a file and
+	         * read from this file to see if contains tether_supported. This function is defined
+	         * inside CoreTask.java
+	         */
+        boolean dumpSettingSuccess = false;
+        boolean setGlobalSettingFail = false;
+        if (this.hasRootPermission()) {
+            if ((this.dumpGlobalSettings()==false)||(this.dumpGlobalSettingsMaxID()==false)){
+                //this.openFailToDumpSecureSettingDialog();
+                dumpSettingSuccess = false;
+            } else dumpSettingSuccess = true;
+        }
+        int iMaxId = -1;
+        if(!this.checkGlobalSetting(this.mGlobalSetting_tether_dun_required)){
+            iMaxId = this.globalSettingMaxId();
+            if (iMaxId < 0){   //error occurs during retrieve maxId of secure table, return -1 if error
+                Log.d(TAG, "cannot read system setting's max id during checking tether_supported...");
+            } else {	//if there is no error to retrieve maxId, then insert with new name field and maxid
+                iMaxId = iMaxId + 1;
+                if(!this.globalSettingInsertAndEnable(this.mGlobalSetting_tether_supported, iMaxId, 1)){
+                    setGlobalSettingFail = true;
+                    Log.d(TAG, "cannot insert and enable " + this.mGlobalSetting_tether_supported );
+                }
+            }
+        } else if(!this.globalSettingIsEnabled(this.mGlobalSetting_tether_supported, 1)){
+            if(!this.globalSettingEnable(this.mGlobalSetting_tether_supported, 1)){
+                setGlobalSettingFail = true;
+                Log.d(TAG, "cannot enable " + this.mGlobalSetting_tether_supported);
+            }
+        } else {
+            Log.d(TAG, this.mGlobalSetting_tether_supported + " has been enabled already");
+        }
+
+        startupCheckSuccess = true;
+        return startupCheckSuccess;
     }
 }
