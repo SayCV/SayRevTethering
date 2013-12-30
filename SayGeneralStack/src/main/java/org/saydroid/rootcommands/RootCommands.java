@@ -1,11 +1,13 @@
 /*
- * Copyright 2013 The Sgs Project
+ * Copyright (C) 2013, sayDroid.
+ *
+ * Copyright 2013 The sayDroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,7 +21,6 @@ package org.saydroid.rootcommands;
 import org.saydroid.logger.Log;
 import org.sufficientlysecure.rootcommands.Shell;
 import org.sufficientlysecure.rootcommands.Toolbox;
-import org.sufficientlysecure.rootcommands.command.SimpleCommand;
 
 public final class RootCommands {
     private static String TAG = RootCommands.class.getCanonicalName();
@@ -53,18 +54,18 @@ public final class RootCommands {
         return false;
     }
 
-    public static boolean runSync(String command) {
+    public static boolean run(int timeout, String command) {
         Log.d(TAG, "Root-Commands ==> su" + " -c \"" + command + "\"");
         int returnCode = -1;
         try {
             //MyCommand binaryCommand = new MyCommand("su" + " -c \""+command+"\"", "");
-            SimpleCommand binaryCommand = new SimpleCommand(command);
+            SimpleCommand binaryCommand = new SimpleCommand(timeout, command);
 
             // start root shell
             Shell shell = Shell.startRootShell();
 
             //shell.add(binaryCommand);
-            shell.add(binaryCommand);
+            shell.add(binaryCommand).waitForFinish();
 
             Log.d(TAG, "Output of command: " + binaryCommand.getOutput());
             returnCode = binaryCommand.getExitCode();

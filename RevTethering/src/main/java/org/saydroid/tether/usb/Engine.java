@@ -476,7 +476,7 @@ public class Engine extends SgsEngine{
                 this.SETTING_DB_PATH + "settings.db  > " +
                 this.DATA_FOLDER + "/setting.txt";
         Log.d(TAG, "command for dumping the GlobalSettings is: " + dumpGlobalSettings);
-        if(RootCommands.runSync(dumpGlobalSettings)==false){
+        if(RootCommands.run(20000, dumpGlobalSettings)==false){
             Log.e(TAG, "Unable to dump the GlobalSettings to " + this.DATA_FOLDER + "/setting.txt");
             File file = new File(Engine.DATA_FOLDER + "/setting.txt");
             if(!file.exists())
