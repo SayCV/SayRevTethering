@@ -35,6 +35,8 @@ public class TetheringPrefrences {
     private boolean mIPsecSecAgree;
     private String mLocalIP;
     private boolean mHackAoR;
+
+    private String mSettingDataBasePath;
     
     public TetheringPrefrences(){
     	
@@ -171,5 +173,10 @@ public class TetheringPrefrences {
 	public boolean isHackAoR() {
 		return mHackAoR;
 	}
+
+    public String getSettingDataBasePath() {
+        return mSettingDataBasePath;
+    }
+    public void setSettingDataBasePath(String settingDataBasePath) { this.mSettingDataBasePath = settingDataBasePath; }
 	
 }

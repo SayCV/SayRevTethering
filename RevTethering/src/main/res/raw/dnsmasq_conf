@@ -1,0 +1,7 @@
+interface=usb1
+dhcp-authoritative 
+dhcp-range=172.20.23.253,172.20.23.253,12h
+dhcp-leasefile=/data/data/jasongong.tether.usb/var/dnsmasq.leases
+pid-file=/data/data/jasongong.tether.usb/var/dnsmasq.pid
+user=root
+no-negcache

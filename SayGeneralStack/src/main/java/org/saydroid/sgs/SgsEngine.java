@@ -25,7 +25,6 @@ import org.saydroid.sgs.services.ISgsNetworkService;
 import org.saydroid.sgs.services.ISgsSipService;
 import org.saydroid.sgs.services.ISgsSoundService;
 import org.saydroid.sgs.services.ISgsStorageService;
-import org.saydroid.sgs.services.ISgsTetheringNetworkService;
 import org.saydroid.sgs.services.impl.SgsConfigurationService;
 import org.saydroid.sgs.services.impl.SgsContactService;
 import org.saydroid.sgs.services.impl.SgsHistoryService;
@@ -34,7 +33,6 @@ import org.saydroid.sgs.services.impl.SgsNetworkService;
 import org.saydroid.sgs.services.impl.SgsSipService;
 import org.saydroid.sgs.services.impl.SgsSoundService;
 import org.saydroid.sgs.services.impl.SgsStorageService;
-import org.saydroid.sgs.services.impl.SgsTetheringNetworkService;
 import org.saydroid.sgs.utils.SgsConfigurationEntry;
 
 import android.app.Activity;
@@ -63,7 +61,6 @@ public class SgsEngine {
 	protected ISgsConfigurationService mConfigurationService;
 	protected ISgsStorageService mStorageService;
 	protected ISgsNetworkService mNetworkService;
-    protected ISgsTetheringNetworkService mTetheringNetworkService;
 	protected ISgsHttpClientService mHttpClientService;
 	protected ISgsContactService mContactService;
 	protected ISgsHistoryService mHistoryService;
@@ -236,13 +233,6 @@ public class SgsEngine {
 		}
 		return mNetworkService;
 	}
-
-    public ISgsTetheringNetworkService getTetheringNetworkService(){
-        if(mTetheringNetworkService == null){
-            mTetheringNetworkService = new SgsTetheringNetworkService();
-        }
-        return mTetheringNetworkService;
-    }
 	
 	/**
 	 * Gets the HTTP service

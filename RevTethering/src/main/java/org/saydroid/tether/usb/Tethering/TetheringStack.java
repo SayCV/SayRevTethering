@@ -18,11 +18,15 @@
 
 package org.saydroid.tether.usb.Tethering;
 
+import org.saydroid.logger.Log;
+import org.saydroid.rootcommands.RootCommands;
 import org.saydroid.sgs.SgsApplication;
 import org.saydroid.sgs.SgsEngine;
 import org.saydroid.sgs.R;
 import org.saydroid.sgs.services.ISgsNetworkService;
-import org.saydroid.sgs.services.impl.SgsNetworkService.DNS_TYPE;
+import org.saydroid.tether.usb.Services.Impl.TetheringNetworkService.DNS_TYPE;
+import org.saydroid.tether.usb.Engine;
+import org.saydroid.tether.usb.Services.ITetheringNetworkService;
 import org.saydroid.tinyWRAP.SipCallback;
 import org.saydroid.tinyWRAP.SipStack;
 
@@ -32,6 +36,7 @@ import android.os.Build;
  * SIP/IMS Stack
  */
 public class TetheringStack {
+    private static final String TAG = TetheringStack.class.getCanonicalName();
 
 	public enum STACK_STATE {
 	     NONE, STARTING, STARTED, STOPPING, STOPPED
@@ -39,26 +44,26 @@ public class TetheringStack {
 	
 	private STACK_STATE mState = STACK_STATE.NONE;
 	private String mCompId;
-	private final ISgsNetworkService mNetworkService;
+    private Engine mEngine;
+	private final ITetheringNetworkService mTetheringNetworkService;
+
+    private String mSettingDataBasePath;
 	
 	/**
 	 * Creates new SIP/IMS Stack. You should use
-	 * @param callback
-	 * @param realmUri
-	 * @param impiUri
-	 * @param impuUri
+	 *
 	 */
-	public TetheringStack(SipCallback callback, String realmUri, String impiUri, String impuUri){
+	public TetheringStack(){
 		//super(callback, realmUri, impiUri, impuUri);
-		
+
 		// Services
-		mNetworkService = SgsEngine.getInstance().getNetworkService();
+        mTetheringNetworkService = ((Engine)Engine.getInstance()).getTetheringNetworkService();
 		
 		// Set first and second DNS servers (used for DNS NAPTR+SRV discovery and ENUM)
 		String dnsServer;
-		if((dnsServer = mNetworkService.getDnsServer(DNS_TYPE.DNS_1)) != null && !dnsServer.equals("0.0.0.0")){
+		if((dnsServer = mTetheringNetworkService.getDnsServer(DNS_TYPE.DNS_1)) != null && !dnsServer.equals("0.0.0.0")){
 			//this.addDnsServer(dnsServer);
-			if((dnsServer = mNetworkService.getDnsServer(DNS_TYPE.DNS_2)) != null && !dnsServer.equals("0.0.0.0")){
+			if((dnsServer = mTetheringNetworkService.getDnsServer(DNS_TYPE.DNS_2)) != null && !dnsServer.equals("0.0.0.0")){
 				//this.addDnsServer(dnsServer);
 			}
 		}
@@ -72,17 +77,16 @@ public class TetheringStack {
 	}
 
 	public boolean start() {
-		if(mNetworkService.acquire()){
+		if(mTetheringNetworkService.acquire()){
 			mState = STACK_STATE.STARTING;
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
 
 	public boolean stop() {
-		mNetworkService.release();
+        mTetheringNetworkService.release();
 		mState = STACK_STATE.STOPPING;
 		return true;
 	}
@@ -111,4 +115,8 @@ public class TetheringStack {
 			//super.addSigCompCompartment(mCompId);
 		}
 	}
+
+
+
+
 }

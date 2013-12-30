@@ -1,23 +1,22 @@
-/* Copyright (C) 2010-2011, Mamadou Diop.
-*  Copyright (C) 2011, Doubango Telecom.
-*
-* Contact: Mamadou Diop <diopmamadou(at)saydroid(dot)org>
-*	
-* This file is part of imsdroid Project (http://code.google.com/p/imsdroid)
-*
-* imsdroid is free software: you can redistribute it and/or modify it under the terms of 
-* the GNU General Public License as published by the Free Software Foundation, either version 3 
-* of the License, or (at your option) any later version.
-*	
-* imsdroid is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-* without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
-* See the GNU General Public License for more details.
-*	
-* You should have received a copy of the GNU General Public License along 
-* with this program; if not, write to the Free Software Foundation, Inc., 
-* 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
-package org.saydroid.sgs.services.impl;
+/*
+ * Copyright (C) 2013, sayDroid.
+ *
+ * Copyright 2013 The sayDroid Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.saydroid.tether.usb.Services.Impl;
 
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -34,10 +33,12 @@ import org.saydroid.sgs.SgsApplication;
 import org.saydroid.sgs.SgsEngine;
 import org.saydroid.sgs.model.SgsAccessPoint;
 import org.saydroid.sgs.services.ISgsNetworkService;
-import org.saydroid.sgs.services.ISgsTetheringNetworkService;
+import org.saydroid.sgs.services.impl.SgsBaseService;
 import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsObservableList;
 import org.saydroid.sgs.utils.SgsStringUtils;
+import org.saydroid.tether.usb.Services.ITetheringNetworkService;
+import org.saydroid.tether.usb.Services.Impl.TetheringNetworkService.DNS_TYPE;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -65,12 +66,14 @@ import android.widget.Toast;
 /**
  * Network service.
  */
-public class SgsTetheringNetworkService  extends SgsBaseService implements ISgsTetheringNetworkService {
-	private static final String TAG = SgsTetheringNetworkService.class.getCanonicalName();
+public class TetheringNetworkService  extends SgsBaseService implements ITetheringNetworkService {
+	private static final String TAG = TetheringNetworkService.class.getCanonicalName();
 	private static final String USB_INTERFACE_NAME = "rndis0";
 	
 	private WifiManager mWifiManager;
 	private WifiLock mWifiLock;
+    private ConnectivityManager mConnectivityManager;
+
 	private String mConnetedSSID;
 	private boolean mAcquired;
 	private boolean mStarted;
@@ -93,7 +96,7 @@ public class SgsTetheringNetworkService  extends SgsBaseService implements ISgsT
 		DNS_1, DNS_2, DNS_3, DNS_4
 	}
 	
-	public SgsTetheringNetworkService() {
+	public TetheringNetworkService() {
 		super();
 		
 		mAccessPoints = new SgsObservableList<SgsAccessPoint>(true);
@@ -102,10 +105,10 @@ public class SgsTetheringNetworkService  extends SgsBaseService implements ISgsT
 	@Override
 	public boolean start() {
 		Log.d(TAG, "Starting...");
-		mWifiManager = (WifiManager) SgsApplication.getContext().getSystemService(Context.WIFI_SERVICE);
+        mConnectivityManager = (ConnectivityManager) SgsApplication.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		
-		if(mWifiManager == null){
-			Log.e(TAG, "WiFi manager is Null");
+		if(mConnectivityManager == null){
+			Log.e(TAG, "Connectivity manager is Null");
 			return false;
 		}
 		
@@ -162,7 +165,7 @@ public class SgsTetheringNetworkService  extends SgsBaseService implements ISgsT
 				NetworkInterface intf = en.nextElement();
 				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
 					InetAddress inetAddress = enumIpAddr.nextElement();
-					Log.d(SgsTetheringNetworkService.TAG, inetAddress.getHostAddress().toString());
+					Log.d(TetheringNetworkService.TAG, inetAddress.getHostAddress().toString());
 					if (!inetAddress.isLoopbackAddress()) {
 						if (((inetAddress instanceof Inet4Address) && !ipv6) || ((inetAddress instanceof Inet6Address) && ipv6)) {
 							addressMap.put(intf.getName(), inetAddress.getHostAddress().toString());
@@ -178,18 +181,18 @@ public class SgsTetheringNetworkService  extends SgsBaseService implements ISgsT
 				return addressMap.values().iterator().next();
 			}
 		} catch (SocketException ex) {
-			Log.e(SgsTetheringNetworkService.TAG, ex.toString());
+			Log.e(TetheringNetworkService.TAG, ex.toString());
 		}
 
 		// Hack
 		try {
 			java.net.Socket socket = new java.net.Socket(ipv6 ? "ipv6.google.com" : "google.com", 80);
-			Log.d(SgsTetheringNetworkService.TAG, socket.getLocalAddress().getHostAddress());
+			Log.d(TetheringNetworkService.TAG, socket.getLocalAddress().getHostAddress());
 			return socket.getLocalAddress().getHostAddress();
 		} catch (UnknownHostException e) {
-			Log.e(SgsTetheringNetworkService.TAG, e.toString());
+			Log.e(TetheringNetworkService.TAG, e.toString());
 		} catch (IOException e) {
-			Log.e(SgsTetheringNetworkService.TAG, e.toString());
+			Log.e(TetheringNetworkService.TAG, e.toString());
 		}
 
 		return null;
@@ -358,14 +361,14 @@ public class SgsTetheringNetworkService  extends SgsBaseService implements ISgsT
 		boolean connected = false;
 		NetworkInfo networkInfo = SgsApplication.getConnectivityManager().getActiveNetworkInfo();
 		if (networkInfo == null) {
-			Log.e(SgsTetheringNetworkService.TAG, "Failed to get Network information");
+			Log.e(TetheringNetworkService.TAG, "Failed to get Network information");
 			return false;
 		}
 
 		int netType = networkInfo.getType();
 		int netSubType = networkInfo.getSubtype();
 
-		Log.d(SgsTetheringNetworkService.TAG, String.format("netType=%d and netSubType=%d",
+		Log.d(TetheringNetworkService.TAG, String.format("netType=%d and netSubType=%d",
 				netType, netSubType));
 
 		boolean useWifi = SgsEngine.getInstance().getConfigurationService().getBoolean(SgsConfigurationEntry.NETWORK_USE_WIFI, 
@@ -376,7 +379,7 @@ public class SgsTetheringNetworkService  extends SgsBaseService implements ISgsT
 		if (useWifi && (netType == ConnectivityManager.TYPE_WIFI)) {
 			if (mWifiManager != null && mWifiManager.isWifiEnabled()) {
 				mWifiLock = mWifiManager.createWifiLock(
-						WifiManager.WIFI_MODE_FULL, SgsTetheringNetworkService.TAG);
+						WifiManager.WIFI_MODE_FULL, TetheringNetworkService.TAG);
 				final WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
 				if (wifiInfo != null && mWifiLock != null) {
 					final DetailedState detailedState = WifiInfo
@@ -390,7 +393,7 @@ public class SgsTetheringNetworkService  extends SgsBaseService implements ISgsT
 					}
 				}
 			} else {
-				Log.d(SgsTetheringNetworkService.TAG, "WiFi not enabled");
+				Log.d(TetheringNetworkService.TAG, "WiFi not enabled");
 			}
 		} else if (use3G
 				&& (netType == ConnectivityManager.TYPE_MOBILE || netType == ConnectivityManager_TYPE_WIMAX)) {
@@ -406,7 +409,7 @@ public class SgsTetheringNetworkService  extends SgsBaseService implements ISgsT
 		}
 
 		if (!connected) {
-			Log.d(SgsTetheringNetworkService.TAG, "No active network");
+			Log.d(TetheringNetworkService.TAG, "No active network");
 			return false;
 		}
 

@@ -24,12 +24,13 @@ import org.saydroid.sgs.SgsApplication;
 
 public class SRTDroid extends SgsApplication{
 	private final static String TAG = SRTDroid.class.getCanonicalName();
-	
-	public SRTDroid() {
 
+    private static final String DATA_FOLDER = String.format("/data/data/%s", MainActivity.class.getPackage().getName());
+
+	public SRTDroid() {
         // Start log to file from here
         LogConfiguration.getInstance().setLoggerName(SRTDroid.class.getCanonicalName());
-        LogConfiguration.getInstance().setFileName(String.format("/data/data/%s/%s", MainActivity.class.getPackage().getName(),"SRTDroid.log"));
+        LogConfiguration.getInstance().setFileName(String.format("%s/%s", SRTDroid.DATA_FOLDER,"SRTDroid.log"));
         LogConfiguration.getInstance().setInternalDebugging(true);
         //LogConfiguration.getInstance().setFilePattern("%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n");
         LogConfiguration.getInstance().setFilePattern("%msg%n");
@@ -41,15 +42,6 @@ public class SRTDroid extends SgsApplication{
     @Override
     public void onCreate() {
         super.onCreate();
+
     }
-
-    public int startTether() {
-        return 1;
-    }
-
-    public boolean stopTether() {
-        return true;
-    }
-
-
 }

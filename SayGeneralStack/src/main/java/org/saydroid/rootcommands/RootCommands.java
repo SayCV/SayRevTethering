@@ -18,6 +18,7 @@ package org.saydroid.rootcommands;
 
 import org.saydroid.logger.Log;
 import org.sufficientlysecure.rootcommands.Shell;
+import org.sufficientlysecure.rootcommands.Toolbox;
 import org.sufficientlysecure.rootcommands.command.SimpleCommand;
 
 public final class RootCommands {
@@ -51,4 +52,26 @@ public final class RootCommands {
         Log.d(TAG, "Root-Commands error, return code: " + returnCode);
         return false;
     }
+
+    public static boolean hasRootPermission() {
+        boolean resultCode = false;
+        try {
+            Shell shell = Shell.startRootShell();
+
+            Toolbox tb = new Toolbox(shell);
+
+            if (tb.isRootAccessGiven()) {
+                Log.d(TAG, "Root access given!");
+                resultCode = true;
+            } else {
+                Log.d(TAG, "No root access!");
+                resultCode = false;
+            }
+            shell.close();
+        } catch (Exception e) {
+            Log.e(TAG, "Exception!", e);
+        }
+        return resultCode;
+    }
+
 }

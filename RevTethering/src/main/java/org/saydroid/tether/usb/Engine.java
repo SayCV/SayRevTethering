@@ -18,7 +18,9 @@
 
 package org.saydroid.tether.usb;
 
+import org.saydroid.rootcommands.RootCommands;
 import org.saydroid.tether.usb.Services.IScreenService;
+import org.saydroid.tether.usb.Services.ITetheringNetworkService;
 import org.saydroid.tether.usb.Services.ITetheringService;
 import org.saydroid.tether.usb.Services.Impl.ScreenService;
 import org.saydroid.sgs.SgsApplication;
@@ -28,6 +30,7 @@ import org.saydroid.sgs.media.SgsMediaType;
 import org.saydroid.sgs.sip.SgsAVSession;
 import org.saydroid.sgs.sip.SgsMsrpSession;
 import org.saydroid.sgs.utils.SgsPredicate;
+import org.saydroid.tether.usb.Services.Impl.TetheringNetworkService;
 import org.saydroid.tether.usb.Services.Impl.TetheringService;
 import org.saydroid.utils.AndroidUtils;
 
@@ -38,6 +41,8 @@ import android.media.RingtoneManager;
 import android.support.v4.app.NotificationCompat;
 
 import org.saydroid.logger.Log;
+
+import java.io.File;
 
 public class Engine extends SgsEngine{
 	private final static String TAG = Engine.class.getCanonicalName();
@@ -51,8 +56,14 @@ public class Engine extends SgsEngine{
 	private static final int NOTIF_CHAT_ID = 19833896;
 	private static final String DATA_FOLDER = String.format("/data/data/%s", MainActivity.class.getPackage().getName());
 	private static final String LIBS_FOLDER = String.format("%s/lib", Engine.DATA_FOLDER);
+
+    private static final String SETTING_DB_PATH = "/data/data/com.android.providers.settings/databases/";
+    private  static final String mGlobalSetting_tether_supported = "tether_supported"; //valid setting is 1
+    private  static final String mGlobalSetting_tether_dun_required = "tether_dun_required"; //valid setting is 0
+
 	
 	private IScreenService mScreenService;
+    protected ITetheringNetworkService mTetheringNetworkService;
     private ITetheringService mTetheringService;
 
 	static {
@@ -70,8 +81,9 @@ public class Engine extends SgsEngine{
 		}*/
 		// Initialize the engine
 		SgsEngine.initialize();
+        Engine.initialize();
 	}
-	
+
 	public static SgsEngine getInstance(){
 		if(sInstance == null){
 			sInstance = new Engine();
@@ -81,6 +93,18 @@ public class Engine extends SgsEngine{
 	
 	public Engine(){
 		super();
+
+        boolean mSupportedKernel = false;
+
+        if (!this.hasRootPermission()){
+            mSupportedKernel = false;
+        }
+
+        if (this.binariesExists() == false) {
+            if (this.hasRootPermission()) {
+                this.installFiles();
+            }
+        }
 	}
 	
 	@Override
@@ -249,13 +273,20 @@ public class Engine extends SgsEngine{
 	public void showSMSNotif(int drawableId, String tickerText){
     	showNotification(NOTIF_SMS_ID, drawableId, tickerText);
     }
-	
+
 	public IScreenService getScreenService(){
 		if(mScreenService == null){
 			mScreenService = new ScreenService();
 		}
 		return mScreenService;
 	}
+
+    public ITetheringNetworkService getTetheringNetworkService(){
+        if(mTetheringNetworkService == null){
+            mTetheringNetworkService = new TetheringNetworkService();
+        }
+        return mTetheringNetworkService;
+    }
 
     public ITetheringService getTetheringService(){
         if(mTetheringService == null){
@@ -268,4 +299,105 @@ public class Engine extends SgsEngine{
 	public Class<? extends SgsNativeService> getNativeServiceClass(){
 		return NativeService.class;
 	}
+
+    public boolean hasRootPermission() {
+        return RootCommands.hasRootPermission();
+    }
+
+    public boolean binariesExists() {
+        File file_ifconfig = new File(this.DATA_FOLDER + "/bin/ifconfig");
+        File file_route = new File(this.DATA_FOLDER + "/bin/route");
+        return (file_ifconfig.exists() && file_route.exists());
+    }
+
+    public void installFiles() {
+        new Thread(new Runnable(){
+            public void run(){
+                String message = null;
+
+                // tether
+                if (message == null) {
+                    message = TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/bin/tether", R.raw.tether);
+                }
+                // iptables
+                if (message == null) {
+                    message = TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/bin/iptables", R.raw.iptables);
+                }
+                // dnsmasq
+                if (message == null) {
+                    message = TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/bin/dnsmasq", R.raw.dnsmasq);
+                }
+                // ifconfig
+                if (message == null) {
+                    message = TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/bin/ifconfig", R.raw.ifconfig);
+                }
+                // sqlite3
+                if (message == null) {
+                    message = TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/bin/sqlite3", R.raw.sqlite3);
+                }
+                //add route command from busybox to serve the setup gw purpose.
+                if (message == null) {
+                    message = TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/bin/route", R.raw.route);
+                }
+                try {
+                    TetherApplication.this.coretask.chmodBin();
+                } catch (Exception e) {
+                    message = "Unable to change permission on binary files!";
+                }
+                // version
+                if (message == null) {
+                    TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/conf/version", R.raw.version);
+                }
+                // text
+                if (message == null) {
+                    TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/setting.txt", R.raw.setting);
+                    TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/maxid.txt", R.raw.maxid);
+                    TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/maxid_exit.txt", R.raw.maxid_exit);
+                    TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/conf/route.conf", R.raw.route_conf);
+                }
+                if (message == null) {
+                    message = "Binaries and config-files installed!";
+                }
+
+                // Removing ols lan-config-file
+                File lanConfFile = new File(TetherApplication.this.coretask.DATA_FILE_PATH+"/conf/lan_network.conf");
+                if (lanConfFile.exists()) {
+                    lanConfFile.delete();
+                }
+
+                // Sending message
+                Message msg = new Message();
+                msg.obj = message;
+                TetherApplication.this.displayMessageHandler.sendMessage(msg);
+            }
+        }).start();
+    }
+
+    /*
+         * this function dumps the securesetting to a txt file. If success, return true, otherwise false
+         * do not use new thread to run it now.
+         */
+    private boolean dumpGlobalSettings(){
+        String dumpGlobalSettings = "echo \'.dump global\' | sqlite3 " +
+                this.SETTING_DB_PATH + "settings.db  > " +
+                this.DATA_FOLDER + "/setting.txt";
+        Log.d(TAG, "command for dumping the GlobalSettings is: " + dumpGlobalSettings);
+        if(RootCommands.run(dumpGlobalSettings)==false){
+            Log.e(TAG, "Unable to dump the GlobalSettings to " + this.DATA_FOLDER + "/settings.txt");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean dumpGlobalSettingsMaxID(){
+        String dumpGlobalSettingsMaxId = "sqlite3 " + this.SETTING_DB_PATH +
+                "settings.db \'select max(_id) from global\'"+  " > " +
+                this.DATA_FOLDER + "/maxid_exit.txt";
+        Log.d(TAG, "command for dumping the max id is: " + dumpGlobalSettingsMaxId);
+        if(RootCommands.run(dumpGlobalSettingsMaxId)==false){
+            Log.e(TAG, "Unable to dump the global setting maxid to" + this.DATA_FOLDER + "maxid_exit.txt");
+            return false;
+        }
+        return true;
+    }
 }

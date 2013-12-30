@@ -26,9 +26,11 @@ import android.os.ConditionVariable;
 import org.saydroid.logger.Log;
 import org.saydroid.sgs.SgsApplication;
 import org.saydroid.sgs.SgsEngine;
+import org.saydroid.sgs.events.SgsInviteEventArgs;
 import org.saydroid.sgs.events.SgsMessagingEventArgs;
 import org.saydroid.sgs.events.SgsMessagingEventTypes;
 import org.saydroid.sgs.events.SgsPublicationEventArgs;
+import org.saydroid.sgs.events.SgsRegistrationEventArgs;
 import org.saydroid.sgs.events.SgsSubscriptionEventArgs;
 import org.saydroid.sgs.services.ISgsConfigurationService;
 import org.saydroid.sgs.services.ISgsNetworkService;
@@ -215,102 +217,24 @@ implements ITetheringService {
 		}
 		
 		// Set STUN information
-		if(mConfigurationService.getBoolean(SgsConfigurationEntry.NATT_USE_STUN, SgsConfigurationEntry.DEFAULT_NATT_USE_STUN)){			
-			Log.d(TAG, "STUN=yes");
-			if(mConfigurationService.getBoolean(SgsConfigurationEntry.NATT_STUN_DISCO, SgsConfigurationEntry.DEFAULT_NATT_STUN_DISCO)){
-				final String realm = mPreferences.getRealm();
-				String domain = realm.substring(realm.indexOf(':')+1);
-				int []port = new int[1];
-				String server = mSipStack.dnsSrv(String.format("_stun._udp.%s", domain), port);
-				if(server == null){
-					Log.e(TAG, "STUN discovery has failed");
-				}
-				Log.d(TAG, String.format("STUN1 - server=%s and port=%d", server, port[0]));
-				mSipStack.setSTUNServer(server, port[0]);// Needed event if null
-			}
-			else{
-				String server = mConfigurationService.getString(SgsConfigurationEntry.NATT_STUN_SERVER, 
-						SgsConfigurationEntry.DEFAULT_NATT_STUN_SERVER);
-				int port = mConfigurationService.getInt(SgsConfigurationEntry.NATT_STUN_PORT, 
-						SgsConfigurationEntry.DEFAULT_NATT_STUN_PORT);
-				Log.d(TetheringService.TAG, String.format("STUN2 - server=%s and port=%d", server, port));
-				mSipStack.setSTUNServer(server, port);
-			}
-		}
-		else{
-			Log.d(TAG, "STUN=no");
-			mSipStack.setSTUNServer(null, 0);
-		}
+
 		
 		// Set Proxy-CSCF
-		mPreferences.setPcscfHost(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_PCSCF_HOST,
-				null)); // null will trigger DNS NAPTR+SRV
-		mPreferences.setPcscfPort(mConfigurationService.getInt(SgsConfigurationEntry.NETWORK_PCSCF_PORT,
-				SgsConfigurationEntry.DEFAULT_NETWORK_PCSCF_PORT));
-		mPreferences.setTransport(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_TRANSPORT,
-				SgsConfigurationEntry.DEFAULT_NETWORK_TRANSPORT));
-		mPreferences.setIPVersion(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_IP_VERSION,
-				SgsConfigurationEntry.DEFAULT_NETWORK_IP_VERSION));
-		
-		Log.d(TAG, String.format(
-				"pcscf-host='%s', pcscf-port='%d', transport='%s', ipversion='%s'",
-				mPreferences.getPcscfHost(), 
-				mPreferences.getPcscfPort(),
-				mPreferences.getTransport(),
-				mPreferences.getIPVersion()));
 
-		if (!mSipStack.setProxyCSCF(mPreferences.getPcscfHost(), mPreferences.getPcscfPort(), mPreferences.getTransport(),
-				mPreferences.getIPVersion())) {
-			Log.e(TetheringService.TAG, "Failed to set Proxy-CSCF parameters");
-			return false;
-		}
 		
 		// Set local IP (If your reusing this code on non-Android platforms (iOS, Symbian, WinPhone, ...),
 		// let Doubango retrieve the best IP address)
-		boolean ipv6 = SgsStringUtils.equals(mPreferences.getIPVersion(), "ipv6", true);
-		mPreferences.setLocalIP(mNetworkService.getLocalIP(ipv6));
-		if(mPreferences.getLocalIP() == null){
-//			if(fromNetworkService){
-//				this.preferences.localIP = ipv6 ? "::" : "10.0.2.15"; /* Probably on the emulator */
-//			}
-//			else{
-//				Log.e(TAG, "IP address is Null. Trying to start network");
-//				this.networkService.setNetworkEnabledAndRegister();
-//				return false;
-//			}
-		}
-		if (!mSipStack.setLocalIP(mPreferences.getLocalIP())) {
-			Log.e(TAG, "Failed to set the local IP");
-			return false;
-		}
-		Log.d(TAG, String.format("Local IP='%s'", mPreferences.getLocalIP()));
+
 		
 		// Whether to use DNS NAPTR+SRV for the Proxy-CSCF discovery (even if the DNS requests are sent only when the stack starts,
 		// should be done after setProxyCSCF())
-		String discoverType = mConfigurationService.getString(SgsConfigurationEntry.NETWORK_PCSCF_DISCOVERY, SgsConfigurationEntry.DEFAULT_NETWORK_PCSCF_DISCOVERY);
-		mSipStack.setDnsDiscovery(SgsStringUtils.equals(discoverType, SgsConfigurationEntry.PCSCF_DISCOVERY_DNS_SRV, true));		
-		
-		// enable/disable 3GPP early IMS
-		mSipStack.setEarlyIMS(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_EARLY_IMS,
-				SgsConfigurationEntry.DEFAULT_NETWORK_USE_EARLY_IMS));
+
 		
 		// SigComp (only update compartment Id if changed)
-		if(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_SIGCOMP, SgsConfigurationEntry.DEFAULT_NETWORK_USE_SIGCOMP)){
-			String compId = String.format("urn:uuid:%s", UUID.randomUUID().toString());
-			mSipStack.setSigCompId(compId);
-		}
-		else{
-			mSipStack.setSigCompId(null);
-		}
+
 		
 		// Start the Stack
-		if (!mSipStack.start()) {
-			if(context != null && Thread.currentThread() == Looper.getMainLooper().getThread()){
-				Toast.makeText(context, "Failed to start the SIP stack", Toast.LENGTH_LONG).show();
-			}
-			Log.e(TAG, "Failed to start the SIP stack");
-			return false;
-		}
+
 		
 		// Preference values
 		mPreferences.setXcapEnabled(mConfigurationService.getBoolean(SgsConfigurationEntry.XCAP_ENABLED,
@@ -321,38 +245,14 @@ implements ITetheringService {
 				SgsConfigurationEntry.DEFAULT_RCS_USE_MWI));
 		
 		// Create registration session
-		if (mRegSession == null) {
-			mRegSession = new SgsRegistrationSession(mSipStack);
-		}
-		else{
-			mRegSession.setSigCompId(mSipStack.getSigCompId());
-		}
+
 		
 		// Set/update From URI. For Registration ToUri should be equals to realm
 		// (done by the stack)
 		mRegSession.setFromUri(mPreferences.getIMPU());
 		
 		/* Before registering, check if AoR hacking id enabled */
-		mPreferences.setHackAoR(mConfigurationService.getBoolean(SgsConfigurationEntry.NATT_HACK_AOR, 
-				SgsConfigurationEntry.DEFAULT_NATT_HACK_AOR));
-		if (mPreferences.isHackAoR()) {
-			if (mCondHackAoR == null) {
-				mCondHackAoR = new ConditionVariable();
-			}
-			final OptionsSession optSession = new OptionsSession(mSipStack);
-			// optSession.setToUri(String.format("sip:%s@%s", "hacking_the_aor", this.preferences.realm));
-			optSession.send();
-			try {
-				synchronized (mCondHackAoR) {
-					mCondHackAoR.wait(mConfigurationService.getInt(SgsConfigurationEntry.NATT_HACK_AOR_TIMEOUT,
-							SgsConfigurationEntry.DEFAULT_NATT_HACK_AOR_TIMEOUT));
-				}
-			} catch (InterruptedException e) {
-				Log.e(TAG, e.getMessage());
-			}
-			mCondHackAoR = null;
-			optSession.delete();
-		}
+
 
 		if (!mRegSession.register()) {
 			Log.e(TAG, "Failed to send REGISTER request");
@@ -380,7 +280,7 @@ implements ITetheringService {
 		return false;
 	}
 
-	public boolean PresencePublish(SgsPresenceStatus status) {
+	public boolean PresencePublish(TetheringPrefrences status) {
 		// TODO Auto-generated method stub
 		return false;
 	}

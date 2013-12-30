@@ -19,7 +19,6 @@
 */
 package org.saydroid.tether.usb.Screens;
 
-import org.saydroid.sgs.services.ISgsTetheringNetworkService;
 import org.saydroid.tether.usb.CustomDialog;
 import org.saydroid.tether.usb.MainActivity;
 import org.saydroid.tether.usb.R;
@@ -202,7 +201,7 @@ public class ScreenHome extends BaseScreen {
 	 * ScreenHomeAdapter
 	 */
 	static class ScreenHomeAdapter extends BaseAdapter{
-		static final int ALWAYS_VISIBLE_ITEMS_COUNT = 5;
+		static final int ALWAYS_VISIBLE_ITEMS_COUNT = 4;
 		static final ScreenHomeItem[] sItems =  new ScreenHomeItem[]{
 			// always visible
     		new ScreenHomeItem(R.drawable.start_48, "Start Tethering", null),
