@@ -98,7 +98,10 @@ public class Engine extends SgsEngine{
 	
 	public Engine(){
 		super();
-
+	}
+	
+	@Override
+	public boolean start() {
         boolean mSupportedKernel = false;
 
         this.checkDirs();
@@ -147,10 +150,7 @@ public class Engine extends SgsEngine{
         } else {
             Log.d(TAG, this.mGlobalSetting_tether_supported + " has been enabled already");
         }
-	}
-	
-	@Override
-	public boolean start() {
+
 		return super.start();
 	}
 	
