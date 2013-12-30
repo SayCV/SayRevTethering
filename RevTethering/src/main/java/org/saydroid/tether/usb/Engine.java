@@ -19,6 +19,7 @@
 package org.saydroid.tether.usb;
 
 import org.saydroid.rootcommands.RootCommands;
+import org.saydroid.sgs.utils.SgsFileUtils;
 import org.saydroid.tether.usb.Services.IScreenService;
 import org.saydroid.tether.usb.Services.ITetheringNetworkService;
 import org.saydroid.tether.usb.Services.ITetheringService;
@@ -38,11 +39,16 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.media.RingtoneManager;
+import android.os.Message;
 import android.support.v4.app.NotificationCompat;
 
 import org.saydroid.logger.Log;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class Engine extends SgsEngine{
 	private final static String TAG = Engine.class.getCanonicalName();
@@ -81,7 +87,6 @@ public class Engine extends SgsEngine{
 		}*/
 		// Initialize the engine
 		SgsEngine.initialize();
-        Engine.initialize();
 	}
 
 	public static SgsEngine getInstance(){
@@ -104,6 +109,41 @@ public class Engine extends SgsEngine{
             if (this.hasRootPermission()) {
                 this.installFiles();
             }
+        }
+
+        /*
+	         * Add a function for get setting from settings.db to see if there is tether_supported
+	         * need to write a function to dump the settings.db secure table into a file and
+	         * read from this file to see if contains tether_supported. This function is defined
+	         * inside CoreTask.java
+	         */
+        boolean dumpSettingSuccess = false;
+        boolean setGlobalSettingFail = false;
+        if (this.hasRootPermission()) {
+            if ((this.dumpGlobalSettings()==false)||(this.dumpGlobalSettingsMaxID()==false)){
+                //this.openFailToDumpSecureSettingDialog();
+                dumpSettingSuccess = false;
+            } else dumpSettingSuccess = true;
+        }
+        int iMaxId = -1;
+        if(!this.checkGlobalSetting(this.mGlobalSetting_tether_dun_required)){
+            iMaxId = this.globalSettingMaxId();
+            if (iMaxId < 0){   //error occurs during retrieve maxId of secure table, return -1 if error
+                Log.d(TAG, "cannot read system setting's max id during checking tether_supported...");
+            } else {	//if there is no error to retrieve maxId, then insert with new name field and maxid
+                iMaxId = iMaxId + 1;
+                if(!this.globalSettingInsertandEnable(this.mGlobalSetting_tether_supported, iMaxId, 1)){
+                    setGlobalSettingFail = true;
+                    Log.d(TAG, "cannot insert and enable " + this.mGlobalSetting_tether_supported );
+                }
+            }
+        } else if(!this.globalSettingIsEnabled(this.mGlobalSetting_tether_supported, 1)){
+            if(!this.globalSettingEnable(this.mGlobalSetting_tether_supported, 1)){
+                setGlobalSettingFail = true;
+                Log.d(TAG, "cannot enable " + this.mGlobalSetting_tether_supported);
+            }
+        } else {
+            Log.d(TAG, this.mGlobalSetting_tether_supported + " has been enabled already");
         }
 	}
 	
@@ -310,65 +350,92 @@ public class Engine extends SgsEngine{
         return (file_ifconfig.exists() && file_route.exists());
     }
 
-    public void installFiles() {
+    private String copyBinary(String filename, int resource) {
+        File outFile = new File(filename);
+        Log.d(TAG, "Copying file '" + filename + "' ...");
+        InputStream is = SgsApplication.getContext().getResources().openRawResource(resource);
+        byte buf[]=new byte[1024];
+        int len;
+        try {
+            OutputStream out = new FileOutputStream(outFile);
+            while((len = is.read(buf))>0) {
+                out.write(buf,0,len);
+            }
+            out.close();
+            is.close();
+        } catch (IOException e) {
+            return "Couldn't install file - "+filename+"!";
+        }
+        return null;
+    }
+
+    private boolean chmodBin() {
+        return RootCommands.run("chmod 0755 " + Engine.DATA_FOLDER + "/bin/*");
+    }
+
+    private void installFiles() {
         new Thread(new Runnable(){
             public void run(){
                 String message = null;
 
                 // tether
                 if (message == null) {
-                    message = TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/bin/tether", R.raw.tether);
+                    message = ((Engine)Engine.getInstance()).copyBinary(Engine.DATA_FOLDER + "/bin/tether", R.raw.tether);
                 }
                 // iptables
                 if (message == null) {
-                    message = TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/bin/iptables", R.raw.iptables);
+                    message = ((Engine)Engine.getInstance()).copyBinary(Engine.DATA_FOLDER + "/bin/iptables", R.raw.iptables);
                 }
                 // dnsmasq
                 if (message == null) {
-                    message = TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/bin/dnsmasq", R.raw.dnsmasq);
+                    message = ((Engine)Engine.getInstance()).copyBinary(Engine.DATA_FOLDER + "/bin/dnsmasq", R.raw.dnsmasq);
                 }
                 // ifconfig
                 if (message == null) {
-                    message = TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/bin/ifconfig", R.raw.ifconfig);
+                    message = ((Engine)Engine.getInstance()).copyBinary(Engine.DATA_FOLDER + "/bin/ifconfig", R.raw.ifconfig);
                 }
                 // sqlite3
                 if (message == null) {
-                    message = TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/bin/sqlite3", R.raw.sqlite3);
+                    message = ((Engine)Engine.getInstance()).copyBinary(Engine.DATA_FOLDER + "/bin/sqlite3", R.raw.sqlite3);
                 }
                 //add route command from busybox to serve the setup gw purpose.
                 if (message == null) {
-                    message = TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/bin/route", R.raw.route);
+                    message = ((Engine)Engine.getInstance()).copyBinary(Engine.DATA_FOLDER + "/bin/route", R.raw.route);
                 }
+
                 try {
-                    TetherApplication.this.coretask.chmodBin();
+                    ((Engine)Engine.getInstance()).chmodBin();
                 } catch (Exception e) {
                     message = "Unable to change permission on binary files!";
+                    Log.e(TAG, message, e);
                 }
+
                 // version
                 if (message == null) {
-                    TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/conf/version", R.raw.version);
+                    ((Engine)Engine.getInstance()).copyBinary(Engine.DATA_FOLDER + "/conf/version", R.raw.version);
                 }
                 // text
                 if (message == null) {
-                    TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/setting.txt", R.raw.setting);
-                    TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/maxid.txt", R.raw.maxid);
-                    TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/maxid_exit.txt", R.raw.maxid_exit);
-                    TetherApplication.this.copyBinary(TetherApplication.this.coretask.DATA_FILE_PATH+"/conf/route.conf", R.raw.route_conf);
+                    //((Engine)Engine.getInstance()).copyBinary(Engine.DATA_FOLDER + "/setting.txt", R.raw.setting);
+                    //((Engine)Engine.getInstance()).copyBinary(Engine.DATA_FOLDER + "/maxid.txt", R.raw.maxid);
+                    //((Engine)Engine.getInstance()).copyBinary(Engine.DATA_FOLDER + "/maxid_exit.txt", R.raw.maxid_exit);
+                    ((Engine)Engine.getInstance()).copyBinary(Engine.DATA_FOLDER + "/conf/route.conf", R.raw.route_conf);
                 }
                 if (message == null) {
                     message = "Binaries and config-files installed!";
+                    Log.d(TAG, message);
                 }
 
                 // Removing ols lan-config-file
-                File lanConfFile = new File(TetherApplication.this.coretask.DATA_FILE_PATH+"/conf/lan_network.conf");
+                File lanConfFile = new File(Engine.DATA_FOLDER + "/conf/lan_network.conf");
                 if (lanConfFile.exists()) {
                     lanConfFile.delete();
                 }
 
                 // Sending message
-                Message msg = new Message();
-                msg.obj = message;
-                TetherApplication.this.displayMessageHandler.sendMessage(msg);
+                //Message msg = new Message();
+                //msg.obj = message;
+                //((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
             }
         }).start();
     }
@@ -399,5 +466,106 @@ public class Engine extends SgsEngine{
             return false;
         }
         return true;
+    }
+
+    /*
+     * Check the setting.txt for particular stringSetting, if it is there, return true, otherwise false
+     */
+    private boolean checkGlobalSetting(String stringSetting) {
+        String secureSettingDumpedFile = this.DATA_FOLDER+"/setting.txt"; //this is the dumped secure table
+        boolean settingIsDefined = false;
+        for (String line : SgsFileUtils.readLinesFromFile(secureSettingDumpedFile)) {
+            if (line.contains(stringSetting) == true)
+                settingIsDefined = true;
+
+        }
+        Log.d(TAG, stringSetting + " inside global table is defined: " + settingIsDefined);
+        return settingIsDefined;
+    }
+
+    /*
+     * check if particular stringSetting is enabled or not but without updating the settings.db
+     * this function will run with the assumption that the checkSecureSetting is true.
+     */
+    public boolean globalSettingIsEnabled(String stringSetting, int iSetValue) {
+        boolean enabled = false;
+        String sSetValue = String.valueOf(iSetValue);
+        String settingLine = null;
+        String secureSettingDumpedFile = this.DATA_FOLDER + "/setting.txt"; //this is the dumped secure table
+        for (String line : SgsFileUtils.readLinesFromFile(secureSettingDumpedFile)) {
+            if (line.contains(stringSetting) && line.contains("\'"+sSetValue+"\'")){
+                enabled = true;
+                settingLine = line;
+            }
+        }
+        Log.d(TAG, stringSetting + " inside global table is: " + settingLine);
+        return enabled;
+    }
+
+    /*
+     * parameter: setting to be enabled (has to pass the check setting first to use this function)
+     * if enabled successfully, return true, otherwise return false
+     */
+    public synchronized boolean globalSettingEnable(String stringSetting, int iValue) {
+        boolean enabled = false;
+        String command;
+        String secureSettingFile = this.SETTING_DB_PATH + "settings.db"; //this is the dumped secure table
+        command = "sqlite3 "+ this.SETTING_DB_PATH + "settings.db "+ "\"update global set value ="+ String.valueOf(iValue) + "where name = " + "\'"+stringSetting +"\'"+"\"" ;
+        Log.d(TAG, "command for enable secureSetting is : " + command);
+        if(RootCommands.run(command)==false){
+            Log.e(TAG, "Unable to enable the global Setting for the setting of" + stringSetting);
+            return enabled;
+        };
+        enabled = true;
+        return enabled;
+    }
+
+    /*
+     * need to define another function to get max(_id).
+     * sqlite3 settings.db "select max(_id) from secure" >> maxid.txt
+     * so the function will read from maxid.txt and return maxid
+     * return -1 if fail otherwise return maxid.
+     */
+    public synchronized int globalSettingMaxId() {
+        int intMaxId = -1;
+        int intTmpId;
+        String command;
+        String secureSettingFile = this.SETTING_DB_PATH+"settings.db"; //this is the dumped secure table
+        command = "sqlite3 "+ this.SETTING_DB_PATH + "settings.db "+ "\'select max(_id) from global\'  > " + this.DATA_FOLDER + "/maxid.txt"; ;
+        Log.d(TAG, "command for dump the max is: " + command);
+        if(RootCommands.run(command)==false){
+            Log.d(TAG, "Unable to get the global setting maxid from" + this.SETTING_DB_PATH + "/settings.db");
+            return -1;
+        }
+
+        String secureSettingMaxIdDumpedFile = this.DATA_FOLDER + "/maxid.txt"; //this is the dumped secure table
+        for (String line : SgsFileUtils.readLinesFromFile(secureSettingMaxIdDumpedFile)) {
+            intTmpId = Integer.parseInt(line);
+            if (intTmpId > intMaxId)
+                intMaxId = intTmpId;
+
+        }
+        Log.d(TAG, "max Id in global setting table is" + intMaxId);
+        return intMaxId;
+    }
+
+    /*
+     * parameters: setting to be inserted and intId to be used
+     * return trun if succss, otherwise false
+     * sqlite3 settings.db "insert into secure values(51,'test_insert',1 or 0)"
+     */
+    public synchronized boolean globalSettingInsertandEnable(String stringSetting, int intId, int iValue) {
+        boolean insertSuccess = false;
+        String command;
+
+        //String secureSettingFile = this.SETTING_DB_PATH+"settings.db"; //this is the dumped secure table
+        command = "sqlite3 "+ this.SETTING_DB_PATH + "settings.db "+ "\'insert into global values(" +String.valueOf(intId)+","+ "\\\""+ stringSetting +"\\\","+ String.valueOf(iValue) + ")\'" ;
+        Log.d(TAG, "command to insert" + stringSetting + "is :" + command);
+        if(RootCommands.run(command)==false){
+            Log.e(TAG, "Unable to insert" + stringSetting + "global Setting for the setting of" + stringSetting);
+            return false;
+        }
+        insertSuccess = true;
+        return insertSuccess;
     }
 }
