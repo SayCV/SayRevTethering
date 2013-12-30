@@ -101,6 +101,8 @@ public class Engine extends SgsEngine{
 
         boolean mSupportedKernel = false;
 
+        this.checkDirs();
+
         if (!this.hasRootPermission()){
             mSupportedKernel = false;
         }
@@ -344,6 +346,26 @@ public class Engine extends SgsEngine{
         return RootCommands.hasRootPermission();
     }
 
+    private void checkDirs() {
+        File dir = new File(this.DATA_FOLDER);
+        if (dir.exists() == false) {
+            Log.d(TAG, "Application data-dir does not exist!");
+        } else {
+            String[] dirs = { "/bin", "/var", "/conf", "/library" };
+            for (String dirname : dirs) {
+                dir = new File(this.DATA_FOLDER + dirname);
+                if (dir.exists() == false) {
+                    if (!dir.mkdir()) {
+                        Log.d(TAG, "Couldn't create " + dirname + " directory!");
+                    }
+                }
+                else {
+                    Log.d(TAG, "Directory '" + dir.getAbsolutePath() + "' already exists!");
+                }
+            }
+        }
+    }
+      
     public boolean binariesExists() {
         File file_ifconfig = new File(this.DATA_FOLDER + "/bin/ifconfig");
         File file_route = new File(this.DATA_FOLDER + "/bin/route");
