@@ -53,6 +53,35 @@ public final class RootCommands {
         return false;
     }
 
+    public static boolean runSync(String command) {
+        Log.d(TAG, "Root-Commands ==> su" + " -c \"" + command + "\"");
+        int returnCode = -1;
+        try {
+            //MyCommand binaryCommand = new MyCommand("su" + " -c \""+command+"\"", "");
+            SimpleCommand binaryCommand = new SimpleCommand(command);
+
+            // start root shell
+            Shell shell = Shell.startRootShell();
+
+            //shell.add(binaryCommand);
+            shell.add(binaryCommand);
+
+            Log.d(TAG, "Output of command: " + binaryCommand.getOutput());
+            returnCode = binaryCommand.getExitCode();
+
+            // close root shell
+            shell.close();
+        } catch (Exception e) {
+            Log.e(TAG, "Exception!", e);
+        }
+
+        if (returnCode == 0) {
+            return true;
+        }
+        Log.d(TAG, "Root-Commands error, return code: " + returnCode);
+        return false;
+    }
+
     public static boolean hasRootPermission() {
         boolean resultCode = false;
         try {

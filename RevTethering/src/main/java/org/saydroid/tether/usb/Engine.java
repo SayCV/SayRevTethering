@@ -351,7 +351,12 @@ public class Engine extends SgsEngine{
         if (dir.exists() == false) {
             Log.d(TAG, "Application data-dir does not exist!");
         } else {
-            String[] dirs = { "/bin", "/var", "/conf", "/library" };
+            String[] dirs = {
+                    "/bin",
+                    //"/var",
+                    "/conf",
+                    //"/library"
+            };
             for (String dirname : dirs) {
                 dir = new File(this.DATA_FOLDER + dirname);
                 if (dir.exists() == false) {
@@ -471,8 +476,14 @@ public class Engine extends SgsEngine{
                 this.SETTING_DB_PATH + "settings.db  > " +
                 this.DATA_FOLDER + "/setting.txt";
         Log.d(TAG, "command for dumping the GlobalSettings is: " + dumpGlobalSettings);
-        if(RootCommands.run(dumpGlobalSettings)==false){
-            Log.e(TAG, "Unable to dump the GlobalSettings to " + this.DATA_FOLDER + "/settings.txt");
+        if(RootCommands.runSync(dumpGlobalSettings)==false){
+            Log.e(TAG, "Unable to dump the GlobalSettings to " + this.DATA_FOLDER + "/setting.txt");
+            File file = new File(Engine.DATA_FOLDER + "/setting.txt");
+            if(!file.exists())
+                return false;
+        }
+        if(RootCommands.run("chmod 666 " + Engine.DATA_FOLDER + "/setting.txt")==false){
+            Log.e(TAG, "Unable to add permission to " + this.DATA_FOLDER + "/setting.txt");
             return false;
         }
         return true;
@@ -485,6 +496,12 @@ public class Engine extends SgsEngine{
         Log.d(TAG, "command for dumping the max id is: " + dumpGlobalSettingsMaxId);
         if(RootCommands.run(dumpGlobalSettingsMaxId)==false){
             Log.e(TAG, "Unable to dump the global setting maxid to" + this.DATA_FOLDER + "maxid_exit.txt");
+            File file = new File(Engine.DATA_FOLDER + "/maxid_exit.txt");
+            if(!file.exists())
+                return false;
+        }
+        if(RootCommands.run("chmod 666 " + Engine.DATA_FOLDER + "/maxid_exit.txt")==false){
+            Log.e(TAG, "Unable to add permission to " + this.DATA_FOLDER + "/maxid_exit.txt");
             return false;
         }
         return true;
@@ -557,6 +574,12 @@ public class Engine extends SgsEngine{
         Log.d(TAG, "command for dump the max is: " + command);
         if(RootCommands.run(command)==false){
             Log.d(TAG, "Unable to get the global setting maxid from" + this.SETTING_DB_PATH + "/settings.db");
+            File file = new File(Engine.DATA_FOLDER + "/maxid.txt");
+            if(!file.exists())
+                return -1;
+        }
+        if(RootCommands.run("chmod 666 " + Engine.DATA_FOLDER + "/maxid.txt")==false){
+            Log.e(TAG, "Unable to add permission to " + this.DATA_FOLDER + "/maxid.txt");
             return -1;
         }
 
