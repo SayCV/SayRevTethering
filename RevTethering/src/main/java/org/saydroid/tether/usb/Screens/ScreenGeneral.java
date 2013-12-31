@@ -19,6 +19,7 @@
 package org.saydroid.tether.usb.Screens;
 
 
+import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -26,9 +27,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import org.saydroid.logger.Log;
+import org.saydroid.sgs.SgsApplication;
 import org.saydroid.sgs.services.ISgsConfigurationService;
 import org.saydroid.sgs.utils.SgsConfigurationEntry;
+import org.saydroid.sgs.utils.SgsRingToneUtils;
 import org.saydroid.tether.usb.R;
+
+import java.util.List;
 
 public class ScreenGeneral  extends BaseScreen {
 	private final static String TAG = ScreenGeneral.class.getCanonicalName();
@@ -50,7 +55,9 @@ public class ScreenGeneral  extends BaseScreen {
 		new Profile(0, "Default (User Defined)"),
         new Profile(1, "SRT (Override)")
 	};
-	
+
+    private String[] sSpinnerNotificationRingtoneItems = null;
+
 	public ScreenGeneral() {
 		super(SCREEN_TYPE.GENERAL_T, TAG);
 		
@@ -70,9 +77,29 @@ public class ScreenGeneral  extends BaseScreen {
         mCbDisableUpdateCheck.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.GENERAL_DUC,SgsConfigurationEntry.DEFAULT_GENERAL_DUC));
         mCbDisableWakeLock.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.GENERAL_DWL,SgsConfigurationEntry.DEFAULT_GENERAL_DWL));
 
-        //mSpNotificationRingtone.setSelection(mConfigurationService.getBoolean(
-        //        SgsConfigurationEntry.NETWORK_CONNECTED,
-        //        SgsConfigurationEntry.DEFAULT_NETWORK_CONNECTED));
+        List<String> lsSpinnerNotificationRingtoneItems = SgsRingToneUtils.getInstance().getRingtoneTitleList(
+                RingtoneManager.TYPE_NOTIFICATION);
+        /*String[] sSpinnerNotificationRingtoneItems = new String[] {
+            RingtoneManager.getRingtone(SgsApplication.getContext(),
+                    android.provider.Settings.System.DEFAULT_RINGTONE_URI).getTitle(SgsApplication.getContext())
+        };*/
+        /*String[] */sSpinnerNotificationRingtoneItems = new String[lsSpinnerNotificationRingtoneItems.size()];
+        lsSpinnerNotificationRingtoneItems.toArray(sSpinnerNotificationRingtoneItems);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, sSpinnerNotificationRingtoneItems);
+        mSpNotificationRingtone.setAdapter(adapter);
+
+        if(null == mConfigurationService.getString(
+                SgsConfigurationEntry.NETWORK_NOTIFICATION_RING_TONE,
+                null)) {
+            mConfigurationService.putString(SgsConfigurationEntry.NETWORK_NOTIFICATION_RING_TONE,
+                    RingtoneManager.getRingtone(SgsApplication.getContext(),
+                            android.provider.Settings.System.DEFAULT_NOTIFICATION_URI).getTitle(SgsApplication.getContext()));
+        }
+        mSpNotificationRingtone.setSelection(super.getSpinnerIndex(
+                mConfigurationService.getString(
+                        SgsConfigurationEntry.NETWORK_NOTIFICATION_RING_TONE,
+                        sSpinnerNotificationRingtoneItems[0]),
+                sSpinnerNotificationRingtoneItems));
 
         super.addConfigurationListener(mSpNotificationRingtone);
         super.addConfigurationListener(mCbVibrateOnConnect);
@@ -88,7 +115,8 @@ public class ScreenGeneral  extends BaseScreen {
 			mConfigurationService.putBoolean(SgsConfigurationEntry.GENERAL_DWL, mCbDisableWakeLock.isChecked());
 			// profile should be moved to another screen (e.g. Media)
 			//mConfigurationService.putString(SgsConfigurationEntry.MEDIA_PROFILE, sProfiles[mSpProfile.getSelectedItemPosition()].mValue.toString());
-			
+            mConfigurationService.putString(SgsConfigurationEntry.NETWORK_NOTIFICATION_RING_TONE,
+                    sSpinnerNotificationRingtoneItems[mSpNotificationRingtone.getSelectedItemPosition()]);
 			// Compute
 			if(!mConfigurationService.commit()){
 				Log.e(TAG, "Failed to commit() configuration");

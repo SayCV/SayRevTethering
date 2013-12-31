@@ -29,6 +29,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 
+import org.saydroid.logger.Log;
+import org.saydroid.rootcommands.RootCommands;
 import org.saydroid.sgs.SgsApplication;
 import org.saydroid.sgs.SgsEngine;
 import org.saydroid.sgs.model.SgsAccessPoint;
@@ -37,6 +39,7 @@ import org.saydroid.sgs.services.impl.SgsBaseService;
 import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsObservableList;
 import org.saydroid.sgs.utils.SgsStringUtils;
+import org.saydroid.tether.usb.MainActivity;
 import org.saydroid.tether.usb.Services.ITetheringNetworkService;
 import org.saydroid.tether.usb.Services.Impl.TetheringNetworkService.DNS_TYPE;
 
@@ -55,8 +58,8 @@ import android.net.wifi.WifiConfiguration.AuthAlgorithm;
 import android.net.wifi.WifiConfiguration.GroupCipher;
 import android.net.wifi.WifiConfiguration.KeyMgmt;
 import android.net.wifi.WifiManager.WifiLock;
+import android.os.BatteryManager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.widget.Toast;
 
 /**@page SgsNetworkService_page Network Service
@@ -68,6 +71,8 @@ import android.widget.Toast;
  */
 public class TetheringNetworkService  extends SgsBaseService implements ITetheringNetworkService {
 	private static final String TAG = TetheringNetworkService.class.getCanonicalName();
+
+    private static final String DATA_FOLDER = String.format("/data/data/%s", MainActivity.class.getPackage().getName());
 	private static final String USB_INTERFACE_NAME = "rndis0";
 	
 	private WifiManager mWifiManager;
@@ -430,7 +435,22 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 		mAcquired = false;
 		return true;
 	}
-	
+
+    public boolean isUsbConnected(){
+        return isUsbPlugged();
+    }
+
+    private boolean isUsbPlugged() {
+        Intent intent = SgsApplication.getContext().registerReceiver(null,
+                new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+        if (plugged == BatteryManager.BATTERY_PLUGGED_USB) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 	private int getNetworkIdBySSID(String SSID) {
 		synchronized(mAccessPoints){
 			final SgsAccessPoint ap = getAccessPointBySSID(SSID);
@@ -615,4 +635,155 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 //			}
 //		}).start();
 	}
+
+
+
+    public boolean setSystemUsbTetherEnabled(boolean enabled) {
+        //
+        String command;
+        String usbTetherOn = "rndis,adb";
+        String usbTetherOff = "mtp,adb";
+        if(enabled) {
+            command = "setprop sys.usb.config "+usbTetherOn;
+        } else {
+            command = "setprop sys.usb.config "+usbTetherOff;
+        }
+        if(RootCommands.run(command)==false){
+            Log.e(TAG, "Unable to set sys.usb.config: " + enabled);
+            return false;
+        }
+        return true;
+    }
+
+    public synchronized String[] getSystemDnsServer() {
+        StringBuilder sb = new StringBuilder();
+        String dns[] = new String[2];
+        String command;
+        command = "getprop net.dns1";
+        if(RootCommands.run(command, sb)==false){
+            Log.e(TAG, "Unable to get net.dns1");
+            return null;
+        }
+        dns[0] = sb.toString();
+        command = "getprop net.dns2";
+        if(RootCommands.run(command, sb)==false){
+            Log.e(TAG, "Unable to get net.dns2");
+            return null;
+        }
+        dns[1] = sb.toString();
+        if (dns[0] == null || dns[0].length() <= 0 || dns[0].equals("undefined")) {
+            dns[0] = SgsConfigurationEntry.DEFAULT_NETWORK_PREFERRED_DNS;
+        }
+        if (dns[1] == null || dns[1].length() <= 0 || dns[1].equals("undefined")) {
+            dns[1] = SgsConfigurationEntry.DEFAULT_NETWORK_SECONDARY_DNS;
+        }
+        return dns;
+    }
+
+    public synchronized String[] setSystemDnsServer(String dns1, String dns2) {
+        String dns[] = new String[2];
+        String command;
+        command = "setprop net.dns1 " + dns1;
+        if(RootCommands.run(command)==false){
+            Log.e(TAG, "Unable to set net.dns1 as dns of " + dns1);
+            return null;
+        }
+        command = "setprop net.dns2 " + dns2;
+        if(RootCommands.run(command)==false){
+            Log.e(TAG, "Unable to set net.dns2 as dns of " + dns2);
+            return null;
+        }
+        dns[0] = dns1;
+        dns[1] = dns2;
+        return dns;
+    }
+
+    public boolean setSystemMobileDataEnable(boolean enable) {
+        // TODO Auto-generated method stub
+        String command;
+        String rmnetIface = "rmnet0";
+        String rmnetIpAddr = "0.0.0.0";
+
+        if(enable) {
+            command = this.DATA_FOLDER + "/bin/ifconfig "+ rmnetIface + " " + rmnetIpAddr;//"up" ;
+        } else {
+            command = this.DATA_FOLDER + "/bin/ifconfig "+ rmnetIface + " " + "down" ;
+        }
+        Log.d(TAG, "command to " + (enable ? "up " : "down ") + rmnetIface + " the is :" + command);
+        if(RootCommands.run(command)==false){
+            Log.e(TAG, "Unable to " + (enable ? "up " : "down ") + rmnetIface);
+
+            return false;
+        }
+        Log.d(TAG, "----" + (enable ? "up " : "down ") + rmnetIface + " success---");
+        return true;
+    }
+
+    public boolean ifConfigUpInterface(String usbIf) {
+        // TODO Auto-generated method stub
+        String command;
+        command = this.DATA_FOLDER + "/bin/ifconfig "+ usbIf + " up" ;
+        Log.d(TAG, "command to up the " + usbIf + " is :" + command);
+        if(RootCommands.run(command)==false){
+            Log.d(TAG, "Unable to up " + usbIf);
+
+            return false;
+        }
+        Log.d(TAG, "----up " + usbIf + " success---");
+        return true;
+    }
+
+
+    public boolean ifConfigSetInterface(String usbIf, String [] network ) {
+        // TODO Auto-generated method stub
+        String command;
+        command = this.DATA_FOLDER + "/bin/ifconfig " + usbIf + " " + network[0] + " netmask " +
+                network[1];
+        Log.d(TAG, "command to setup the " + usbIf + " is :" + command);
+        if(RootCommands.run(command)==false){
+            Log.d(TAG, "Unable to setup usbIface with ip address of " + network[0]);
+            Log.d(TAG, "Unable to setup usbIface with sub mask of " + network[1]);
+            return false;
+        }
+        return true;
+    }
+
+
+    public boolean ifConfigSetGW(String usbIf, String network) {
+        // TODO Auto-generated method stub
+        String command;
+        command = this.DATA_FOLDER + "/bin/route add default gw " + network + " " + usbIf;
+        Log.d(TAG, "command to setup the gateway of " + network + " is :" + command);
+        if(RootCommands.run(command)==false){
+            Log.e(TAG, "Unable to setup gateway with ip address of " + network);
+            return false;
+        }
+        return true;
+    }
+
+    class DnsUpdate implements Runnable {
+        String[] dns;
+
+        public DnsUpdate(String[] dns) {
+            this.dns = dns;
+        }
+        //@Override
+        public void run() {
+
+        }
+    }
+
+    public void waitForFinish(int timeout) {
+        synchronized (this) {
+            while (true) {
+                try {
+                    this.wait(timeout);
+                } catch (InterruptedException e) {
+                    Log.e(TAG, "InterruptedException in waitForFinish()", e);
+                }
+                return;
+            }
+        }
+    }
+
 }

@@ -54,6 +54,17 @@ public abstract class TetheringSession extends SgsObservableObject implements Co
         TERMINATED,
     }
 
+    public class DataCount {
+        // Total data uploaded
+        public long totalUpload;
+        // Total data downloaded
+        public long totalDownload;
+        // Current upload rate
+        public long uploadRate;
+        // Current download rate
+        public long downloadRate;
+    }
+
     /**
      * Creates new SIP session
      * @param sipStack the sip stack to use to create the session
@@ -318,4 +329,8 @@ public abstract class TetheringSession extends SgsObservableObject implements Co
 	public int compareTo(TetheringSession arg0) {
 		return (int)(getId() - arg0.getId());
 	}
+
+    public void trafficCounterEnable(boolean enable) {
+
+    }
 }

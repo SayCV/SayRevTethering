@@ -43,6 +43,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -56,7 +57,13 @@ public class ScreenHome extends BaseScreen {
 	private static final int MENU_SETTINGS = 1;
 	
 	private GridView mGridView;
-	
+
+    private RelativeLayout mTrafficRow = null;
+    private TextView mDownloadText = null;
+    private TextView mUploadText = null;
+    private TextView mDownloadRateText = null;
+    private TextView mUploadRateText = null;
+
 	private final ITetheringService mTetheringService;
 	
 	private BroadcastReceiver mTetheringBroadCastRecv;
@@ -71,7 +78,14 @@ public class ScreenHome extends BaseScreen {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.screen_home);
-		
+
+        mTrafficRow = (RelativeLayout)findViewById(R.id.screen_home_trafficRow);
+        mDownloadText = (TextView)findViewById(R.id.screen_home_trafficDown);
+        mUploadText = (TextView)findViewById(R.id.screen_home_trafficUp);
+        mDownloadRateText = (TextView)findViewById(R.id.screen_home_trafficDownRate);
+        mUploadRateText = (TextView)findViewById(R.id.screen_home_trafficUpRate);
+        mTrafficRow.setVisibility(View.VISIBLE);
+
 		mGridView = (GridView) findViewById(R.id.screen_home_gridview);
 		mGridView.setAdapter(new ScreenHomeAdapter(this));
 		mGridView.setOnItemClickListener(new OnItemClickListener() {
@@ -257,16 +271,17 @@ public class ScreenHome extends BaseScreen {
 			}
 			
 			if(position == ScreenHomeItem.ITEM_SIGNIN_SIGNOUT_POS){
-                if(true){
+                if(mBaseScreen.mTetheringService.getRegistrationState() == ConnectionState.CONNECTING || mBaseScreen.mTetheringService.getRegistrationState() == ConnectionState.TERMINATING){
+                    ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Cancel");
+                    ((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(R.drawable.start_48);
+                } else if(mBaseScreen.mTetheringService.isRegistered()){
+                    ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Stop tethering");
+                    ((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(R.drawable.stop_48);
+                } else {
                     ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Start tethering");
                     ((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(R.drawable.start_48);
                 }
-                else{
-                    ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Stop tethering");
-                    ((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(R.drawable.stop_48);
-                }
-			}
-			else{				
+			} else {
 				((TextView) view.findViewById(R.id.screen_home_item_text)).setText(item.mText);
 				((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(item.mIconResId);
 			}

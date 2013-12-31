@@ -75,6 +75,7 @@ public class SgsConfigurationEntry {
 	public static final String NETWORK_TRANSPORT = "NETWORK_TRANSPORT." + TAG;
 
     public static final String NETWORK_CONNECTED = "NETWORK_CONNECTED." + TAG;
+    public static final String NETWORK_NOTIFICATION_RING_TONE = "NETWORK_NOTIFICATION_RING_TONE." + TAG;
     public static final String NETWORK_LOCAL_IP = "NETWORK_LOCAL_IP." + TAG;
     public static final String NETWORK_SUB_MASK = "NETWORK_SUB_MASK." + TAG;
     public static final String NETWORK_GATE_WAY = "NETWORK_GATE_WAY." + TAG;
@@ -171,6 +172,7 @@ public class SgsConfigurationEntry {
 	public static final String DEFAULT_NETWORK_REALM = "saydroid.org";
 	public static final boolean DEFAULT_NETWORK_USE_WIFI = true;
 	public static final boolean DEFAULT_NETWORK_USE_3G = false;
+    public static final boolean DEFAULT_NETWORK_USE_FAKED_3G = false;
 	public static final String DEFAULT_NETWORK_PCSCF_DISCOVERY = "None";
 	public static final String DEFAULT_NETWORK_PCSCF_HOST = "127.0.0.1";
 	public static final int DEFAULT_NETWORK_PCSCF_PORT = 5060;
@@ -180,6 +182,7 @@ public class SgsConfigurationEntry {
 	public static final boolean DEFAULT_NETWORK_USE_EARLY_IMS = false;
 
     public static final boolean DEFAULT_NETWORK_CONNECTED = false;
+    public static final String DEFAULT_NETWORK_NOTIFICATION_RING_TONE = "";
     public static final String DEFAULT_NETWORK_LOCAL_IP = "192.168.0.252";
     public static final String DEFAULT_NETWORK_SUB_MASK = "255.255.255.0";
     public static final String DEFAULT_NETWORK_GATE_WAY = "192.168.0.1";

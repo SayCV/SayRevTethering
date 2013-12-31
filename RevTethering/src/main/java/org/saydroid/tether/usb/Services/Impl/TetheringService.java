@@ -39,8 +39,12 @@ import org.saydroid.sgs.sip.SgsPresenceStatus;
 import org.saydroid.sgs.sip.SgsRegistrationSession;
 import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsDateTimeUtils;
+import org.saydroid.tether.usb.Engine;
+import org.saydroid.tether.usb.MainActivity;
+import org.saydroid.tether.usb.Services.ITetheringNetworkService;
 import org.saydroid.tether.usb.Services.ITetheringService;
 import org.saydroid.tether.usb.Tethering.TetheringPrefrences;
+import org.saydroid.tether.usb.Tethering.TetheringSession;
 import org.saydroid.tether.usb.Tethering.TetheringSession.ConnectionState;
 import org.saydroid.tether.usb.Tethering.TetheringStack;
 import org.saydroid.tether.usb.Tethering.TetheringStack.STACK_STATE;
@@ -49,12 +53,12 @@ public class TetheringService extends SgsBaseService
 implements ITetheringService {
 	private final static String TAG = TetheringService.class.getCanonicalName();
 	
-	private SgsRegistrationSession mRegSession;
+	private TetheringSession mRegSession;
 	private TetheringStack mTetheringStack;
 	private final TetheringPrefrences mPreferences;
 	
 	private final ISgsConfigurationService mConfigurationService;
-	private final ISgsNetworkService mNetworkService;
+	private final ITetheringNetworkService mTetheringNetworkService;
 	
 	private ConditionVariable mCondHackAoR;
 	
@@ -65,7 +69,7 @@ implements ITetheringService {
 		mPreferences = new TetheringPrefrences();
 		
 		mConfigurationService = SgsEngine.getInstance().getConfigurationService();
-		mNetworkService = SgsEngine.getInstance().getNetworkService();
+        mTetheringNetworkService = ((Engine)Engine.getInstance()).getTetheringNetworkService();
 	}
 	
 	@Override
@@ -188,15 +192,37 @@ implements ITetheringService {
 	@Override
 	public boolean register(Context context) {
 		Log.d(TAG,"register()");
-		mPreferences.setRealm(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_REALM, 
-				SgsConfigurationEntry.DEFAULT_NETWORK_REALM));
-		mPreferences.setIMPI(mConfigurationService.getString(SgsConfigurationEntry.IDENTITY_IMPI, 
-				SgsConfigurationEntry.DEFAULT_IDENTITY_IMPI));
-		mPreferences.setIMPU(mConfigurationService.getString(SgsConfigurationEntry.IDENTITY_IMPU, 
-				SgsConfigurationEntry.DEFAULT_IDENTITY_IMPU));
-		
+		mPreferences.setMobileNetworkEnabled(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_3G,
+                SgsConfigurationEntry.DEFAULT_NETWORK_USE_3G));
+		mPreferences.setMobileNetworkFaked(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_FAKED_3G,
+                SgsConfigurationEntry.DEFAULT_NETWORK_USE_FAKED_3G));
+		mPreferences.setLocalIP(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_LOCAL_IP,
+                SgsConfigurationEntry.DEFAULT_NETWORK_LOCAL_IP));
+        mPreferences.setSubMask(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_SUB_MASK,
+                SgsConfigurationEntry.DEFAULT_NETWORK_SUB_MASK));
+        mPreferences.setGateWay(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_GATE_WAY,
+                SgsConfigurationEntry.DEFAULT_NETWORK_GATE_WAY));
+        mPreferences.setPreferredDNS(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_PREFERRED_DNS,
+                SgsConfigurationEntry.DEFAULT_NETWORK_PREFERRED_DNS));
+        mPreferences.setSecondaryDNS(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_SECONDARY_DNS,
+                SgsConfigurationEntry.DEFAULT_NETWORK_SECONDARY_DNS));
+
+
+
 		Log.d(TAG, String.format(
-				"realm='%s', impu='%s', impi='%s'", mPreferences.getRealm(), mPreferences.getIMPU(), mPreferences.getIMPI()));
+				"3G='%s', Faked 3G='%s'" +
+                        "ip='%s'" +
+                        "sub mask='%s'" +
+                        "gate way='%s'" +
+                        "dns1='%s'" +
+                        "dns2='%s'",
+                mPreferences.isMobileNetworkEnabled()?"on":"off",
+                mPreferences.isMobileNetworkFaked()?"on":"off",
+                mPreferences.getLocalIP(),
+                mPreferences.getSubMask(),
+                mPreferences.getGateWay(),
+                mPreferences.getPreferredDNS(),
+                mPreferences.getSecondaryDNS()));
 		
 		if (mTetheringStack == null) {
             mTetheringStack = new TetheringStack();
@@ -237,27 +263,16 @@ implements ITetheringService {
 
 		
 		// Preference values
-		mPreferences.setXcapEnabled(mConfigurationService.getBoolean(SgsConfigurationEntry.XCAP_ENABLED,
-				SgsConfigurationEntry.DEFAULT_XCAP_ENABLED));
-		mPreferences.setPresenceEnabled(mConfigurationService.getBoolean(SgsConfigurationEntry.RCS_USE_PRESENCE,
-				SgsConfigurationEntry.DEFAULT_RCS_USE_PRESENCE));
-		mPreferences.setMWI(mConfigurationService.getBoolean(SgsConfigurationEntry.RCS_USE_MWI,
-				SgsConfigurationEntry.DEFAULT_RCS_USE_MWI));
 		
 		// Create registration session
-
-		
-		// Set/update From URI. For Registration ToUri should be equals to realm
-		// (done by the stack)
-		mRegSession.setFromUri(mPreferences.getIMPU());
 		
 		/* Before registering, check if AoR hacking id enabled */
 
 
-		if (!mRegSession.register()) {
+		/*if (!mRegSession.register()) {
 			Log.e(TAG, "Failed to send REGISTER request");
 			return false;
-		}
+		}*/
 		
 		return true;
 	}
@@ -324,8 +339,84 @@ implements ITetheringService {
 		intent.putExtra(SgsSubscriptionEventArgs.EXTRA_EMBEDDED, args);
 		SgsApplication.getContext().sendBroadcast(intent);
 	}
-	
 
+    public int startTether() {
+    	/*
+    	 * ReturnCodes:
+    	 *    0 = All OK, Service started
+    	 *    1 = Mobile-Data-Connection not established (not used at the moment)
+    	 *    2 = Fatal error
+    	 */
+
+        // check if usb is plugged
+        if (!((TetheringNetworkService)mTetheringNetworkService).isUsbConnected()) {
+            /*Toast.makeText(MainActivity.currentInstance,
+                    "usb is not pluged, retry",
+                    Toast.LENGTH_LONG).show();*/
+            Log.d(TAG, "usb is not pluged, retry ");
+            return 13; //MESSAGE_USB_ACTION_DETACH
+        }
+
+        // pre turn on Settings USB Tethering
+        if(((TetheringNetworkService)mTetheringNetworkService).setSystemUsbTetherEnabled(true) == false ) {
+            Log.d(TAG, "Unable to set sys.usb.config ");
+            return 2;
+        }
+        //waitForFinish(1000);
+        String usbIface = mTetheringStack.getTetherableIfaces();
+
+
+       /* if (usbIface == null) {
+            // updateState();
+            //MainActivity.currentInstance.openNoUSBIfaceDialog(); cause bug, cannot change UI inside child thread
+            Message msg = Message.obtain();
+            msg.what = MainActivity.MESSAGE_NO_USB_INTERFACE;
+            msg.obj = "No tetherable usb inteface found ...but not assume as rndis0";
+            MainActivity.currentInstance.viewUpdateHandler.sendMessage(msg);
+            //usbIface = new String("rndis0");
+        }*/
+
+
+        // Starting service
+
+        //has to use Integer
+        if (mTetheringStack.setTetherableIfacesEnabled()) {
+            //clientConnectEnable is mainly a separate thread to handle the dhcp leasing
+            //this is not required for reverse tethering jason-12Apri2012
+            //this.clientConnectEnable(true);
+
+            this.trafficCounterEnable(true);
+
+            // Update resolv.conf-file
+            //Move to after starttether, because android internal tether will set its own DNS. 2012-July-12 Jason GONG
+            String dns[] = this.coretask.updateResolvConf();
+            this.coretask.waitForFinish(200);
+
+            this.dnsUpdateEnable(dns, true);
+            this.coretask.waitForFinish(200);
+
+            String network[] = this.coretask.readLanConf();
+
+            this.ipConfigureEnable(network,true);
+            this.coretask.waitForFinish(200);
+
+            this.setMobileDataEnabled(true);
+            //this.coretask.waitForFinish(1000);
+            this.coretask.ipConfigureMobileData(true);
+
+            //debug here
+            this.coretask.appendLog("tethering started ...");
+
+            // Acquire Wakelock
+            this.acquireWakeLock();
+
+            //indicate the tether_stop is not valid
+            this.tetherStopped = -1;
+
+            return 0;
+        }
+        return 2;
+    }
 		
 
 }
