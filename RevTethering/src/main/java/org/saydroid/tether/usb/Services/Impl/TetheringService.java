@@ -364,7 +364,7 @@ implements ITetheringService {
             Log.d(TAG, "Unable to set sys.usb.config ");
             return 2;
         }
-        //waitForFinish(1000);
+        ((TetheringNetworkService)mTetheringNetworkService).waitForFinish(1000);
         String usbIface = mTetheringStack.getTetherableIfaces();
 
 
