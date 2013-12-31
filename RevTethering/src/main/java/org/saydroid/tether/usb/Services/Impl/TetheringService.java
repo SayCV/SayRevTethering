@@ -380,7 +380,7 @@ implements ITetheringService {
         // Starting service
 
         //has to use Integer
-        if (mTetheringStack.setTetherableIfacesEnabled()) {
+        if (mTetheringStack.setTetherableIfacesEnabled(usbIface) == 0) {
             //clientConnectEnable is mainly a separate thread to handle the dhcp leasing
             //this is not required for reverse tethering jason-12Apri2012
             //this.clientConnectEnable(true);
