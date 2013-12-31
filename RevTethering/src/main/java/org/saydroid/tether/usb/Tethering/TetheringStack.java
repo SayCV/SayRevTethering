@@ -128,7 +128,7 @@ public class TetheringStack {
 	}
 
     public String getTetherableIfaces(){
-        //getTetherableUsbRegexs();
+        getTetherableUsbRegexs();
         if(mUsbRegexs == null) {
             Log.e(TAG, "mUsbRegexs is null!");
         }
