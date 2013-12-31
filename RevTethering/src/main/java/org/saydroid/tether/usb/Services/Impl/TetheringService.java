@@ -61,6 +61,7 @@ implements ITetheringService {
 	private final ITetheringNetworkService mTetheringNetworkService;
 	
 	private ConditionVariable mCondHackAoR;
+
 	
 	public TetheringService() {
 		super();
@@ -243,7 +244,7 @@ implements ITetheringService {
 		}
 		
 		// Set STUN information
-
+        startTether();
 		
 		// Set Proxy-CSCF
 
@@ -280,6 +281,7 @@ implements ITetheringService {
 	@Override
 	public boolean unRegister() {
 		if (isRegistered()) {
+            stopTether();
 			new Thread(new Runnable(){
 				@Override
 				public void run() {
@@ -385,38 +387,53 @@ implements ITetheringService {
             //this is not required for reverse tethering jason-12Apri2012
             //this.clientConnectEnable(true);
 
-            this.trafficCounterEnable(true);
+            //this.trafficCounterEnable(true);
 
             // Update resolv.conf-file
-            //Move to after starttether, because android internal tether will set its own DNS. 2012-July-12 Jason GONG
-            String dns[] = this.coretask.updateResolvConf();
-            this.coretask.waitForFinish(200);
+            //Move to after starttether, because android internal tether will set its own DNS.
+            String dns[] = ((TetheringNetworkService) mTetheringNetworkService).getSystemDnsServer();
+            ((TetheringNetworkService) mTetheringNetworkService).setDnsUpdateThreadClassEnabled(dns, true);
 
-            this.dnsUpdateEnable(dns, true);
-            this.coretask.waitForFinish(200);
+            String network[] = new String[2];
+            network[0] = mPreferences.getLocalIP();
+            network[1] = mPreferences.getGateWay();
 
-            String network[] = this.coretask.readLanConf();
+            ((TetheringNetworkService) mTetheringNetworkService).setIpConfigureThreadClassEnabled(network, true);
 
-            this.ipConfigureEnable(network,true);
-            this.coretask.waitForFinish(200);
-
-            this.setMobileDataEnabled(true);
-            //this.coretask.waitForFinish(1000);
-            this.coretask.ipConfigureMobileData(true);
+            ((TetheringNetworkService) mTetheringNetworkService).setMobileNetworkEnabled(true);
+            ((TetheringNetworkService) mTetheringNetworkService).setMobileNetworkFakedEnabled(true);
 
             //debug here
-            this.coretask.appendLog("tethering started ...");
+            Log.d(TAG, "tethering started ...");
 
             // Acquire Wakelock
-            this.acquireWakeLock();
+            SgsApplication.getInstance().acquirePowerLock();
 
             //indicate the tether_stop is not valid
-            this.tetherStopped = -1;
+            //this.tetherStopped = -1;
 
             return 0;
         }
         return 2;
     }
-		
 
+    public boolean stopTether() {
+        String usbIface = mTetheringStack.getTetherableIfaces();
+        // Release Wakelock
+        SgsApplication.getInstance().acquirePowerLock();
+
+        mTetheringStack.setTetherableIfacesDisabled(usbIface);
+
+        if(((TetheringNetworkService)mTetheringNetworkService).setSystemUsbTetherEnabled(false) == false ) {
+            Log.d(TAG, "Unable to set sys.usb.config ");
+        }
+        ((TetheringNetworkService) mTetheringNetworkService).setMobileNetworkEnabled(false);
+
+        //((TetheringNetworkService) mTetheringNetworkService).setTrafficCounterThreadClassEnabled(false);
+
+        ((TetheringNetworkService) mTetheringNetworkService).setDnsUpdateThreadClassEnabled(false);
+        ((TetheringNetworkService) mTetheringNetworkService).setIpConfigureThreadClassEnabled(false);
+
+        return true;
+    }
 }

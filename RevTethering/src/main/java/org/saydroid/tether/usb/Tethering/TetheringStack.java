@@ -54,7 +54,10 @@ public class TetheringStack {
     private Engine mEngine;
 	private final ITetheringNetworkService mTetheringNetworkService;
     private final TetheringPrefrences mPreferences;
-	
+
+    private String mUsbInterface = null;
+    private String[] mUsbRegexs = null;
+
 	/**
 	 * Creates new SIP/IMS Stack. You should use
 	 *
@@ -80,6 +83,7 @@ public class TetheringStack {
 		}
 		
 	     // Sip headers
+        getTetherableUsbRegexs();
 
 	}
 
@@ -123,6 +127,15 @@ public class TetheringStack {
 		}
 	}
 
+    public String getTetherableIfaces(){
+        //getTetherableUsbRegexs();
+        if(mUsbRegexs == null) {
+            Log.e(TAG, "mUsbRegexs is null!");
+        }
+        getTetherableIfaces(mUsbRegexs);
+        return mUsbInterface;
+    }
+
     private String findIface(String[] ifaces, String[] regexes) {
         for (String iface : ifaces) {
             for (String regex : regexes) {
@@ -134,8 +147,8 @@ public class TetheringStack {
         return null;
     }
 
-    public String[] getTetherableUsbRegexs(){
-        String[] mUsbRegexs = null;
+    public void getTetherableUsbRegexs(){
+        //String[] usbRegexs = null;
         //ArrayList mUsbIfaces;
         ConnectivityManager cm = SgsApplication.getConnectivityManager();
         Method getTetherableUsbRegexsLocal = null;
@@ -162,11 +175,9 @@ public class TetheringStack {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-        return mUsbRegexs;
     }
 
-    public String getTetherableIfaces(String[] usbRegexs){
+    public void getTetherableIfaces(String[] usbRegexs){
         String[] available = null;
         ConnectivityManager cm = SgsApplication.getConnectivityManager();
         Method getTetherableIfacesLocal = null;
@@ -195,7 +206,7 @@ public class TetheringStack {
         }
         Log.d(TAG, "getTetherableIfaces got ..." + (available.length > 0 ? available[0].toString() : "NULL"));
 
-        return findIface(available, usbRegexs);
+        mUsbInterface = findIface(available, usbRegexs);
     }
 
     public int setTetherableIfacesEnabled(String usbIf){
@@ -229,4 +240,68 @@ public class TetheringStack {
         return tetherStarted;
     }
 
+    public int setTetherableIfacesDisabled(String usbIf){
+        int tetherStopped = -1;
+        ConnectivityManager cm = SgsApplication.getConnectivityManager();
+        Method getTetheredIfacesLocal = null;
+        try {
+            getTetheredIfacesLocal = cm.getClass().getMethod("getTetheredIfaces");
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        String[] tethered = null;
+        try {
+            tethered = (String [])getTetheredIfacesLocal.invoke(cm);
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Log.d(TAG, "stopTether() getTetheredIfaces got ..." + (tethered.length > 0 ? tethered[0].toString() : "NULL"));
+        //tethered = new String[] {"rndis0"};
+        usbIf = findIface(tethered, mUsbRegexs);
+        if (usbIf == null) {
+            //TO DO : return with a pop up message
+            //MainActivity.currentInstance.openNoUSBIfaceDialog();
+            /*Message msg = Message.obtain();
+            msg.what = MainActivity.MESSAGE_NO_USB_INTERFACE;
+            msg.obj = "No tetherable usb inteface found ...";
+            MainActivity.currentInstance.viewUpdateHandler.sendMessage(msg);*/
+
+        }
+        Method untetherLocal = null;
+        try {
+            untetherLocal = cm.getClass().getMethod("untether", String.class);
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        try {
+            tetherStopped = (Integer)untetherLocal.invoke(cm, usbIf);
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return tetherStopped;
+    }
 }

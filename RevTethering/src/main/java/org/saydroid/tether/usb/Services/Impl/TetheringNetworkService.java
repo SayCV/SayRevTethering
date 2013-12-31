@@ -18,13 +18,17 @@
 
 package org.saydroid.tether.usb.Services.Impl;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +41,7 @@ import org.saydroid.sgs.model.SgsAccessPoint;
 import org.saydroid.sgs.services.ISgsNetworkService;
 import org.saydroid.sgs.services.impl.SgsBaseService;
 import org.saydroid.sgs.utils.SgsConfigurationEntry;
+import org.saydroid.sgs.utils.SgsFileUtils;
 import org.saydroid.sgs.utils.SgsObservableList;
 import org.saydroid.sgs.utils.SgsStringUtils;
 import org.saydroid.tether.usb.MainActivity;
@@ -59,6 +64,7 @@ import android.net.wifi.WifiConfiguration.GroupCipher;
 import android.net.wifi.WifiConfiguration.KeyMgmt;
 import android.net.wifi.WifiManager.WifiLock;
 import android.os.BatteryManager;
+import android.support.v7.appcompat.R;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
@@ -85,6 +91,12 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 	private boolean mScanning;
 	private final SgsObservableList<SgsAccessPoint> mAccessPoints;
 	private BroadcastReceiver mNetworkWatcher;
+
+    private Thread mTrafficCounterThread = null;
+    private Thread mDnsUpdateThread = null;
+    private Thread mIpConfigureThread = null;
+
+    private String mUsbInterface = null;
 	
 	public static final int[] sWifiSignalValues = new int[] {
         0,
@@ -116,7 +128,7 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 			Log.e(TAG, "Connectivity manager is Null");
 			return false;
 		}
-		
+
 		mStarted = true;
 		return true;
 	}
@@ -636,7 +648,10 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 //		}).start();
 	}
 
-
+    public boolean setTetherableIfaces(String usbInterface) {
+        mUsbInterface = usbInterface;
+        return true;
+    }
 
     public boolean setSystemUsbTetherEnabled(boolean enabled) {
         //
@@ -683,10 +698,17 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
     public synchronized String[] setSystemDnsServer(String dns1, String dns2) {
         String dns[] = new String[2];
         String command;
+        if(dns1 == null) {
+            dns1 = SgsConfigurationEntry.DEFAULT_NETWORK_PREFERRED_DNS;
+        }
         command = "setprop net.dns1 " + dns1;
         if(RootCommands.run(command)==false){
             Log.e(TAG, "Unable to set net.dns1 as dns of " + dns1);
             return null;
+        }
+
+        if(dns2 == null) {
+            dns2 = SgsConfigurationEntry.DEFAULT_NETWORK_SECONDARY_DNS;
         }
         command = "setprop net.dns2 " + dns2;
         if(RootCommands.run(command)==false){
@@ -698,24 +720,73 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
         return dns;
     }
 
-    public boolean setSystemMobileDataEnable(boolean enable) {
+    public void setMobileNetworkEnabled(boolean enabled){
+        String[] available = null;
+        ConnectivityManager cm = SgsApplication.getConnectivityManager();
+        Method setMobileDataEnabledLocal = null;
+        try {
+            setMobileDataEnabledLocal = cm.getClass().getMethod("setMobileDataEnabled", boolean.class);
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Log.d(TAG, "setMobileDataEnabled method got security exception ...");
+        } catch (NoSuchMethodException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        try {
+            setMobileDataEnabledLocal.invoke(cm, enabled);
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Log.d(TAG, "setMobileDataEnabledLocal returned value is: " + (enabled ? "Enable" : "Disable"));
+
+        if(enabled) {
+            NetworkInfo wifiNetworkInfo, mobileNetworkInfo;
+            boolean finished = false;
+            synchronized (this) {
+                while (!finished) {
+                    try {
+                        this.wait(1000);
+                    } catch (InterruptedException e) {
+                        Log.d(TAG, "InterruptedException in v()", e);
+                    }
+                    mobileNetworkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+                    if(mobileNetworkInfo.isConnected()) {
+                        finished = true;
+                        //terminate("Timeout");
+                        Log.d(TAG, "setMobileDataEnabled() Timeout has occurred.");
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean setMobileNetworkFakedEnabled(boolean enabled) {
         // TODO Auto-generated method stub
         String command;
         String rmnetIface = "rmnet0";
         String rmnetIpAddr = "0.0.0.0";
 
-        if(enable) {
+        if(enabled) {
             command = this.DATA_FOLDER + "/bin/ifconfig "+ rmnetIface + " " + rmnetIpAddr;//"up" ;
         } else {
             command = this.DATA_FOLDER + "/bin/ifconfig "+ rmnetIface + " " + "down" ;
         }
-        Log.d(TAG, "command to " + (enable ? "up " : "down ") + rmnetIface + " the is :" + command);
+        Log.d(TAG, "command to " + (enabled ? "up " : "down ") + rmnetIface + " the is :" + command);
         if(RootCommands.run(command)==false){
-            Log.e(TAG, "Unable to " + (enable ? "up " : "down ") + rmnetIface);
+            Log.e(TAG, "Unable to " + (enabled ? "up " : "down ") + rmnetIface);
 
             return false;
         }
-        Log.d(TAG, "----" + (enable ? "up " : "down ") + rmnetIface + " success---");
+        Log.d(TAG, "----" + (enabled ? "up " : "down ") + rmnetIface + " success---");
         return true;
     }
 
@@ -734,15 +805,14 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
     }
 
 
-    public boolean ifConfigSetInterface(String usbIf, String [] network ) {
+    public boolean ifConfigSetInterface(String usbIf, String ip, String subMask ) {
         // TODO Auto-generated method stub
         String command;
-        command = this.DATA_FOLDER + "/bin/ifconfig " + usbIf + " " + network[0] + " netmask " +
-                network[1];
+        command = this.DATA_FOLDER + "/bin/ifconfig " + usbIf + " " + ip + " netmask " + subMask;
         Log.d(TAG, "command to setup the " + usbIf + " is :" + command);
         if(RootCommands.run(command)==false){
-            Log.d(TAG, "Unable to setup usbIface with ip address of " + network[0]);
-            Log.d(TAG, "Unable to setup usbIface with sub mask of " + network[1]);
+            Log.d(TAG, "Unable to setup usbIface with ip address of " + ip);
+            Log.d(TAG, "Unable to setup usbIface with sub mask of " + subMask);
             return false;
         }
         return true;
@@ -761,15 +831,142 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
         return true;
     }
 
-    class DnsUpdate implements Runnable {
+    public boolean dumpDefaultGW(){
+        String dumpDefaultGW = this.DATA_FOLDER + "/bin/route  > " + this.DATA_FOLDER + "/conf/route.conf";
+        Log.d(TAG, "command for dumping the default gateway is: " + dumpDefaultGW);
+        if(RootCommands.run(dumpDefaultGW)==false){
+            Log.e(TAG, "Unable to dump the route output to " + this.DATA_FOLDER + "/var/route.out");
+            return false;
+        }
+        return true;
+    }
+
+    public String[] getCurrentGW( ){
+        String currentGWandIface[] = new String[2];
+
+        String filename = this.DATA_FOLDER + "/conf/route.conf";
+        File inFile = new File(filename);
+        if (inFile.exists() == true) {
+            ArrayList<String> inputLines = SgsFileUtils.readLinesFromFile(filename);
+            for (String line : inputLines) {
+                if (line.startsWith("default")) {
+                    String[] routeOutPuts = line.split(" ");
+                    currentGWandIface[0] = routeOutPuts[1];  //ip of gateway
+                    currentGWandIface[1] = routeOutPuts[routeOutPuts.length-1]; //interface of gateway
+                    break;
+                }
+
+            }
+        }
+
+        if (currentGWandIface[0] == null || currentGWandIface[0].length() <= 0) {
+            currentGWandIface[0] = "undefined";
+        }
+        if (currentGWandIface[1] == null || currentGWandIface[1].length() <= 0) {
+            currentGWandIface[1] = "undefined";
+        }
+        return currentGWandIface;
+    }
+
+    public void setDnsUpdateThreadClassEnabled(boolean enabled) {
+        this.setDnsUpdateThreadClassEnabled(null, enabled);
+    }
+
+    public void setDnsUpdateThreadClassEnabled(String[] dns, boolean enabled) {
+        if (enabled == true) {
+            if (this.mDnsUpdateThread == null || this.mDnsUpdateThread.isAlive() == false) {
+                this.mDnsUpdateThread = new Thread(new DnsUpdateThreadClass(dns));
+                this.mDnsUpdateThread.start();
+            }
+        } else {
+            if (this.mDnsUpdateThread != null)
+                this.mDnsUpdateThread.interrupt();
+        }
+    }
+
+    // Move to after starttether, because android internal tether will set its own DNS.
+    class DnsUpdateThreadClass implements Runnable {
         String[] dns;
 
-        public DnsUpdate(String[] dns) {
+        public DnsUpdateThreadClass(String[] dns) {
             this.dns = dns;
         }
         //@Override
         public void run() {
+            while (!Thread.currentThread().isInterrupted()) {
+                String[] currentDns = getSystemDnsServer();
+                if (this.dns == null || this.dns[0].equals(currentDns[0]) == false || this.dns[1].equals(currentDns[1]) == false) {
+                    //this.dns = updateResolvConf();
+                    this.dns = setSystemDnsServer(this.dns[0], this.dns[1]);
+                    Log.d(TAG, "set dns1: " + this.dns[0]);
+                    Log.d(TAG, "set dns2: " + this.dns[1]);
+                }
+                // Taking a nap
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+    }
 
+    public void setIpConfigureThreadClassEnabled(boolean enabled) {
+        this.setIpConfigureThreadClassEnabled(null, enabled);
+    }
+
+
+    public void setIpConfigureThreadClassEnabled(String[] network, boolean enable) {
+        if (enable == true) {
+            if (this.mIpConfigureThread == null || this.mIpConfigureThread.isAlive() == false) {
+                this.mIpConfigureThread = new Thread(new IpConfigureThreadClass(network));
+                this.mIpConfigureThread.start();
+            }
+        } else {
+            if (this.mIpConfigureThread != null)
+                this.mIpConfigureThread.interrupt();
+        }
+    }
+
+    class IpConfigureThreadClass implements Runnable {
+
+        String[] network;
+
+        public IpConfigureThreadClass(String[] network) {
+            this.network = network;
+        }
+
+        //@Override
+    	/*
+    	 * cannot simply copy over the updateDNS function, it is ok to keep updating dns,
+    	 * but the ifconfig only need setup once.
+    	 */
+        public void run() {
+            //while (!Thread.currentThread().isInterrupted()) {
+            //String[] currentDns = TetherApplication.this.coretask.getCurrentDns();//current means current system setting, not setting inside file.
+            //if (this.dns == null || this.dns[0].equals(currentDns[0]) == false || this.dns[1].equals(currentDns[1]) == false) {
+            if(ifConfigUpInterface(mUsbInterface)){ //ifconfig usb up command execution
+                if(ifConfigSetInterface(mUsbInterface, network[0], network[1])){
+                    if(dumpDefaultGW()) {
+                        String[] currentGW = getCurrentGW();
+                        if ((currentGW[0].equals(network[1])==false)  || (currentGW[1].equals(mUsbInterface)==false)){
+                            if(ifConfigSetGW(mUsbInterface, network[1])) {
+                                Log.d(TAG, "ifconfig setup success");
+                            } else {
+                                Log.d(TAG, "cannot set default gate way");
+                            }
+                        } else {
+                            Log.d(TAG, "existing gateway is already correct");
+                        }
+                    } else {
+                        Log.d(TAG, "cannot dump system gate way");
+                    }
+                } else { //ifConfigSetInterface(mUsbInterface, network)){
+                    Log.d(TAG, "cannot set ifconfig inteface");
+                }
+            } else {
+                Log.d(TAG, "cannot up usb interface");
+            }
         }
     }
 
