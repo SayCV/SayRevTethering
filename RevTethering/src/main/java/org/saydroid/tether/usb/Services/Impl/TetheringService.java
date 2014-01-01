@@ -44,6 +44,7 @@ import org.saydroid.tether.usb.MainActivity;
 import org.saydroid.tether.usb.Services.ITetheringNetworkService;
 import org.saydroid.tether.usb.Services.ITetheringService;
 import org.saydroid.tether.usb.Tethering.TetheringPrefrences;
+import org.saydroid.tether.usb.Tethering.TetheringRegistrationSession;
 import org.saydroid.tether.usb.Tethering.TetheringSession;
 import org.saydroid.tether.usb.Tethering.TetheringSession.ConnectionState;
 import org.saydroid.tether.usb.Tethering.TetheringStack;
@@ -53,7 +54,7 @@ public class TetheringService extends SgsBaseService
 implements ITetheringService {
 	private final static String TAG = TetheringService.class.getCanonicalName();
 	
-	private TetheringSession mRegSession;
+	private TetheringRegistrationSession mRegSession;
 	private TetheringStack mTetheringStack;
 	private final TetheringPrefrences mPreferences;
 	
@@ -116,8 +117,7 @@ implements ITetheringService {
 	@Override
 	public ConnectionState getRegistrationState(){
 		if (mRegSession != null) {
-			//return mRegSession.getConnectionState();
-            return ConnectionState.NONE;
+			return mRegSession.getConnectionState();
 		}
 		return ConnectionState.NONE;
 	}
@@ -244,36 +244,27 @@ implements ITetheringService {
 		}
 		
 		// Set STUN information
-        startTether();
-		
 		// Set Proxy-CSCF
-
-		
 		// Set local IP (If your reusing this code on non-Android platforms (iOS, Symbian, WinPhone, ...),
 		// let Doubango retrieve the best IP address)
-
-		
 		// Whether to use DNS NAPTR+SRV for the Proxy-CSCF discovery (even if the DNS requests are sent only when the stack starts,
 		// should be done after setProxyCSCF())
-
-		
 		// SigComp (only update compartment Id if changed)
-
-		
 		// Start the Stack
-
-		
 		// Preference values
-		
 		// Create registration session
-		
+        // Create registration session
+        if (mRegSession == null) {
+            mRegSession = new TetheringRegistrationSession(mTetheringStack);
+        }
+        else{
+            mRegSession.setSigCompId(mTetheringStack.getSigCompId());
+        }
 		/* Before registering, check if AoR hacking id enabled */
-
-
-		/*if (!mRegSession.register()) {
-			Log.e(TAG, "Failed to send REGISTER request");
+		if (startTether() != 0) {
+			Log.e(TAG, "Failed to startTether request");
 			return false;
-		}*/
+		}
 		
 		return true;
 	}
@@ -366,6 +357,9 @@ implements ITetheringService {
         }
         ((TetheringNetworkService)mTetheringNetworkService).waitForFinish(1000);
         String usbIface = mTetheringStack.getTetherableIfaces();
+        Log.d(TAG, "Found usbIface: " + usbIface == null ? "null" : usbIface);
+
+        mRegSession.setTetheringNetworkDevice(usbIface);
 
 
        /* if (usbIface == null) {
@@ -411,9 +405,10 @@ implements ITetheringService {
 
             //indicate the tether_stop is not valid
             //this.tetherStopped = -1;
-
+            mRegSession.setConnectionState(ConnectionState.CONNECTED);
             return 0;
         }
+        mRegSession.setConnectionState(ConnectionState.CONNECTING);
         return 2;
     }
 
@@ -434,6 +429,7 @@ implements ITetheringService {
         ((TetheringNetworkService) mTetheringNetworkService).setDnsUpdateThreadClassEnabled(false);
         ((TetheringNetworkService) mTetheringNetworkService).setIpConfigureThreadClassEnabled(false);
 
+        mRegSession.setConnectionState(ConnectionState.TERMINATED);
         return true;
     }
 }

@@ -895,11 +895,11 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
         public void run() {
             while (!Thread.currentThread().isInterrupted()) {
                 String[] currentDns = getSystemDnsServer();
-                if (this.dns == null || this.dns[0].equals(currentDns[0]) == false || this.dns[1].equals(currentDns[1]) == false) {
+                if (this.dns == null || currentDns == null || this.dns[0].equals(currentDns[0]) == false || this.dns[1].equals(currentDns[1]) == false) {
                     //this.dns = updateResolvConf();
                     this.dns = setSystemDnsServer(this.dns[0], this.dns[1]);
-                    Log.d(TAG, "set dns1: " + this.dns[0]);
-                    Log.d(TAG, "set dns2: " + this.dns[1]);
+                    //Log.d(TAG, "set dns1: " + this.dns[0]);
+                    //Log.d(TAG, "set dns2: " + this.dns[1]);
                 }
                 // Taking a nap
                 try {

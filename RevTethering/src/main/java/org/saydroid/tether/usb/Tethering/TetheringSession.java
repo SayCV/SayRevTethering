@@ -54,20 +54,9 @@ public abstract class TetheringSession extends SgsObservableObject implements Co
         TERMINATED,
     }
 
-    public class DataCount {
-        // Total data uploaded
-        public long totalUpload;
-        // Total data downloaded
-        public long totalDownload;
-        // Current upload rate
-        public long uploadRate;
-        // Current download rate
-        public long downloadRate;
-    }
-
     /**
      * Creates new SIP session
-     * @param sipStack the sip stack to use to create the session
+     * @param tetheringStack the sip stack to use to create the session
      */
     protected TetheringSession(TetheringStack tetheringStack){
         mTetheringStack = tetheringStack;
@@ -269,20 +258,22 @@ public abstract class TetheringSession extends SgsObservableObject implements Co
     	return mToUri;
     }
     
-    public void setToUri(String uri){
+    public boolean setToUri(String uri){
     	if (!getSession().setToUri(uri)){
             Log.e(TAG, String.format("%s is invalid as toUri", uri));
-            return;
+            return false;
         }
     	mToUri = uri;
+        return true;
     }
     
-    public void setToUri(SipUri uri){
+    public boolean setToUri(SipUri uri){
     	if (!getSession().setToUri(uri)){
             Log.e(TAG, "Failed to set ToUri");
-            return;
+            return false;
         }
     	mToUri = String.format("%s:%s@%s", uri.getScheme(), uri.getUserName(), uri.getHost());
+        return true;
     }
     
     public String getRemotePartyUri(){
@@ -306,10 +297,10 @@ public abstract class TetheringSession extends SgsObservableObject implements Co
 
     public void setSigCompId(String compId){
 		if(compId != null && mCompId != compId){
-			getSession().removeSigCompCompartment();
+			//getSession().removeSigCompCompartment();
 		}
 		if((mCompId = compId) != null){
-			getSession().addSigCompCompartment(mCompId);
+			//getSession().addSigCompCompartment(mCompId);
 		}
 	}
     
@@ -317,7 +308,7 @@ public abstract class TetheringSession extends SgsObservableObject implements Co
 		getSession().delete();
 	}
 
-    protected abstract SipSession getSession();
+    protected abstract TetheringSession getSession();
 
     protected void init(){
         // Sip Headers (common to all sessions)
@@ -329,8 +320,4 @@ public abstract class TetheringSession extends SgsObservableObject implements Co
 	public int compareTo(TetheringSession arg0) {
 		return (int)(getId() - arg0.getId());
 	}
-
-    public void trafficCounterEnable(boolean enable) {
-
-    }
 }
