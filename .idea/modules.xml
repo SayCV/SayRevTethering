@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://F:/.iml" filepath="F:/.iml" />
       <module fileurl="file://$PROJECT_DIR$/RevTethering/RevTethering.iml" filepath="$PROJECT_DIR$/RevTethering/RevTethering.iml" />
       <module fileurl="file://$PROJECT_DIR$/SayGeneralStack/SayGeneralStack.iml" filepath="$PROJECT_DIR$/SayGeneralStack/SayGeneralStack.iml" />
       <module fileurl="file://$PROJECT_DIR$/SayRevTethering.iml" filepath="$PROJECT_DIR$/SayRevTethering.iml" />

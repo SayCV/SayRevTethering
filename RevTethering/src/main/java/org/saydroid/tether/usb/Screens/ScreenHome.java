@@ -84,7 +84,7 @@ public class ScreenHome extends BaseScreen {
         mUploadText = (TextView)findViewById(R.id.screen_home_trafficUp);
         mDownloadRateText = (TextView)findViewById(R.id.screen_home_trafficDownRate);
         mUploadRateText = (TextView)findViewById(R.id.screen_home_trafficUpRate);
-        mTrafficRow.setVisibility(View.VISIBLE);
+        // mTrafficRow.setVisibility(View.VISIBLE);
 
 		mGridView = (GridView) findViewById(R.id.screen_home_gridview);
 		mGridView.setAdapter(new ScreenHomeAdapter(this));

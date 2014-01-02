@@ -96,7 +96,7 @@ public abstract class TetheringSession extends SgsObservableObject implements Co
     public int decRef(){
     	synchronized (this) {
 			if(--mRefCount == 0){
-				getSession().delete();
+				// getSession().delete();
 			}
 			Log.d(TAG, "mRefCount="+mRefCount);
 			return mRefCount;
@@ -109,7 +109,7 @@ public abstract class TetheringSession extends SgsObservableObject implements Co
      */
     public long getId(){
     	if(mId == -1){
-            mId = getSession().getId(); 
+            mId = 0;
         }
         return mId;
     }
@@ -124,75 +124,6 @@ public abstract class TetheringSession extends SgsObservableObject implements Co
      */
     public TetheringStack getStack(){
         return mTetheringStack;
-    }
-
-    /**
-     * Adds a new SIP header to the session
-     * @param name the name of the header
-     * @param value the value of the header
-     * @return true if succeed and false otherwise
-     * @sa @ref removeHeader()
-     * @code
-     * mSipSession.addHeader("User-Agent", "IM-OMAv1.0");
-     * @endcode
-     */
-    public boolean addHeader(String name, String value){
-    	return getSession().addHeader(name, value);
-    }
-    
-    /**
-     * Removes a SIP header from the session
-     * @param name the name of the sip header to remove
-     * @return true if succeed and false otherwise
-     * @sa @ref addHeader()
-     * @code
-     * mSipSession.removeHeader("User-Agent");
-     * @endcode
-     */
-    public boolean removeHeader(String name){
-    	return getSession().removeHeader(name);
-    }
-    
-    /**
-     * Adds sip capabilities to the session. The capability will be added in a separate
-     * "Accept-Contact" header if the session is dialogless or in the "Contact" header otherwise
-     * @param name the name of capability to add
-     * @return true if succeed and false otherwise
-     * @sa @ref removeCaps()
-     * @code
-     * mSipSession.addCaps("+g.3gpp.smsip");
-     * @endcode
-     */
-    public boolean addCaps(String name){
-    	return getSession().addCaps(name);
-    }
-    
-    /**
-     * Adds sip capabilities to the session. The capability will be added in a separate
-     * "Accept-Contact" header if the session is dialogless or in the "Contact" header otherwise
-     * @param name the name of capability to add
-     * @param value the value of the capability
-     * @return true if succeed and false otherwise
-     * @sa @ref removeCaps()
-     * @code
-     * mSipSession.addCaps("+g.3gpp.icsi-ref", "\"urn%3Aurn-7%3A3gpp-service.ims.icsi.mmtel\"");
-     * @endcode
-     */
-    public boolean addCaps(String name, String value){
-    	return getSession().addCaps(name, value);
-    }
-    
-    /**
-     * Removes a sip capability from the session
-     * @param name the name of the capability to remove
-     * @return true if succeed and false otherwise
-     * @sa @ref addCaps()
-     * @code
-     * mSipSession.removeCaps("+g.3gpp.smsip");
-     * @endcode
-     */
-    public boolean removeCaps(String name){
-    	return getSession().removeCaps(name);
     }
     
     /**
@@ -222,102 +153,21 @@ public abstract class TetheringSession extends SgsObservableObject implements Co
     	return mConnectionState;
     }
     
-    /**
-     * Gets the sip from uri
-     * @return the sip from uri
-     */
-    public String getFromUri(){
-    	return mFromUri;
-    }
-    
-    /**
-     * Sets the sip from uri
-     * @param uri the new sip from uri
-     * @return true if succeed and false otherwise
-     * @sa ref setToUri()
-     */
-    public boolean setFromUri(String uri){
-    	if (!getSession().setFromUri(uri)){
-            Log.e(TAG, String.format("%s is invalid as FromUri", uri));
-            return false;
-        }
-        mFromUri = uri;
-        return true;
-    }
-    
-    public boolean setFromUri(SipUri uri){
-    	if (!getSession().setFromUri(uri)){
-            Log.e(TAG, "Failed to set FromUri");
-            return false;
-        }
-        mFromUri = String.format("%s:%s@%s", uri.getScheme(), uri.getUserName(), uri.getHost());
-        return true;
-    }
-    
-    public String getToUri(){
-    	return mToUri;
-    }
-    
-    public boolean setToUri(String uri){
-    	if (!getSession().setToUri(uri)){
-            Log.e(TAG, String.format("%s is invalid as toUri", uri));
-            return false;
-        }
-    	mToUri = uri;
-        return true;
-    }
-    
-    public boolean setToUri(SipUri uri){
-    	if (!getSession().setToUri(uri)){
-            Log.e(TAG, "Failed to set ToUri");
-            return false;
-        }
-    	mToUri = String.format("%s:%s@%s", uri.getScheme(), uri.getUserName(), uri.getHost());
-        return true;
-    }
-    
-    public String getRemotePartyUri(){
-    	if (SgsStringUtils.isNullOrEmpty(mRemotePartyUri)){
-            mRemotePartyUri =  mOutgoing ? mToUri : mFromUri;
-        }
-        return SgsStringUtils.isNullOrEmpty(mRemotePartyUri) ? "(null)" : mRemotePartyUri;
-    }
-    
-    public void setRemotePartyUri(String uri){
-    	mRemotePartyUri = uri;
-    }
-    
-    public String getRemotePartyDisplayName(){
-    	if (SgsStringUtils.isNullOrEmpty(mRemotePartyDisplayName)){
-            mRemotePartyDisplayName = SgsUriUtils.getDisplayName(getRemotePartyUri());
-            mRemotePartyDisplayName = SgsStringUtils.isNullOrEmpty(mRemotePartyDisplayName) ? "(null)" : mRemotePartyDisplayName;
-        }
-        return mRemotePartyDisplayName;
-    }
-
-    public void setSigCompId(String compId){
-		if(compId != null && mCompId != compId){
-			//getSession().removeSigCompCompartment();
-		}
-		if((mCompId = compId) != null){
-			//getSession().addSigCompCompartment(mCompId);
-		}
-	}
-    
     public void delete(){
-		getSession().delete();
+		// getSession().delete();
 	}
 
-    protected abstract TetheringSession getSession();
+    // protected abstract TetheringSession getSession();
 
     protected void init(){
         // Sip Headers (common to all sessions)
-        getSession().addCaps("+g.oma.sip-im");
-        getSession().addCaps("language", "\"en,fr\"");
+        // getSession().addCaps("+g.oma.sip-im");
+        // getSession().addCaps("language", "\"en,fr\"");
     }
 
 	@Override
 	public int compareTo(TetheringSession arg0) {
-		return (int)(getId() - arg0.getId());
+		// return (int)(getId() - arg0.getId());
+        return 0;
 	}
 }

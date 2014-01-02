@@ -89,7 +89,33 @@ public class NativeService extends SgsNativeService {
 				final String action = intent.getAction();
 				
 				// Registration Events
-				//if(SgsRegistrationEventArgs.ACTION_REGISTRATION_EVENT.equals(action)){ }
+				if(SgsRegistrationEventArgs.ACTION_REGISTRATION_EVENT.equals(action)){
+                    SgsRegistrationEventArgs args = intent.getParcelableExtra(SgsEventArgs.EXTRA_EMBEDDED);
+                    final SgsRegistrationEventTypes type;
+                    if(args == null){
+                        Log.e(TAG, "Invalid event args");
+                        return;
+                    }
+                    switch((type = args.getEventType())){
+                        case REGISTRATION_OK:
+                        case REGISTRATION_NOK:
+                        case REGISTRATION_INPROGRESS:
+                        case UNREGISTRATION_INPROGRESS:
+                        case UNREGISTRATION_OK:
+                        case UNREGISTRATION_NOK:
+                        default:
+                            final boolean bTrying = (type == SgsRegistrationEventTypes.REGISTRATION_INPROGRESS || type == SgsRegistrationEventTypes.UNREGISTRATION_INPROGRESS);
+                            if(mEngine.getTetheringService().isRegistered()){
+                                mEngine.showAppNotif(bTrying ?R.drawable.bullet_ball_glass_grey_16 : R.drawable.bullet_ball_glass_green_16, null);
+                                SRTDroid.acquirePowerLock();
+                            }
+                            else{
+                                mEngine.showAppNotif(bTrying ?R.drawable.bullet_ball_glass_grey_16 : R.drawable.bullet_ball_glass_red_16, null);
+                                SRTDroid.releasePowerLock();
+                            }
+                            break;
+                    }
+                }
 				
 				// PagerMode Messaging Events
 				//if(SgsMessagingEventArgs.ACTION_MESSAGING_EVENT.equals(action)){ }
