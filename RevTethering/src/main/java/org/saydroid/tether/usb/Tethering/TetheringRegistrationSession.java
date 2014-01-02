@@ -30,7 +30,7 @@ import java.util.Date;
 public class TetheringRegistrationSession extends TetheringSession {
     private static final String TAG = TetheringRegistrationSession.class.getCanonicalName();
 
-    private final TetheringRegistrationSession mSession;
+    //private final TetheringRegistrationSession mSession;
 
     private String mTetherNetworkDevice = "";
     private Thread mTrafficCounterThread = null;
@@ -51,7 +51,7 @@ public class TetheringRegistrationSession extends TetheringSession {
      */
     public TetheringRegistrationSession(TetheringStack tetheringStack){
         super(tetheringStack);
-        mSession = new TetheringRegistrationSession(tetheringStack);
+        //mSession = new TetheringRegistrationSession(tetheringStack);
 
         super.init();
     }

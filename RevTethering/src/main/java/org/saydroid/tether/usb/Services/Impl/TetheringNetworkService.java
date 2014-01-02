@@ -339,18 +339,19 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 	public boolean scan(){
 		if(mWifiManager == null){
 			Log.e(TAG,"WiFi manager is Null");
-			return false;
+			// return false;
 		}
 		
 		Toast.makeText(SgsApplication.getContext(), "Network Scanning...", Toast.LENGTH_SHORT).show();
 		
 		if(mNetworkWatcher == null){
 			IntentFilter intentNetWatcher = new IntentFilter();
-			intentNetWatcher.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-			intentNetWatcher.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
-			intentNetWatcher.addAction(WifiManager.SUPPLICANT_STATE_CHANGED_ACTION);
-			intentNetWatcher.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-			intentNetWatcher.addAction(WifiManager.RSSI_CHANGED_ACTION);
+            // intentNetWatcher.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+            // intentNetWatcher.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
+            // intentNetWatcher.addAction(WifiManager.SUPPLICANT_STATE_CHANGED_ACTION);
+            // intentNetWatcher.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+			// intentNetWatcher.addAction(WifiManager.RSSI_CHANGED_ACTION);
+            intentNetWatcher.addAction(Intent.ACTION_BATTERY_CHANGED);
 			mNetworkWatcher = new BroadcastReceiver() {
 				@Override
 				public void onReceive(Context context, Intent intent) {
@@ -361,10 +362,10 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 		}
 		
 		mScanning = true;
-		if(mWifiManager.setWifiEnabled(true)){
+		/*if(mWifiManager.setWifiEnabled(true)){
 			return mWifiManager.reassociate();
-		}
-		return false;
+		}*/
+		return true;
 	}
 	
 	@Override
@@ -512,10 +513,10 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 		final String action = intent.getAction();
 		Log.d(TAG, "NetworkService::BroadcastReceiver(" + action + ")");
 		
-		if(mWifiManager == null){
+		/*if(mWifiManager == null){
 			Log.e(TAG, "Invalid state");
 			return;
-		}
+		}*/
 		
 		if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(action)) {
 			mScanning = true;
@@ -596,6 +597,16 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 				}
 			}
 		}
+        else if(Intent.ACTION_BATTERY_CHANGED.equals(action)){
+            final int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+            Log.d(TAG, "Intent.ACTION_BATTERY_CHANGED="+plugged);
+            if (plugged == BatteryManager.BATTERY_PLUGGED_USB) {
+
+            } else {
+
+            }
+            updateConnectionState();
+        }
 	}
 	
 	private void updateConnectionState(){

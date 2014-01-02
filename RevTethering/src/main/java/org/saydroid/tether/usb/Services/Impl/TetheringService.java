@@ -257,9 +257,6 @@ implements ITetheringService {
         if (mRegSession == null) {
             mRegSession = new TetheringRegistrationSession(mTetheringStack);
         }
-        else{
-            mRegSession.setSigCompId(mTetheringStack.getSigCompId());
-        }
 		/* Before registering, check if AoR hacking id enabled */
 		if (startTether() != 0) {
 			Log.e(TAG, "Failed to startTether request");
