@@ -89,7 +89,6 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 	private boolean mAcquired;
 	private boolean mStarted;
 	private boolean mScanning;
-	private final SgsObservableList<SgsAccessPoint> mAccessPoints;
 	private BroadcastReceiver mNetworkWatcher;
 
     private Thread mTrafficCounterThread = null;
@@ -115,8 +114,6 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 	
 	public TetheringNetworkService() {
 		super();
-		
-		mAccessPoints = new SgsObservableList<SgsAccessPoint>(true);
 	}
 	
 	@Override
@@ -150,75 +147,6 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 		mStarted = false;
 		return true;
 	}
-
-	@Override
-	public String getDnsServer(DNS_TYPE type) {
-		String dns = null;
-		switch (type) {
-			case DNS_1: default: dns = "dns1"; break;
-			case DNS_2: dns = "dns2"; break;
-			case DNS_3: dns = "dns3"; break;
-			case DNS_4: dns = "dns4"; break;
-		}
-
-		if (mWifiManager != null) {
-			String[] dhcpInfos = mWifiManager.getDhcpInfo().toString().split(" ");
-			int i = 0;
-
-			while (i++ < dhcpInfos.length) {
-				if (dhcpInfos[i - 1].equals(dns)) {
-					return dhcpInfos[i];
-				}
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public String getLocalIP(boolean ipv6) {
-		final HashMap<String, String> addressMap = new HashMap<String, String>();
-		try {
-			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-				NetworkInterface intf = en.nextElement();
-				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-					InetAddress inetAddress = enumIpAddr.nextElement();
-					Log.d(TetheringNetworkService.TAG, inetAddress.getHostAddress().toString());
-					if (!inetAddress.isLoopbackAddress()) {
-						if (((inetAddress instanceof Inet4Address) && !ipv6) || ((inetAddress instanceof Inet6Address) && ipv6)) {
-							addressMap.put(intf.getName(), inetAddress.getHostAddress().toString());
-						}
-					}
-				}
-			}
-			if(addressMap.size() > 0){
-				final String openvpn = addressMap.get(USB_INTERFACE_NAME);
-				if(!SgsStringUtils.isNullOrEmpty(openvpn)){
-					return openvpn;
-				}
-				return addressMap.values().iterator().next();
-			}
-		} catch (SocketException ex) {
-			Log.e(TetheringNetworkService.TAG, ex.toString());
-		}
-
-		// Hack
-		try {
-			java.net.Socket socket = new java.net.Socket(ipv6 ? "ipv6.google.com" : "google.com", 80);
-			Log.d(TetheringNetworkService.TAG, socket.getLocalAddress().getHostAddress());
-			return socket.getLocalAddress().getHostAddress();
-		} catch (UnknownHostException e) {
-			Log.e(TetheringNetworkService.TAG, e.toString());
-		} catch (IOException e) {
-			Log.e(TetheringNetworkService.TAG, e.toString());
-		}
-
-		return null;
-	}
-
-	@Override
-	public boolean isScanning(){
-		return mScanning;
-	}
 	
 	@Override
 	public boolean setNetworkEnabledAndRegister() {
@@ -228,7 +156,7 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 
 	@Override
 	public boolean setNetworkEnabled(String SSID, boolean enabled, boolean force) {
-		return setNetworkEnabled(getNetworkIdBySSID(SSID), enabled, force);
+		return true;//setNetworkEnabled(getNetworkIdBySSID(SSID), enabled, force);
 	}
 	
 	@Override
@@ -273,11 +201,7 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	@Override
-	public SgsObservableList<SgsAccessPoint> getAccessPoints(){
-		return mAccessPoints;
-	}
+
 
 	@Override
 	public int configure(SgsAccessPoint ap, String password, boolean bHex){
@@ -337,10 +261,6 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 	
 	@Override
 	public boolean scan(){
-		if(mWifiManager == null){
-			Log.e(TAG,"WiFi manager is Null");
-			// return false;
-		}
 		
 		Toast.makeText(SgsApplication.getContext(), "Network Scanning...", Toast.LENGTH_SHORT).show();
 		
@@ -437,13 +357,6 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 
 	@Override
 	public boolean release() {
-		if (mWifiLock != null) {
-			if(mWifiLock.isHeld()){
-				Log.d(TAG, "releaseNetworkLock()");
-				mWifiLock.release();
-			}	
-			mWifiLock = null;
-		}
 
 		mAcquired = false;
 		return true;
@@ -463,50 +376,8 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
             return false;
         }
     }
-
-	private int getNetworkIdBySSID(String SSID) {
-		synchronized(mAccessPoints){
-			final SgsAccessPoint ap = getAccessPointBySSID(SSID);
-			if(ap != null){
-				return ap.getNetworkId();
-			}
-			return -1;
-		}
-	}
-
-	@SuppressWarnings("unused")
-	private WifiConfiguration getWifiConfBySSID(String SSID) {
-		synchronized(mAccessPoints){
-			final SgsAccessPoint ap = getAccessPointBySSID(SSID);
-			if(ap != null){
-				return ap.getConf();
-			}
-			return null;
-		}
-	}
-	
-	private SgsAccessPoint getAccessPointBySSID(String SSID) {
-		final List<SgsAccessPoint> accessPoints = mAccessPoints.getList();
-		for (SgsAccessPoint ap : accessPoints) {
-			String SSID1 = SgsStringUtils.unquote(ap.getSSID(), "\"");
-			String SSID2 = SgsStringUtils.unquote(SSID, "\"");
-			if (SSID1.equalsIgnoreCase(SSID2)) {
-				return ap;
-			}
-		}
-		return null;
-	}
 	
 	private void loadConfiguredNetworks(){
-		synchronized(mAccessPoints){
-			mAccessPoints.clear();
-			final List<WifiConfiguration> confNetworks = mWifiManager.getConfiguredNetworks();
-			for (WifiConfiguration wifiConf : confNetworks) {
-				SgsAccessPoint ap = new SgsAccessPoint(wifiConf);
-				ap.setConnected(SgsStringUtils.equals(mConnetedSSID, ap.getSSID(), false));
-				mAccessPoints.add(ap);
-			}
-		}
 	}
 	
 	private void handleNetworkEvent(Context context, Intent intent){
@@ -518,86 +389,7 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 			return;
 		}*/
 		
-		if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(action)) {
-			mScanning = true;
-			// load() configured networks
-			loadConfiguredNetworks();
-			// load() network results
-			synchronized(mAccessPoints){
-				List<ScanResult> scanResults = mWifiManager.getScanResults();
-				for(ScanResult sr : scanResults){
-					SgsAccessPoint ap = getAccessPointBySSID(sr.SSID);
-					if(ap == null){
-						ap = new SgsAccessPoint(sr);
-						mAccessPoints.add(ap);
-					}
-				}
-			}
-			
-			updateConnectionState();
-			mScanning = false;
-		}
-		else if(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION.equals(action)){
-			final boolean connected = intent.getBooleanExtra(WifiManager.EXTRA_SUPPLICANT_CONNECTED, false);
-			Log.d(TAG, "SUPPLICANT_CONNECTION_CHANGE_ACTION.CONNECTED="+connected);
-			if(connected){
-				final WifiInfo wInfo = mWifiManager.getConnectionInfo();
-				if(wInfo != null){
-					if(!SgsStringUtils.equals(mConnetedSSID, wInfo.getSSID(), false)){
-						triggerSipRegistration();
-					}
-					mConnetedSSID = wInfo.getSSID();
-				}
-			}
-			updateConnectionState();
-//			synchronized(mAccessPoints){
-//				final List<AccessPoint> aps = mAccessPoints.getList();
-//				for(AccessPoint ap : aps){
-//					ap.setConnected(connected && StringUtils.equals(mConnetedSSID, ap.getSSID(), false));
-//				}
-//			}
-		}
-		else if(WifiManager.SUPPLICANT_STATE_CHANGED_ACTION.equals(action)){
-			updateConnectionState();
-//			final SupplicantState newState = intent.getParcelableExtra(WifiManager.EXTRA_NEW_STATE);
-//			if(newState != null){
-//				synchronized(mAccessPoints){
-//					final List<AccessPoint> aps = mAccessPoints.getList();
-//					final WifiInfo wInfo = mWifiManager.getConnectionInfo();
-//					if(wInfo != null){
-//						for(AccessPoint ap : aps){
-//							ap.setConnected((newState == SupplicantState.ASSOCIATED) && StringUtils.equals(wInfo.getSSID(), ap.getSSID(), false));
-//						}
-//					}
-//				}
-//			}
-		}
-		else if(WifiManager.WIFI_STATE_CHANGED_ACTION.equals(action)){
-			updateConnectionState();
-//			final boolean connected = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)
-//				== WifiManager.WIFI_STATE_ENABLED;
-//			synchronized(mAccessPoints){
-//				final List<AccessPoint> aps = mAccessPoints.getList();
-//				final WifiInfo wInfo = mWifiManager.getConnectionInfo();
-//				if(wInfo != null){
-//					for(AccessPoint ap : aps){
-//						ap.setConnected(connected && StringUtils.equals(wInfo.getSSID(), ap.getSSID(), false));
-//					}
-//				}
-//			}
-		}
-		else if(WifiManager.RSSI_CHANGED_ACTION.equals(action)){
-			final WifiInfo wInfo = mWifiManager.getConnectionInfo();
-			if(wInfo != null){
-				final SgsAccessPoint ap = getAccessPointBySSID(wInfo.getSSID());
-				if(ap != null){
-					final int newRssi = intent.getIntExtra(WifiManager.EXTRA_NEW_RSSI, -200);
-					ap.setLevel(WifiManager.calculateSignalLevel(newRssi,
-							sWifiSignalValues.length));
-				}
-			}
-		}
-        else if(Intent.ACTION_BATTERY_CHANGED.equals(action)){
+		if(Intent.ACTION_BATTERY_CHANGED.equals(action)){
             final int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
             Log.d(TAG, "Intent.ACTION_BATTERY_CHANGED="+plugged);
             if (plugged == BatteryManager.BATTERY_PLUGGED_USB) {
@@ -612,23 +404,7 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 	private void updateConnectionState(){
 		final WifiInfo wInfo = mWifiManager.getConnectionInfo();
 		boolean bAtLeastOneConnected = false;
-		if(wInfo != null){
-			final DetailedState detailedState = WifiInfo
-				.getDetailedStateOf(wInfo.getSupplicantState());
-			boolean isConnecting = detailedState == DetailedState.CONNECTED
-			|| detailedState == DetailedState.CONNECTING
-			|| detailedState == DetailedState.OBTAINING_IPADDR;
-			synchronized(mAccessPoints){
-				final List<SgsAccessPoint> aps = mAccessPoints.getList();
-				if(wInfo != null){
-					for(SgsAccessPoint ap : aps){
-						final boolean connected = isConnecting && SgsStringUtils.equals(wInfo.getSSID(), ap.getSSID(), false);
-						ap.setConnected(connected);
-						bAtLeastOneConnected |= connected;
-					}
-				}
-			}
-		}
+
 		
 		if(bAtLeastOneConnected || !SgsEngine.getInstance().getSipService().isRegistered()){
 			triggerSipRegistration();

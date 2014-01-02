@@ -24,14 +24,10 @@ import org.saydroid.sgs.utils.SgsObservableList;
 import org.saydroid.tether.usb.Services.Impl.TetheringNetworkService.DNS_TYPE;
 
 public interface ITetheringNetworkService extends ISgsBaseService {
-	String getDnsServer(DNS_TYPE type);
-	String getLocalIP(boolean ipv6);
-	boolean isScanning();
 	boolean setNetworkEnabledAndRegister();
 	boolean setNetworkEnabled(String SSID, boolean enabled, boolean force);
 	boolean setNetworkEnabled(int networkId, boolean enabled, boolean force);
 	boolean forceConnectToNetwork();
-	SgsObservableList<SgsAccessPoint> getAccessPoints();
 	int configure(SgsAccessPoint ap, String password, boolean bHex);
 	boolean scan();
 	boolean acquire();

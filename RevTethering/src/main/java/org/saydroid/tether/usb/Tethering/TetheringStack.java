@@ -70,17 +70,7 @@ public class TetheringStack {
         mTetheringNetworkService = ((Engine)Engine.getInstance()).getTetheringNetworkService();
 		
 		// Set first and second DNS servers (used for DNS NAPTR+SRV discovery and ENUM)
-		String dnsServer;
-		if((dnsServer = mTetheringNetworkService.getDnsServer(DNS_TYPE.DNS_1)) != null && !dnsServer.equals("0.0.0.0")){
-			//this.addDnsServer(dnsServer);
-			if((dnsServer = mTetheringNetworkService.getDnsServer(DNS_TYPE.DNS_2)) != null && !dnsServer.equals("0.0.0.0")){
-				//this.addDnsServer(dnsServer);
-			}
-		}
-		else{
-			// On the emulator FIXME
-			//this.addDnsServer("212.27.40.241");
-		}
+
 		
 	     // Sip headers
         getTetherableUsbRegexs();
@@ -98,6 +88,7 @@ public class TetheringStack {
 
 	public boolean stop() {
         mTetheringNetworkService.release();
+
 		mState = STACK_STATE.STOPPING;
 		return true;
 	}

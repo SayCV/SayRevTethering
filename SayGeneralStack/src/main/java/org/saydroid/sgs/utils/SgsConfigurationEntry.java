@@ -170,9 +170,9 @@ public class SgsConfigurationEntry {
 	// Network
 	public static final int DEFAULT_NETWORK_REGISTRATION_TIMEOUT = 1700;
 	public static final String DEFAULT_NETWORK_REALM = "saydroid.org";
-	public static final boolean DEFAULT_NETWORK_USE_WIFI = true;
-	public static final boolean DEFAULT_NETWORK_USE_3G = false;
-    public static final boolean DEFAULT_NETWORK_USE_FAKED_3G = false;
+	public static final boolean DEFAULT_NETWORK_USE_WIFI = false;
+	public static final boolean DEFAULT_NETWORK_USE_3G = true;
+    public static final boolean DEFAULT_NETWORK_USE_FAKED_3G = true;
 	public static final String DEFAULT_NETWORK_PCSCF_DISCOVERY = "None";
 	public static final String DEFAULT_NETWORK_PCSCF_HOST = "127.0.0.1";
 	public static final int DEFAULT_NETWORK_PCSCF_PORT = 5060;

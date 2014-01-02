@@ -187,6 +187,7 @@ implements ITetheringService {
 		if(mTetheringStack != null){
             mTetheringStack.stop();
 		}
+        stopTether();
 		return false;
 	}
 
@@ -410,9 +411,11 @@ implements ITetheringService {
     }
 
     public boolean stopTether() {
+
+        if(mRegSession.getConnectionState() == ConnectionState.TERMINATED) { return true; }
         String usbIface = mTetheringStack.getTetherableIfaces();
         // Release Wakelock
-        SgsApplication.getInstance().acquirePowerLock();
+        SgsApplication.getInstance().releasePowerLock();
 
         mTetheringStack.setTetherableIfacesDisabled(usbIface);
 
