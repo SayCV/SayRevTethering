@@ -602,4 +602,40 @@ public class SgsApplication extends Application{
     	}
     	return true;
     }
+
+    public static boolean acquireWakeLock(){
+        if(sPowerManagerLock == null){
+            final PowerManager powerManager = getPowerManager();
+            if(powerManager == null){
+                Log.e(TAG, "Null Power manager from the system");
+                return false;
+            }
+
+            if((sPowerManagerLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, TAG)) == null){
+                Log.e(TAG, "Null Power manager lock from the system");
+                return false;
+            }
+            sPowerManagerLock.setReferenceCounted(false);
+        }
+
+        synchronized(sPowerManagerLock){
+            if(!sPowerManagerLock.isHeld()){
+                Log.d(TAG,"acquirePowerLock()");
+                sPowerManagerLock.acquire();
+            }
+        }
+        return true;
+    }
+
+    public static boolean releaseWakeLock(){
+        if(sPowerManagerLock != null){
+            synchronized(sPowerManagerLock){
+                if(sPowerManagerLock.isHeld()){
+                    Log.d(TAG,"releasePowerLock()");
+                    sPowerManagerLock.release();
+                }
+            }
+        }
+        return true;
+    }
 }

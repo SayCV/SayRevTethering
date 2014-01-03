@@ -420,7 +420,8 @@ implements ITetheringService {
             Log.d(TAG, "tethering started ...");
 
             // Acquire Wakelock
-            SgsApplication.getInstance().acquirePowerLock();
+            //SgsApplication.getInstance().acquirePowerLock();
+            SgsApplication.getInstance().acquireWakeLock();
 
             //indicate the tether_stop is not valid
             //this.tetherStopped = -1;
@@ -439,7 +440,8 @@ implements ITetheringService {
         broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.UNREGISTRATION_INPROGRESS, (short)0, null));
         String usbIface = mTetheringStack.getTetherableIfaces();
         // Release Wakelock
-        SgsApplication.getInstance().releasePowerLock();
+        //SgsApplication.getInstance().releasePowerLock();
+        SgsApplication.getInstance().releaseWakeLock();
 
         mTetheringStack.setTetherableIfacesDisabled(usbIface);
 
