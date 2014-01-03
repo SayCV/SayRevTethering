@@ -124,6 +124,7 @@ public final class LogConfiguration {
 
             File logFile = new File(getFileName());
             if (logFile.exists() == true) {
+                if(logFile.length() > 20 * 1024) // 20KB
                 logFile.delete();
             }
         }

@@ -144,7 +144,7 @@ public class TetheringRegistrationSession extends TetheringSession {
                 MainActivity.currentInstance.viewUpdateHandler.sendMessage(message);*/
                 ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
                         new TrafficCountEventArgs(TrafficCountEventTypes.COUNTING,
-                                datacount),
+                                datacount.totalUpload, datacount.totalDownload, datacount.uploadRate, datacount.downloadRate),
                         SgsDateTimeUtils.now()
                 );
 
@@ -161,7 +161,7 @@ public class TetheringRegistrationSession extends TetheringSession {
             MainActivity.currentInstance.viewUpdateHandler.sendMessage(message);*/
             ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
                     new TrafficCountEventArgs(TrafficCountEventTypes.END,
-                            null),
+                            0, 0, 0, 0),
                     SgsDateTimeUtils.now()
             );
         }

@@ -175,10 +175,10 @@ public class ScreenHome extends BaseScreen {
                             //TrafficCountEventArgs.DataCount dataCount = new TrafficCountEventArgs.DataCount();
                             String dateString = intent.getStringExtra(TrafficCountEventArgs.EXTRA_DATE);
                             mTrafficRow.setVisibility(View.VISIBLE);
-                            long uploadTraffic = args.getContent().totalUpload;
-                            long downloadTraffic = args.getContent().totalDownload;
-                            long uploadRate = args.getContent().uploadRate;
-                            long downloadRate = args.getContent().downloadRate;
+                            long uploadTraffic = args.getTotalUpload();
+                            long downloadTraffic = args.getTotalDownload();
+                            long uploadRate = args.getUploadRate();
+                            long downloadRate = args.getDownloadRate();
 
                             // Set rates to 0 if values are negative
                             if (uploadRate < 0)

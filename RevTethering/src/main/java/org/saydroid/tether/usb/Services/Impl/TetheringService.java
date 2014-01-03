@@ -357,21 +357,21 @@ implements ITetheringService {
     	 *    2 = Fatal error
     	 */
 
-        broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_INPROGRESS, (short)0, null));
+        //broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_INPROGRESS, (short)0, null));
         // check if usb is plugged
         if (!((TetheringNetworkService)mTetheringNetworkService).isUsbConnected()) {
             /*Toast.makeText(MainActivity.currentInstance,
                     "usb is not pluged, retry",
                     Toast.LENGTH_LONG).show();*/
             Log.d(TAG, "usb is not pluged, retry ");
-            broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
+            //broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
             return 13; //MESSAGE_USB_ACTION_DETACH
         }
 
         // pre turn on Settings USB Tethering
         if(((TetheringNetworkService)mTetheringNetworkService).setSystemUsbTetherEnabled(true) == false ) {
             Log.d(TAG, "Unable to set sys.usb.config ");
-            broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
+            //broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
             return 2;
         }
         ((TetheringNetworkService)mTetheringNetworkService).waitForFinish(1000);
@@ -429,7 +429,7 @@ implements ITetheringService {
             return 0;
         }
         mRegSession.setConnectionState(ConnectionState.CONNECTING);
-        broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
+        //broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
         return 2;
     }
 
