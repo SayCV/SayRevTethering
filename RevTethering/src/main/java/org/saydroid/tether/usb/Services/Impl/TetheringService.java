@@ -31,6 +31,7 @@ import org.saydroid.sgs.events.SgsMessagingEventArgs;
 import org.saydroid.sgs.events.SgsMessagingEventTypes;
 import org.saydroid.sgs.events.SgsPublicationEventArgs;
 import org.saydroid.sgs.events.SgsRegistrationEventArgs;
+import org.saydroid.sgs.events.SgsRegistrationEventTypes;
 import org.saydroid.sgs.events.SgsSubscriptionEventArgs;
 import org.saydroid.sgs.services.ISgsConfigurationService;
 import org.saydroid.sgs.services.ISgsNetworkService;
@@ -264,7 +265,11 @@ implements ITetheringService {
 			Log.e(TAG, "Failed to startTether request");
 			return false;
 		}
-		
+        if (!mRegSession.register()) {
+            Log.e(TAG, "Failed to send REGISTER request");
+            return false;
+        }
+
 		return true;
 	}
 
@@ -272,6 +277,7 @@ implements ITetheringService {
 	public boolean unRegister() {
 		if (isRegistered()) {
             stopTether();
+            mRegSession.unregister();
 			new Thread(new Runnable(){
 				@Override
 				public void run() {
@@ -302,8 +308,8 @@ implements ITetheringService {
         intent.putExtra(TrafficCountEventArgs.EXTRA_EMBEDDED, args);
         SgsApplication.getContext().sendBroadcast(intent);
     }
-	
-	private void broadcastRegistrationEvent(SgsRegistrationEventArgs args){
+
+    public void broadcastRegistrationEvent(SgsRegistrationEventArgs args){
 		final Intent intent = new Intent(SgsRegistrationEventArgs.ACTION_REGISTRATION_EVENT);
 		intent.putExtra(SgsRegistrationEventArgs.EXTRA_EMBEDDED, args);
 		SgsApplication.getContext().sendBroadcast(intent);
@@ -351,23 +357,26 @@ implements ITetheringService {
     	 *    2 = Fatal error
     	 */
 
+        broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_INPROGRESS, (short)0, null));
         // check if usb is plugged
         if (!((TetheringNetworkService)mTetheringNetworkService).isUsbConnected()) {
             /*Toast.makeText(MainActivity.currentInstance,
                     "usb is not pluged, retry",
                     Toast.LENGTH_LONG).show();*/
             Log.d(TAG, "usb is not pluged, retry ");
+            broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
             return 13; //MESSAGE_USB_ACTION_DETACH
         }
 
         // pre turn on Settings USB Tethering
         if(((TetheringNetworkService)mTetheringNetworkService).setSystemUsbTetherEnabled(true) == false ) {
             Log.d(TAG, "Unable to set sys.usb.config ");
+            broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
             return 2;
         }
         ((TetheringNetworkService)mTetheringNetworkService).waitForFinish(1000);
         String usbIface = mTetheringStack.getTetherableIfaces();
-        Log.d(TAG, "Found usbIface: " + usbIface == null ? "null" : usbIface);
+        Log.d(TAG, "Found usbIface: " + (usbIface == null ? "null" : usbIface));
 
         mRegSession.setTetheringNetworkDevice(usbIface);
 
@@ -396,7 +405,7 @@ implements ITetheringService {
             // Update resolv.conf-file
             //Move to after starttether, because android internal tether will set its own DNS.
             String dns[] = ((TetheringNetworkService) mTetheringNetworkService).getSystemDnsServer();
-            ((TetheringNetworkService) mTetheringNetworkService).setDnsUpdateThreadClassEnabled(dns, true);
+            //((TetheringNetworkService) mTetheringNetworkService).setDnsUpdateThreadClassEnabled(dns, true);
 
             String network[] = new String[2];
             network[0] = mPreferences.getLocalIP();
@@ -416,15 +425,18 @@ implements ITetheringService {
             //indicate the tether_stop is not valid
             //this.tetherStopped = -1;
             mRegSession.setConnectionState(ConnectionState.CONNECTED);
+            broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_OK, (short)0, null));
             return 0;
         }
         mRegSession.setConnectionState(ConnectionState.CONNECTING);
+        broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
         return 2;
     }
 
     public boolean stopTether() {
 
         if(mRegSession.getConnectionState() == ConnectionState.TERMINATED) { return true; }
+        broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.UNREGISTRATION_INPROGRESS, (short)0, null));
         String usbIface = mTetheringStack.getTetherableIfaces();
         // Release Wakelock
         SgsApplication.getInstance().releasePowerLock();
@@ -442,6 +454,7 @@ implements ITetheringService {
         ((TetheringNetworkService) mTetheringNetworkService).setIpConfigureThreadClassEnabled(false);
 
         mRegSession.setConnectionState(ConnectionState.TERMINATED);
+        broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.UNREGISTRATION_OK, (short)0, null));
         return true;
     }
 }
