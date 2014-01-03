@@ -40,6 +40,7 @@ import org.saydroid.sgs.sip.SgsRegistrationSession;
 import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsDateTimeUtils;
 import org.saydroid.tether.usb.Engine;
+import org.saydroid.tether.usb.Events.TrafficCountEventArgs;
 import org.saydroid.tether.usb.MainActivity;
 import org.saydroid.tether.usb.Services.ITetheringNetworkService;
 import org.saydroid.tether.usb.Services.ITetheringService;
@@ -290,6 +291,28 @@ implements ITetheringService {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+    public void broadcastTrafficCountEvent(TrafficCountEventArgs args, String date){
+        final Intent intent = new Intent(TrafficCountEventArgs.ACTION_TRAFFIC_COUNT_EVENT);
+        /*intent.putExtra(TrafficCountEventArgs.EXTRA_DATA_COUNT_TOTAL_UPLOAD, dataCount.totalUpload);
+        intent.putExtra(TrafficCountEventArgs.EXTRA_DATA_COUNT_TOTAL_DOWNLOAD, dataCount.totalDownload);
+        intent.putExtra(TrafficCountEventArgs.EXTRA_DATA_COUNT_UPLOAD_RATE, dataCount.uploadRate);
+        intent.putExtra(TrafficCountEventArgs.EXTRA_DATA_COUNT_DOWNLOAD_RATE, dataCount.downloadRate);*/
+        intent.putExtra(TrafficCountEventArgs.EXTRA_DATE, date);
+        intent.putExtra(TrafficCountEventArgs.EXTRA_EMBEDDED, args);
+        SgsApplication.getContext().sendBroadcast(intent);
+    }
+
+    public void broadcastTrafficEndEvent(TrafficCountEventArgs args, String date){
+        final Intent intent = new Intent(TrafficCountEventArgs.ACTION_TRAFFIC_END_EVENT);
+        /*intent.putExtra(TrafficCountEventArgs.EXTRA_DATA_COUNT_TOTAL_UPLOAD, dataCount.totalUpload);
+        intent.putExtra(TrafficCountEventArgs.EXTRA_DATA_COUNT_TOTAL_DOWNLOAD, dataCount.totalDownload);
+        intent.putExtra(TrafficCountEventArgs.EXTRA_DATA_COUNT_UPLOAD_RATE, dataCount.uploadRate);
+        intent.putExtra(TrafficCountEventArgs.EXTRA_DATA_COUNT_DOWNLOAD_RATE, dataCount.downloadRate);*/
+        intent.putExtra(TrafficCountEventArgs.EXTRA_DATE, date);
+        intent.putExtra(TrafficCountEventArgs.EXTRA_EMBEDDED, args);
+        SgsApplication.getContext().sendBroadcast(intent);
+    }
 	
 	private void broadcastRegistrationEvent(SgsRegistrationEventArgs args){
 		final Intent intent = new Intent(SgsRegistrationEventArgs.ACTION_REGISTRATION_EVENT);

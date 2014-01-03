@@ -46,6 +46,8 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import org.saydroid.logger.Log;
+import org.saydroid.tether.usb.Events.TrafficCountEventArgs;
+import org.saydroid.tether.usb.Events.TrafficCountEventTypes;
 
 public class NativeService extends SgsNativeService {
 	private final static String TAG = NativeService.class.getCanonicalName();
@@ -116,7 +118,23 @@ public class NativeService extends SgsNativeService {
                             break;
                     }
                 }
-				
+                if(TrafficCountEventArgs.ACTION_TRAFFIC_COUNT_EVENT.equals(action)){
+                    TrafficCountEventArgs args = intent.getParcelableExtra(SgsEventArgs.EXTRA_EMBEDDED);
+                    final TrafficCountEventTypes type;
+                    if(args == null){
+                        Log.e(TAG, "Invalid event args");
+                        return;
+                    }
+                    switch((type = args.getEventType())){
+                        case COUNTING:
+
+                            break;
+                        case END:
+                        default:
+                            Log.d(TAG, "Traffic Count thread has disposed.");
+                            break;
+                    }
+                }
 				// PagerMode Messaging Events
 				//if(SgsMessagingEventArgs.ACTION_MESSAGING_EVENT.equals(action)){ }
 				
@@ -133,6 +151,7 @@ public class NativeService extends SgsNativeService {
 		intentFilter.addAction(SgsInviteEventArgs.ACTION_INVITE_EVENT);
 		intentFilter.addAction(SgsMessagingEventArgs.ACTION_MESSAGING_EVENT);
 		intentFilter.addAction(SgsMsrpEventArgs.ACTION_MSRP_EVENT);
+        intentFilter.addAction(TrafficCountEventArgs.ACTION_TRAFFIC_COUNT_EVENT);
 		registerReceiver(mBroadcastReceiver, intentFilter);
 		
 		if(intent != null){

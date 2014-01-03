@@ -19,7 +19,10 @@
 */
 package org.saydroid.tether.usb.Screens;
 
+import org.saydroid.sgs.utils.SgsUriUtils;
 import org.saydroid.tether.usb.CustomDialog;
+import org.saydroid.tether.usb.Events.TrafficCountEventArgs;
+import org.saydroid.tether.usb.Events.TrafficCountEventTypes;
 import org.saydroid.tether.usb.MainActivity;
 import org.saydroid.tether.usb.R;
 import org.saydroid.sgs.events.SgsEventArgs;
@@ -73,7 +76,17 @@ public class ScreenHome extends BaseScreen {
 
         mTetheringService = getEngine().getTetheringService();
 	}
-	
+
+    private String formatCount(long count, boolean rate) {
+        // Converts the supplied argument into a string.
+        // 'rate' indicates whether is a total bytes, or bits per sec.
+        // Under 2Mb, returns "xxx.xKb"
+        // Over 2Mb, returns "xxx.xxMb"
+        if (count < 1e6 * 2)
+            return ((float)((int)(count*10/1024))/10 + (rate ? "kbps" : "kB"));
+        return ((float)((int)(count*100/1024/1024))/100 + (rate ? "mbps" : "MB"));
+    }
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -150,10 +163,51 @@ public class ScreenHome extends BaseScreen {
 							break;
 					}
 				}
+                if(TrafficCountEventArgs.ACTION_TRAFFIC_COUNT_EVENT.equals(action)){
+                    TrafficCountEventArgs args = intent.getParcelableExtra(SgsEventArgs.EXTRA_EMBEDDED);
+                    final TrafficCountEventTypes type;
+                    if(args == null){
+                        Log.e(TAG, "Invalid event args");
+                        return;
+                    }
+                    switch((type = args.getEventType())){
+                        case COUNTING:
+                            //TrafficCountEventArgs.DataCount dataCount = new TrafficCountEventArgs.DataCount();
+                            String dateString = intent.getStringExtra(TrafficCountEventArgs.EXTRA_DATE);
+                            mTrafficRow.setVisibility(View.VISIBLE);
+                            long uploadTraffic = args.getContent().totalUpload;
+                            long downloadTraffic = args.getContent().totalDownload;
+                            long uploadRate = args.getContent().uploadRate;
+                            long downloadRate = args.getContent().downloadRate;
+
+                            // Set rates to 0 if values are negative
+                            if (uploadRate < 0)
+                                uploadRate = 0;
+                            if (downloadRate < 0)
+                                downloadRate = 0;
+
+                            mUploadText.setText(formatCount(uploadTraffic, false));
+                            mDownloadText.setText(formatCount(downloadTraffic, false));
+                            mDownloadText.invalidate();
+                            mUploadText.invalidate();
+
+                            mUploadRateText.setText(formatCount(uploadRate, true));
+                            mDownloadRateText.setText(formatCount(downloadRate, true));
+                            mDownloadRateText.invalidate();
+                            mUploadRateText.invalidate();
+                            break;
+                        case END:
+                        default:
+                            mTrafficRow.setVisibility(View.INVISIBLE);
+                            Log.d(TAG, "Traffic Count thread has disposed.");
+                            break;
+                    }
+                }
 			}
 		};
 		final IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(SgsRegistrationEventArgs.ACTION_REGISTRATION_EVENT);
+        intentFilter.addAction(TrafficCountEventArgs.ACTION_TRAFFIC_COUNT_EVENT);
 	    registerReceiver(mTetheringBroadCastRecv, intentFilter);
 	}
 

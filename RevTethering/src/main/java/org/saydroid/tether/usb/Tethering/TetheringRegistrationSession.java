@@ -20,7 +20,13 @@ package org.saydroid.tether.usb.Tethering;
 
 
 import org.saydroid.logger.Log;
+import org.saydroid.sgs.utils.SgsDateTimeUtils;
 import org.saydroid.sgs.utils.SgsFileUtils;
+import org.saydroid.tether.usb.Engine;
+import org.saydroid.tether.usb.Events.TrafficCountEventArgs;
+import org.saydroid.tether.usb.Events.TrafficCountEventArgs.DataCount;
+import org.saydroid.tether.usb.Events.TrafficCountEventTypes;
+import org.saydroid.tether.usb.Services.Impl.TetheringService;
 
 import java.util.Date;
 
@@ -34,16 +40,6 @@ public class TetheringRegistrationSession extends TetheringSession {
 
     private String mTetherNetworkDevice = "";
     private Thread mTrafficCounterThread = null;
-    public class DataCount {
-        // Total data uploaded
-        public long totalUpload;
-        // Total data downloaded
-        public long totalDownload;
-        // Current upload rate
-        public long uploadRate;
-        // Current download rate
-        public long downloadRate;
-    }
 
     /**
      * Creates new registration session
@@ -146,6 +142,12 @@ public class TetheringRegistrationSession extends TetheringSession {
                 message.what = MainActivity.MESSAGE_TRAFFIC_COUNT;
                 message.obj = datacount;
                 MainActivity.currentInstance.viewUpdateHandler.sendMessage(message);*/
+                ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
+                        new TrafficCountEventArgs(TrafficCountEventTypes.COUNTING,
+                                datacount),
+                        SgsDateTimeUtils.now()
+                );
+
                 this.previousUpload = datacount.totalUpload;
                 this.previousDownload = datacount.totalDownload;
                 try {
@@ -157,7 +159,11 @@ public class TetheringRegistrationSession extends TetheringSession {
             /*Message message = Message.obtain();
             message.what = MainActivity.MESSAGE_TRAFFIC_END;
             MainActivity.currentInstance.viewUpdateHandler.sendMessage(message);*/
-
+            ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
+                    new TrafficCountEventArgs(TrafficCountEventTypes.END,
+                            null),
+                    SgsDateTimeUtils.now()
+            );
         }
     }
 }
