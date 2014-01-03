@@ -44,7 +44,7 @@ public class TrafficCountEventArgs extends SgsEventArgs {
     }
 
     public static final String ACTION_TRAFFIC_COUNT_EVENT = TAG + ".ACTION_TRAFFIC_COUNT_EVENT";
-    
+
     public static final String EXTRA_EMBEDDED = SgsEventArgs.EXTRA_EMBEDDED;
     public static final String EXTRA_SESSION = TAG + "session";
     public static final String EXTRA_CODE = TAG + "code";

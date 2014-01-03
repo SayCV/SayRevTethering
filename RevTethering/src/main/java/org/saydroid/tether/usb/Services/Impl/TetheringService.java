@@ -302,17 +302,6 @@ implements ITetheringService {
         intent.putExtra(TrafficCountEventArgs.EXTRA_EMBEDDED, args);
         SgsApplication.getContext().sendBroadcast(intent);
     }
-
-    public void broadcastTrafficEndEvent(TrafficCountEventArgs args, String date){
-        final Intent intent = new Intent(TrafficCountEventArgs.ACTION_TRAFFIC_END_EVENT);
-        /*intent.putExtra(TrafficCountEventArgs.EXTRA_DATA_COUNT_TOTAL_UPLOAD, dataCount.totalUpload);
-        intent.putExtra(TrafficCountEventArgs.EXTRA_DATA_COUNT_TOTAL_DOWNLOAD, dataCount.totalDownload);
-        intent.putExtra(TrafficCountEventArgs.EXTRA_DATA_COUNT_UPLOAD_RATE, dataCount.uploadRate);
-        intent.putExtra(TrafficCountEventArgs.EXTRA_DATA_COUNT_DOWNLOAD_RATE, dataCount.downloadRate);*/
-        intent.putExtra(TrafficCountEventArgs.EXTRA_DATE, date);
-        intent.putExtra(TrafficCountEventArgs.EXTRA_EMBEDDED, args);
-        SgsApplication.getContext().sendBroadcast(intent);
-    }
 	
 	private void broadcastRegistrationEvent(SgsRegistrationEventArgs args){
 		final Intent intent = new Intent(SgsRegistrationEventArgs.ACTION_REGISTRATION_EVENT);
