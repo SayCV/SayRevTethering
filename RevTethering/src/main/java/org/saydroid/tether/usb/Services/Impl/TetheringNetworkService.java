@@ -733,7 +733,7 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
             //String[] currentDns = TetherApplication.this.coretask.getCurrentDns();//current means current system setting, not setting inside file.
             //if (this.dns == null || this.dns[0].equals(currentDns[0]) == false || this.dns[1].equals(currentDns[1]) == false) {
             if(ifConfigUpInterface(mUsbInterface)){ //ifconfig usb up command execution
-                if(ifConfigSetInterface(mUsbInterface, network[0], network[1])){
+                if(ifConfigSetInterface(mUsbInterface, network[0], network[2])){
                     if(dumpDefaultGW()) {
                         String[] currentGW = getCurrentGW();
                         if ((currentGW[0].equals(network[1])==false)  || (currentGW[1].equals(mUsbInterface)==false)){

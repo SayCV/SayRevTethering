@@ -378,6 +378,7 @@ implements ITetheringService {
         String usbIface = mTetheringStack.getTetherableIfaces();
         Log.d(TAG, "Found usbIface: " + (usbIface == null ? "null" : usbIface));
 
+        ((TetheringNetworkService) mTetheringNetworkService).setTetherableIfaces(usbIface);
         mRegSession.setTetheringNetworkDevice(usbIface);
 
 
@@ -407,9 +408,10 @@ implements ITetheringService {
             String dns[] = ((TetheringNetworkService) mTetheringNetworkService).getSystemDnsServer();
             //((TetheringNetworkService) mTetheringNetworkService).setDnsUpdateThreadClassEnabled(dns, true);
 
-            String network[] = new String[2];
+            String network[] = new String[3];
             network[0] = mPreferences.getLocalIP();
             network[1] = mPreferences.getGateWay();
+            network[2] = mPreferences.getSubMask();
 
             ((TetheringNetworkService) mTetheringNetworkService).setIpConfigureThreadClassEnabled(network, true);
 
@@ -443,6 +445,7 @@ implements ITetheringService {
         //SgsApplication.getInstance().releasePowerLock();
         SgsApplication.getInstance().releaseWakeLock();
 
+        ((TetheringNetworkService) mTetheringNetworkService).setTetherableIfaces(usbIface);
         mTetheringStack.setTetherableIfacesDisabled(usbIface);
 
         if(((TetheringNetworkService)mTetheringNetworkService).setSystemUsbTetherEnabled(false) == false ) {

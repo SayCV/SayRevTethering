@@ -91,7 +91,7 @@ public class TetheringRegistrationSession extends TetheringSession {
             dataCount[1] += Long.parseLong(values[9]);
         }
         //logger.debug(MSG_TAG+"Data rx: " + dataCount[0] + ", tx: " + dataCount[1]);
-        Log.d(TAG, "Data rx: " + dataCount[0] + ", tx: " + dataCount[1]);
+       android.util.Log.d(TAG, "Data rx: " + dataCount[0] + ", tx: " + dataCount[1]);
         return dataCount;
     }
 
