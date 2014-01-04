@@ -162,7 +162,7 @@ public class NativeService extends SgsNativeService {
 			Bundle bundle = intent.getExtras();
 			if (bundle != null && bundle.getBoolean("autostarted")) {
 				if (mEngine.start()) {
-					mEngine.getSipService().register(null);
+					mEngine.getTetheringService().register(null);
 				}
 			}
 		}

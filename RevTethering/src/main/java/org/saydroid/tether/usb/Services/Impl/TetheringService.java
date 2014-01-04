@@ -434,8 +434,8 @@ implements ITetheringService {
             //indicate the tether_stop is not valid
             //this.tetherStopped = -1;
             mRegSession.setConnectionState(ConnectionState.CONNECTED);
-            Engine.getInstance().getConfigurationService().putBoolean(SgsConfigurationEntry.NETWORK_CONNECTED,
-                    true);
+            //Engine.getInstance().getConfigurationService().putBoolean(SgsConfigurationEntry.NETWORK_CONNECTED, true);
+            //Engine.getInstance().getConfigurationService().commit();
             broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_OK, (short)0, null));
             return 0;
         }
@@ -467,8 +467,8 @@ implements ITetheringService {
         ((TetheringNetworkService) mTetheringNetworkService).setIpConfigureThreadClassEnabled(false);
 
         mRegSession.setConnectionState(ConnectionState.TERMINATED);
-        Engine.getInstance().getConfigurationService().putBoolean(SgsConfigurationEntry.NETWORK_CONNECTED,
-                false);
+        //Engine.getInstance().getConfigurationService().putBoolean(SgsConfigurationEntry.NETWORK_CONNECTED, false);
+        //Engine.getInstance().getConfigurationService().commit();
         broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.UNREGISTRATION_OK, (short)0, null));
         return true;
     }

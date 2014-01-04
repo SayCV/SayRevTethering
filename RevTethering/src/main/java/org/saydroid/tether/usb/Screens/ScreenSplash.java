@@ -59,13 +59,13 @@ public class ScreenSplash extends BaseScreen {
 				
 				if(NativeService.ACTION_STATE_EVENT.equals(action)){
 					if(intent.getBooleanExtra("started", false)){
-						mScreenService.show(ScreenHome.class);
-						getEngine().getConfigurationService().putBoolean(SgsConfigurationEntry.GENERAL_AUTOSTART, true);
-                        if(getEngine().getConfigurationService().getBoolean(SgsConfigurationEntry.NETWORK_CONNECTED,
+                        /*if(getEngine().getConfigurationService().getBoolean(SgsConfigurationEntry.NETWORK_CONNECTED,
                                 SgsConfigurationEntry.DEFAULT_NETWORK_CONNECTED)) {
                             ((TetheringService)getEngine().getTetheringService()).setRegistrationState(TetheringSession.ConnectionState.CONNECTED);
                             SgsApplication.acquireWakeLock();
-                        }
+                        }*/
+						mScreenService.show(ScreenHome.class);
+						getEngine().getConfigurationService().putBoolean(SgsConfigurationEntry.GENERAL_AUTOSTART, true);
 						finish();
 					}
 				}

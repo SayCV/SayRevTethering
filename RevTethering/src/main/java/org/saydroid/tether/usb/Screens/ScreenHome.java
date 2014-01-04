@@ -19,8 +19,10 @@
 */
 package org.saydroid.tether.usb.Screens;
 
+import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsUriUtils;
 import org.saydroid.tether.usb.CustomDialog;
+import org.saydroid.tether.usb.Engine;
 import org.saydroid.tether.usb.Events.TrafficCountEventArgs;
 import org.saydroid.tether.usb.Events.TrafficCountEventTypes;
 import org.saydroid.tether.usb.MainActivity;
@@ -28,6 +30,7 @@ import org.saydroid.tether.usb.R;
 import org.saydroid.sgs.events.SgsEventArgs;
 import org.saydroid.sgs.events.SgsRegistrationEventArgs;
 import org.saydroid.sgs.services.ISgsSipService;
+import org.saydroid.tether.usb.Tethering.TetheringRegistrationSession;
 import org.saydroid.tether.usb.Tethering.TetheringSession.ConnectionState;
 
 import android.app.Activity;
@@ -97,7 +100,11 @@ public class ScreenHome extends BaseScreen {
         mUploadText = (TextView)findViewById(R.id.screen_home_trafficUp);
         mDownloadRateText = (TextView)findViewById(R.id.screen_home_trafficDownRate);
         mUploadRateText = (TextView)findViewById(R.id.screen_home_trafficUpRate);
-        // mTrafficRow.setVisibility(View.VISIBLE);
+        if(getEngine().getConfigurationService().getBoolean(SgsConfigurationEntry.NETWORK_CONNECTED,
+                SgsConfigurationEntry.DEFAULT_NETWORK_CONNECTED)){
+            mTrafficRow.setVisibility(View.VISIBLE);
+            //TetheringRegistrationSession.setTrafficCounterThreadClassEnabled(true);
+        }
 
 		mGridView = (GridView) findViewById(R.id.screen_home_gridview);
 		mGridView.setAdapter(new ScreenHomeAdapter(this));
@@ -110,6 +117,7 @@ public class ScreenHome extends BaseScreen {
                             mTetheringService.stopStack();
                         } else if (mTetheringService.isRegistered()){
                             mTetheringService.unRegister();
+                            mTrafficRow.setVisibility(View.VISIBLE);
                         } else {
                             mTetheringService.register(ScreenHome.this);
                         }
@@ -329,7 +337,9 @@ public class ScreenHome extends BaseScreen {
                         mBaseScreen.mTetheringService.getRegistrationState() == ConnectionState.TERMINATING){
                     ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Cancel");
                     ((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(R.drawable.start_48);
-                } else if(mBaseScreen.mTetheringService.isRegistered()){
+                } else if(mBaseScreen.mTetheringService.isRegistered()/* ||
+                       Engine.getInstance().getConfigurationService().getBoolean(SgsConfigurationEntry.NETWORK_CONNECTED,
+                                SgsConfigurationEntry.DEFAULT_NETWORK_CONNECTED)*/){
                     ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Stop tethering");
                     ((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(R.drawable.stop_48);
                 } else {
