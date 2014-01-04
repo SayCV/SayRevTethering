@@ -20,6 +20,7 @@ package org.saydroid.tether.usb;
 
 
 import org.saydroid.sgs.SgsApplication;
+import org.saydroid.sgs.SgsEngine;
 import org.saydroid.sgs.SgsNativeService;
 import org.saydroid.sgs.events.SgsEventArgs;
 import org.saydroid.sgs.events.SgsInviteEventArgs;
@@ -32,6 +33,7 @@ import org.saydroid.sgs.model.SgsHistorySMSEvent;
 import org.saydroid.sgs.model.SgsHistoryEvent.StatusType;
 import org.saydroid.sgs.sip.SgsAVSession;
 import org.saydroid.sgs.sip.SgsMsrpSession;
+import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsDateTimeUtils;
 import org.saydroid.sgs.utils.SgsStringUtils;
 import org.saydroid.sgs.utils.SgsUriUtils;
@@ -48,6 +50,8 @@ import android.view.WindowManager;
 import org.saydroid.logger.Log;
 import org.saydroid.tether.usb.Events.TrafficCountEventArgs;
 import org.saydroid.tether.usb.Events.TrafficCountEventTypes;
+import org.saydroid.tether.usb.Services.Impl.TetheringService;
+import org.saydroid.tether.usb.Tethering.TetheringSession;
 
 public class NativeService extends SgsNativeService {
 	private final static String TAG = NativeService.class.getCanonicalName();

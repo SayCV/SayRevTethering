@@ -325,7 +325,8 @@ public class ScreenHome extends BaseScreen {
 			}
 			
 			if(position == ScreenHomeItem.ITEM_SIGNIN_SIGNOUT_POS){
-                if(mBaseScreen.mTetheringService.getRegistrationState() == ConnectionState.CONNECTING || mBaseScreen.mTetheringService.getRegistrationState() == ConnectionState.TERMINATING){
+                if(mBaseScreen.mTetheringService.getRegistrationState() == ConnectionState.CONNECTING ||
+                        mBaseScreen.mTetheringService.getRegistrationState() == ConnectionState.TERMINATING){
                     ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Cancel");
                     ((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(R.drawable.start_48);
                 } else if(mBaseScreen.mTetheringService.isRegistered()){

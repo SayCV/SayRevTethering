@@ -19,6 +19,7 @@
 */
 package org.saydroid.tether.usb.Screens;
 
+import org.saydroid.sgs.SgsApplication;
 import org.saydroid.tether.usb.Engine;
 import org.saydroid.tether.usb.NativeService;
 import org.saydroid.tether.usb.R;
@@ -32,6 +33,8 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import org.saydroid.logger.Log;
+import org.saydroid.tether.usb.Services.Impl.TetheringService;
+import org.saydroid.tether.usb.Tethering.TetheringSession;
 
 public class ScreenSplash extends BaseScreen {
 	private static String TAG = ScreenSplash.class.getCanonicalName();
@@ -58,6 +61,11 @@ public class ScreenSplash extends BaseScreen {
 					if(intent.getBooleanExtra("started", false)){
 						mScreenService.show(ScreenHome.class);
 						getEngine().getConfigurationService().putBoolean(SgsConfigurationEntry.GENERAL_AUTOSTART, true);
+                        if(getEngine().getConfigurationService().getBoolean(SgsConfigurationEntry.NETWORK_CONNECTED,
+                                SgsConfigurationEntry.DEFAULT_NETWORK_CONNECTED)) {
+                            ((TetheringService)getEngine().getTetheringService()).setRegistrationState(TetheringSession.ConnectionState.CONNECTED);
+                            SgsApplication.acquireWakeLock();
+                        }
 						finish();
 					}
 				}
@@ -72,6 +80,7 @@ public class ScreenSplash extends BaseScreen {
 	protected void onDestroy() {
 		if(mBroadCastRecv != null){
 			unregisterReceiver(mBroadCastRecv);
+            SgsApplication.releaseWakeLock();
 		}
 		super.onDestroy();
 	}
