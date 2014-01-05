@@ -99,7 +99,7 @@ public class ScreenSplash extends BaseScreen {
                     if(getEngine().getConfigurationService().getBoolean(SgsConfigurationEntry.NETWORK_CONNECTED,
                             SgsConfigurationEntry.DEFAULT_NETWORK_CONNECTED)) {
                         //((TetheringService)getEngine().getTetheringService()).setRegistrationState(TetheringSession.ConnectionState.CONNECTED);
-                        //SgsApplication.acquireWakeLock();
+                        SgsApplication.acquireWakeLock();
                         ((TetheringService)getEngine().getTetheringService()).reRegister(null);
                     }
 				}
