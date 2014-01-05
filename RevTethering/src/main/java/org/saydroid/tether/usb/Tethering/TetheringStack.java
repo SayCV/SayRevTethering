@@ -127,6 +127,14 @@ public class TetheringStack {
         return mUsbInterface;
     }
 
+    public String getTetheredIfaces(){
+        getTetherableUsbRegexs();
+        if(mUsbRegexs == null) {
+            Log.e(TAG, "mUsbRegexs is null!");
+        }
+        return getTetheredIfaces(mUsbRegexs);
+    }
+
     private String findIface(String[] ifaces, String[] regexes) {
         for (String iface : ifaces) {
             for (String regex : regexes) {
@@ -200,6 +208,38 @@ public class TetheringStack {
         mUsbInterface = findIface(available, usbRegexs);
     }
 
+    public String getTetheredIfaces(String[] usbRegexs){
+        String[] available = null;
+        ConnectivityManager cm = SgsApplication.getConnectivityManager();
+        Method getTetheredIfacesLocal = null;
+        try {
+            getTetheredIfacesLocal = cm.getClass().getMethod("getTetheredIfaces");
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Log.d(TAG, "getTetheredIfaces got security exception ...");
+        } catch (NoSuchMethodException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        try {
+            available = (String [])getTetheredIfacesLocal.invoke(cm);
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Log.d(TAG, "getTetheredIfaces got ..." + (available.length > 0 ? available[0].toString() : "NULL"));
+
+        return findIface(available, usbRegexs);
+    }
+
     public int setTetherableIfacesEnabled(String usbIf){
         int tetherStarted = -1;
         ConnectivityManager cm = SgsApplication.getConnectivityManager();
@@ -234,33 +274,8 @@ public class TetheringStack {
     public int setTetherableIfacesDisabled(String usbIf){
         int tetherStopped = -1;
         ConnectivityManager cm = SgsApplication.getConnectivityManager();
-        Method getTetheredIfacesLocal = null;
-        try {
-            getTetheredIfacesLocal = cm.getClass().getMethod("getTetheredIfaces");
-        } catch (SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
 
-        String[] tethered = null;
-        try {
-            tethered = (String [])getTetheredIfacesLocal.invoke(cm);
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        Log.d(TAG, "stopTether() getTetheredIfaces got ..." + (tethered.length > 0 ? tethered[0].toString() : "NULL"));
-        //tethered = new String[] {"rndis0"};
-        usbIf = findIface(tethered, mUsbRegexs);
+        usbIf =  getTetheredIfaces(mUsbRegexs);
         if (usbIf == null) {
             //TO DO : return with a pop up message
             //MainActivity.currentInstance.openNoUSBIfaceDialog();

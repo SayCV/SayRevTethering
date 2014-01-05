@@ -291,7 +291,7 @@ implements ITetheringService {
             if (mRegSession == null) {
                 mRegSession = new TetheringRegistrationSession(mTetheringStack);
             }
-            String usbIface = mTetheringStack.getTetherableIfaces();
+            String usbIface = mTetheringStack.getTetheredIfaces();
             Log.d(TAG, "Found usbIface: " + (usbIface == null ? "null" : usbIface));
             if(usbIface == null){
                 stopTether();
