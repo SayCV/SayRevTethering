@@ -294,7 +294,14 @@ implements ITetheringService {
             String usbIface = mTetheringStack.getTetherableIfaces();
             Log.d(TAG, "Found usbIface: " + (usbIface == null ? "null" : usbIface));
             if(usbIface == null){
-                unRegister();
+                stopTether();
+                mRegSession.unregister();
+                new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        mTetheringStack.stop();
+                    }
+                }).start();
                 return false;
             }
             //((TetheringNetworkService) mTetheringNetworkService).setTetherableIfaces(usbIface);
