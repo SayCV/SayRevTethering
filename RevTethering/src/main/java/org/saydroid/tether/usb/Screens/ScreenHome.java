@@ -100,11 +100,11 @@ public class ScreenHome extends BaseScreen {
         mUploadText = (TextView)findViewById(R.id.screen_home_trafficUp);
         mDownloadRateText = (TextView)findViewById(R.id.screen_home_trafficDownRate);
         mUploadRateText = (TextView)findViewById(R.id.screen_home_trafficUpRate);
-        if(getEngine().getConfigurationService().getBoolean(SgsConfigurationEntry.NETWORK_CONNECTED,
+        /*if(getEngine().getConfigurationService().getBoolean(SgsConfigurationEntry.NETWORK_CONNECTED,
                 SgsConfigurationEntry.DEFAULT_NETWORK_CONNECTED)){
             mTrafficRow.setVisibility(View.VISIBLE);
             //TetheringRegistrationSession.setTrafficCounterThreadClassEnabled(true);
-        }
+        }*/
 
 		mGridView = (GridView) findViewById(R.id.screen_home_gridview);
 		mGridView.setAdapter(new ScreenHomeAdapter(this));
@@ -117,7 +117,7 @@ public class ScreenHome extends BaseScreen {
                             mTetheringService.stopStack();
                         } else if (mTetheringService.isRegistered()){
                             mTetheringService.unRegister();
-                            mTrafficRow.setVisibility(View.VISIBLE);
+                            //mTrafficRow.setVisibility(View.VISIBLE);
                         } else {
                             mTetheringService.register(ScreenHome.this);
                         }

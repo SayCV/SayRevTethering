@@ -80,7 +80,7 @@ public class ScreenSplash extends BaseScreen {
 	protected void onDestroy() {
 		if(mBroadCastRecv != null){
 			unregisterReceiver(mBroadCastRecv);
-            SgsApplication.releaseWakeLock();
+            //SgsApplication.releaseWakeLock();
 		}
 		super.onDestroy();
 	}
@@ -96,6 +96,12 @@ public class ScreenSplash extends BaseScreen {
 				if(!engine.isStarted()){
 					Log.d(TAG, "Starts the engine from the splash screen");
 					engine.start();
+                    if(getEngine().getConfigurationService().getBoolean(SgsConfigurationEntry.NETWORK_CONNECTED,
+                            SgsConfigurationEntry.DEFAULT_NETWORK_CONNECTED)) {
+                        //((TetheringService)getEngine().getTetheringService()).setRegistrationState(TetheringSession.ConnectionState.CONNECTED);
+                        //SgsApplication.acquireWakeLock();
+                        ((TetheringService)getEngine().getTetheringService()).reRegister(null);
+                    }
 				}
 			}
 		});

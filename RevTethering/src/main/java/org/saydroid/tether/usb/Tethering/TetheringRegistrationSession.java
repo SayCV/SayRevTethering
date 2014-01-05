@@ -38,8 +38,8 @@ public class TetheringRegistrationSession extends TetheringSession {
 
     //private final TetheringRegistrationSession mSession;
 
-    private static String mTetherNetworkDevice = "";
-    private static Thread mTrafficCounterThread = null;
+    private String mTetherNetworkDevice = "";
+    private Thread mTrafficCounterThread = null;
 
     /**
      * Creates new registration session
@@ -77,7 +77,7 @@ public class TetheringRegistrationSession extends TetheringSession {
 
     public void setTetheringNetworkDevice(String tetherNetworkDevice) { mTetherNetworkDevice = tetherNetworkDevice; }
 
-    protected static long[] getDataTraffic(String device) {
+    protected long[] getDataTraffic(String device) {
         // Returns traffic usage for all interfaces starting with 'device'.
         long [] dataCount = new long[] {0, 0};
         if (device == "")
@@ -95,7 +95,7 @@ public class TetheringRegistrationSession extends TetheringSession {
         return dataCount;
     }
 
-    public static void setTrafficCounterThreadClassEnabled(boolean enabled) {
+    public void setTrafficCounterThreadClassEnabled(boolean enabled) {
         if (enabled == true) {
             if (mTrafficCounterThread == null || mTrafficCounterThread.isAlive() == false) {
                 mTrafficCounterThread = new Thread(new TrafficCounterThreadClass());
@@ -108,7 +108,7 @@ public class TetheringRegistrationSession extends TetheringSession {
     }
 
 
-    static class TrafficCounterThreadClass implements Runnable {
+    class TrafficCounterThreadClass implements Runnable {
         private static final int INTERVAL = 2;  // Sample rate in seconds.
         long previousDownload;
         long previousUpload;

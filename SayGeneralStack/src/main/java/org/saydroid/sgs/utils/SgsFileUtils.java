@@ -38,7 +38,7 @@ public class SgsFileUtils {
         BufferedReader br = null;
         InputStream ins = null;
         ArrayList<String> lines = new ArrayList<String>();
-        Log.d(TAG, "Reading lines from file: " + filename);
+        android.util.Log.d(TAG, "Reading lines from file: " + filename);
         try {
             ins = new FileInputStream(new File(filename));
             br = new BufferedReader(new InputStreamReader(ins), 8192);
