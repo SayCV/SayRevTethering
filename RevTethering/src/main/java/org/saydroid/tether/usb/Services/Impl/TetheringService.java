@@ -293,6 +293,10 @@ implements ITetheringService {
             }
             String usbIface = mTetheringStack.getTetherableIfaces();
             Log.d(TAG, "Found usbIface: " + (usbIface == null ? "null" : usbIface));
+            if(usbIface == null){
+                unRegister();
+                return false;
+            }
             //((TetheringNetworkService) mTetheringNetworkService).setTetherableIfaces(usbIface);
             mRegSession.setTetheringNetworkDevice(usbIface);
             if (!mRegSession.register()) {
