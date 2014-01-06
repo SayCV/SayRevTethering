@@ -22,6 +22,7 @@ package org.saydroid.tether.usb.Services.Impl;
 import android.content.Context;
 import android.content.Intent;
 import android.os.ConditionVariable;
+import android.os.Message;
 
 import org.saydroid.logger.Log;
 import org.saydroid.sgs.SgsApplication;
@@ -207,11 +208,11 @@ implements ITetheringService {
 		mPreferences.setMobileNetworkFaked(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_FAKED_3G,
                 SgsConfigurationEntry.DEFAULT_NETWORK_USE_FAKED_3G));
 		mPreferences.setLocalIP(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_LOCAL_IP,
-                SgsConfigurationEntry.DEFAULT_NETWORK_LOCAL_IP));
+                SgsConfigurationEntry.DEFAULT_NETWORK_LOCAL_IP_WINXP));
         mPreferences.setSubMask(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_SUB_MASK,
                 SgsConfigurationEntry.DEFAULT_NETWORK_SUB_MASK));
         mPreferences.setGateWay(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_GATE_WAY,
-                SgsConfigurationEntry.DEFAULT_NETWORK_GATE_WAY));
+                SgsConfigurationEntry.DEFAULT_NETWORK_GATE_WAY_WINXP));
         mPreferences.setPreferredDNS(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_PREFERRED_DNS,
                 SgsConfigurationEntry.DEFAULT_NETWORK_PREFERRED_DNS));
         mPreferences.setSecondaryDNS(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_SECONDARY_DNS,
@@ -392,6 +393,7 @@ implements ITetheringService {
 	}
 
     public int startTether() {
+        String message;
     	/*
     	 * ReturnCodes:
     	 *    0 = All OK, Service started
@@ -405,14 +407,24 @@ implements ITetheringService {
             /*Toast.makeText(MainActivity.currentInstance,
                     "usb is not pluged, retry",
                     Toast.LENGTH_LONG).show();*/
-            Log.d(TAG, "usb is not pluged, retry ");
+            message = "usb is not pluged, retry ";
+            Log.d(TAG, message);
+            // Sending message
+            Message msg = new Message();
+            msg.obj = message;
+            ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
             broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
             return 13; //MESSAGE_USB_ACTION_DETACH
         }
 
         // pre turn on Settings USB Tethering
         if(((TetheringNetworkService)mTetheringNetworkService).setSystemUsbTetherEnabled(true) == false ) {
-            Log.d(TAG, "Unable to set sys.usb.config ");
+            message = "Unable to set sys.usb.config ";
+            Log.d(TAG, message);
+            // Sending message
+            Message msg = new Message();
+            msg.obj = message;
+            ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
             broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
             return 2;
         }
@@ -461,7 +473,12 @@ implements ITetheringService {
             ((TetheringNetworkService) mTetheringNetworkService).setMobileNetworkFakedEnabled(true);
 
             //debug here
-            Log.d(TAG, "tethering started ...");
+            message = "tethering started ...";
+            Log.d(TAG, message);
+            // Sending message
+            Message msg = new Message();
+            msg.obj = message;
+            ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
 
             // Acquire Wakelock
             //SgsApplication.getInstance().acquirePowerLock();
@@ -481,6 +498,7 @@ implements ITetheringService {
     }
 
     public boolean stopTether() {
+        String message;
 
         if(mRegSession.getConnectionState() == ConnectionState.TERMINATED) { return true; }
         broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.UNREGISTRATION_INPROGRESS, (short)0, null));
@@ -490,7 +508,12 @@ implements ITetheringService {
         mTetheringStack.setTetherableIfacesDisabled(usbIface);
 
         if(((TetheringNetworkService)mTetheringNetworkService).setSystemUsbTetherEnabled(false) == false ) {
-            Log.d(TAG, "Unable to set sys.usb.config ");
+            message = "Unable to set sys.usb.config ";
+            Log.d(TAG, message);
+            // Sending message
+            Message msg = new Message();
+            msg.obj = message;
+            ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
         }
         ((TetheringNetworkService)mTetheringNetworkService).waitForFinish(1000);
         ((TetheringNetworkService) mTetheringNetworkService).setMobileNetworkEnabled(false);
@@ -499,6 +522,13 @@ implements ITetheringService {
 
         ((TetheringNetworkService) mTetheringNetworkService).setDnsUpdateThreadClassEnabled(false);
         ((TetheringNetworkService) mTetheringNetworkService).setIpConfigureThreadClassEnabled(false);
+
+        message = "tethering started ...";
+        Log.d(TAG, message);
+        // Sending message
+        Message msg = new Message();
+        msg.obj = message;
+        ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
 
         // Release Wakelock
         //SgsApplication.getInstance().releasePowerLock();

@@ -64,6 +64,37 @@
             </RadioGroup>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:id="@+id/screen_network_linearLayout_ip_style"
+            android:layout_below="@+id/screen_network_linearLayout_ipversion"
+            android:layout_width="fill_parent">
+            <RadioGroup
+                android:layout_height="wrap_content"
+                android:id="@+id/screen_network_radioGroup_ip_style"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_marginBottom="5px">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="WIN XP"
+                    android:id="@+id/screen_network_radioButton_ip_style_winxp"
+                    android:layout_marginLeft="5px"
+                    android:checked="true">
+
+                </RadioButton>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/screen_network_radioButton_ip_style_win7"
+                    android:text="WIN 7/8"
+                    android:layout_marginLeft="5px">
+
+                </RadioButton>
+            </RadioGroup>
+        </LinearLayout>
+
         <TextView
             android:layout_height="wrap_content"
             android:text="IP Address"
@@ -71,7 +102,7 @@
             android:id="@+id/screen_network_textView_ip_address"
             android:layout_marginLeft="5px"
             android:layout_marginRight="5px"
-            android:layout_below="@+id/screen_network_linearLayout_ipversion"
+            android:layout_below="@+id/screen_network_linearLayout_ip_style"
             android:textSize="16dp">
 
         </TextView>

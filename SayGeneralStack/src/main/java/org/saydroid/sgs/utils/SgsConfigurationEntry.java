@@ -74,6 +74,7 @@ public class SgsConfigurationEntry {
 	public static final String NETWORK_USE_SIGCOMP = "NETWORK_USE_SIGCOMP." + TAG;
 	public static final String NETWORK_TRANSPORT = "NETWORK_TRANSPORT." + TAG;
 
+    public static final String NETWORK_IP_STYLE = "NETWORK_IP_STYLE." + TAG;
     public static final String NETWORK_CONNECTED = "NETWORK_CONNECTED." + TAG;
     public static final String NETWORK_NOTIFICATION_RING_TONE = "NETWORK_NOTIFICATION_RING_TONE." + TAG;
     public static final String NETWORK_LOCAL_IP = "NETWORK_LOCAL_IP." + TAG;
@@ -181,11 +182,14 @@ public class SgsConfigurationEntry {
 	public static final String DEFAULT_NETWORK_IP_VERSION = "ipv4";
 	public static final boolean DEFAULT_NETWORK_USE_EARLY_IMS = false;
 
+    public static final String DEFAULT_NETWORK_IP_STYLE = "ip_style_winxp";
     public static final boolean DEFAULT_NETWORK_CONNECTED = false;
     public static final String DEFAULT_NETWORK_NOTIFICATION_RING_TONE = "";
-    public static final String DEFAULT_NETWORK_LOCAL_IP = "192.168.0.252";
+    public static final String DEFAULT_NETWORK_LOCAL_IP_WINXP = "192.168.0.252";
+    public static final String DEFAULT_NETWORK_LOCAL_IP_WIN7 = "192.168.137.252";
     public static final String DEFAULT_NETWORK_SUB_MASK = "255.255.255.0";
-    public static final String DEFAULT_NETWORK_GATE_WAY = "192.168.0.1";
+    public static final String DEFAULT_NETWORK_GATE_WAY_WINXP = "192.168.0.1";
+    public static final String DEFAULT_NETWORK_GATE_WAY_WIN7 = "192.168.137.1";
     public static final String DEFAULT_NETWORK_PREFERRED_DNS = "8.8.8.4";
     public static final String DEFAULT_NETWORK_SECONDARY_DNS = "8.8.8.8";
 	

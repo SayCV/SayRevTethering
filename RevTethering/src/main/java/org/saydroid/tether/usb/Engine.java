@@ -467,7 +467,7 @@ public class Engine extends SgsEngine{
                 this.DATA_FOLDER + "/maxid_exit.txt";
         Log.d(TAG, "command for dumping the max id is: " + dumpGlobalSettingsMaxId);
         if(RootCommands.run(dumpGlobalSettingsMaxId)==false){
-            Log.e(TAG, "Unable to dump the global setting maxid to" + this.DATA_FOLDER + "maxid_exit.txt");
+            Log.e(TAG, "Unable to dump the global setting maxid to" + this.DATA_FOLDER + "/maxid_exit.txt");
             File file = new File(Engine.DATA_FOLDER + "/maxid_exit.txt");
             if(!file.exists())
                 return false;

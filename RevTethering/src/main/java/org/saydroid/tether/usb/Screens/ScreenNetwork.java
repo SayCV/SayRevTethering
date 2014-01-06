@@ -27,6 +27,7 @@ import org.saydroid.sgs.utils.SgsStringUtils;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -42,6 +43,8 @@ public class ScreenNetwork extends BaseScreen {
 	private CheckBox mCb3G;
 	private RadioButton mRbIPv4;
 	private RadioButton mRbIPv6;
+    private RadioButton mRbStyleWINXP;
+    private RadioButton mRbStyleWIN7;
     private EditText mEtLocalIP;
     private EditText mEtSubMask;
     private EditText mEtGateWay;
@@ -63,6 +66,8 @@ public class ScreenNetwork extends BaseScreen {
         mCb3G = (CheckBox)findViewById(R.id.screen_network_checkBox_3g);
         mRbIPv4 = (RadioButton)findViewById(R.id.screen_network_radioButton_ipv4);
         mRbIPv6 = (RadioButton)findViewById(R.id.screen_network_radioButton_ipv6);
+        mRbStyleWINXP = (RadioButton)findViewById(R.id.screen_network_radioButton_ip_style_winxp);
+        mRbStyleWIN7 = (RadioButton)findViewById(R.id.screen_network_radioButton_ip_style_win7);
         mEtLocalIP = (EditText)findViewById(R.id.screen_network_textView_local_ip);
         mEtSubMask = (EditText)findViewById(R.id.screen_network_editText_sub_mask);
         mEtGateWay = (EditText)findViewById(R.id.screen_network_editText_gateway);
@@ -75,9 +80,17 @@ public class ScreenNetwork extends BaseScreen {
         mRbIPv4.setChecked(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_IP_VERSION,
         		SgsConfigurationEntry.DEFAULT_NETWORK_IP_VERSION).equalsIgnoreCase("ipv4"));
         mRbIPv6.setChecked(!mRbIPv4.isChecked());
-        mEtLocalIP.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_LOCAL_IP, SgsConfigurationEntry.DEFAULT_NETWORK_LOCAL_IP));
+        mRbStyleWINXP.setChecked(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_IP_STYLE,
+                SgsConfigurationEntry.DEFAULT_NETWORK_IP_STYLE).equalsIgnoreCase("ip_style_winxp"));
+        mRbStyleWIN7.setChecked(!mRbStyleWINXP.isChecked());
+        if(mRbStyleWINXP.isChecked()) {
+            mEtLocalIP.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_LOCAL_IP, SgsConfigurationEntry.DEFAULT_NETWORK_LOCAL_IP_WINXP));
+            mEtGateWay.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_GATE_WAY, SgsConfigurationEntry.DEFAULT_NETWORK_GATE_WAY_WINXP));
+        } else {
+            mEtLocalIP.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_LOCAL_IP, SgsConfigurationEntry.DEFAULT_NETWORK_LOCAL_IP_WIN7));
+            mEtGateWay.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_GATE_WAY, SgsConfigurationEntry.DEFAULT_NETWORK_GATE_WAY_WIN7));
+        }
         mEtSubMask.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_SUB_MASK, SgsConfigurationEntry.DEFAULT_NETWORK_SUB_MASK));
-        mEtGateWay.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_GATE_WAY, SgsConfigurationEntry.DEFAULT_NETWORK_GATE_WAY));
         mEtPreferredDNS.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_PREFERRED_DNS, SgsConfigurationEntry.DEFAULT_NETWORK_PREFERRED_DNS));
         mEtSecondaryDNS.setText(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_SECONDARY_DNS, SgsConfigurationEntry.DEFAULT_NETWORK_SECONDARY_DNS));
         
@@ -86,12 +99,29 @@ public class ScreenNetwork extends BaseScreen {
         super.addConfigurationListener(mCb3G);
         super.addConfigurationListener(mRbIPv4);
         super.addConfigurationListener(mRbIPv6);
+        super.addConfigurationListener(mRbStyleWINXP);
+        super.addConfigurationListener(mRbStyleWIN7);
         super.addConfigurationListener(mEtLocalIP);
         super.addConfigurationListener(mEtSubMask);
         super.addConfigurationListener(mEtGateWay);
         super.addConfigurationListener(mEtPreferredDNS);
         super.addConfigurationListener(mEtSecondaryDNS);
-	}
+
+        mRbStyleWINXP.setOnCheckedChangeListener(rbLocal_OnCheckedChangeListener);
+        mRbStyleWIN7.setOnCheckedChangeListener(rbLocal_OnCheckedChangeListener);
+    }
+
+    private CompoundButton.OnCheckedChangeListener rbLocal_OnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener(){
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if(mRbStyleWINXP.isChecked()) {
+                mEtLocalIP.setText(SgsConfigurationEntry.DEFAULT_NETWORK_LOCAL_IP_WINXP);
+                mEtGateWay.setText(SgsConfigurationEntry.DEFAULT_NETWORK_GATE_WAY_WINXP);
+            } else {
+                mEtLocalIP.setText(SgsConfigurationEntry.DEFAULT_NETWORK_LOCAL_IP_WIN7);
+                mEtGateWay.setText(SgsConfigurationEntry.DEFAULT_NETWORK_GATE_WAY_WIN7);
+            }
+        }
+    };
 	
 	protected void onPause() {
 		if(super.mComputeConfiguration){
@@ -103,6 +133,8 @@ public class ScreenNetwork extends BaseScreen {
 					mCb3G.isChecked());
 			mConfigurationService.putString(SgsConfigurationEntry.NETWORK_IP_VERSION, 
 					mRbIPv4.isChecked() ? "ipv4" : "ipv6");
+            mConfigurationService.putString(SgsConfigurationEntry.NETWORK_IP_STYLE,
+                    mRbStyleWINXP.isChecked() ? "ip_style_winxp" : "ip_style_win7");
             mConfigurationService.putString(SgsConfigurationEntry.NETWORK_LOCAL_IP,
                     mEtLocalIP.getText().toString().trim());
             mConfigurationService.putString(SgsConfigurationEntry.NETWORK_SUB_MASK,
