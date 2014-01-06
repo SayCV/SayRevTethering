@@ -19,6 +19,8 @@
 package org.saydroid.tether.usb;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
@@ -52,4 +54,50 @@ public class CustomDialog {
 		
 		builder.create().show();
 	}
+
+    public static Dialog showProgressDialog(Context context, int icon, String title, String msg, DialogInterface.OnCancelListener onCancelListener){
+//        ProgressDialog.Builder builder;
+        ProgressDialog pd;
+//
+//        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        View layout = inflater.inflate(R.layout.custom_dialog, null);
+//
+//        ImageView ivIcon = (ImageView) layout.findViewById(R.id.custom_dialog_imageView_icon);
+//        ivIcon.setImageResource(icon);
+//        TextView tvTitle = (TextView) layout.findViewById(R.id.custom_dialog_textView_title);
+//        tvTitle.setText((title == null) ? "" : title);
+//        TextView tvMsg = (TextView) layout.findViewById(R.id.custom_dialog_textView_msg);
+//        tvMsg.setText(msg);
+//
+//        builder = new ProgressDialog.Builder(context);
+//        //builder.setView(layout);
+//        builder.setTitle(title);
+//        builder.setMessage(msg);
+//        builder.setCancelable(false);
+//        if(positive != null && positiveText != null){
+//            builder.setPositiveButton(positiveText, positive);
+//        }
+//        if(negative != null && negativeText != null){
+//            builder.setNegativeButton(negativeText, negative);
+//        }
+
+//        builder.create().show();
+
+//        show(Context context, CharSequence title,
+//                CharSequence message, boolean indeterminate,
+//                boolean cancelable, OnCancelListener cancelListener)
+
+        pd = new ProgressDialog(context);
+        pd.setTitle(title);
+        pd.setMessage(msg);
+        pd.setIndeterminate(false);
+        pd.setCancelable(false);
+        if(onCancelListener != null){
+            /*ProgressDialog.show(context, title,
+                    msg, false, false, onCancelListener);*/
+            pd.setOnCancelListener(onCancelListener);
+        }
+        pd.show();
+        return pd;
+    }
 }

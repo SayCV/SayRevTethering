@@ -19,6 +19,7 @@
 */
 package org.saydroid.tether.usb.Screens;
 
+import org.saydroid.sgs.events.SgsRegistrationEventTypes;
 import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsUriUtils;
 import org.saydroid.tether.usb.CustomDialog;
@@ -34,6 +35,7 @@ import org.saydroid.tether.usb.Tethering.TetheringRegistrationSession;
 import org.saydroid.tether.usb.Tethering.TetheringSession.ConnectionState;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -63,6 +65,8 @@ public class ScreenHome extends BaseScreen {
 	private static final int MENU_SETTINGS = 1;
 	
 	private GridView mGridView;
+
+    private ProgressDialog mStartStopProgressDialog;
 
     private RelativeLayout mTrafficRow = null;
     private TextView mDownloadText = null;
@@ -117,7 +121,6 @@ public class ScreenHome extends BaseScreen {
                             mTetheringService.stopStack();
                         } else if (mTetheringService.isRegistered()){
                             mTetheringService.unRegister();
-                            //mTrafficRow.setVisibility(View.VISIBLE);
                         } else {
                             mTetheringService.register(ScreenHome.this);
                         }
@@ -159,6 +162,45 @@ public class ScreenHome extends BaseScreen {
 						Log.e(TAG, "Invalid event args");
 						return;
 					}
+                    switch(args.getEventType()){
+                        case REGISTRATION_INPROGRESS:
+                            if(mStartStopProgressDialog.isShowing()) { mStartStopProgressDialog.dismiss(); }
+                            mStartStopProgressDialog = ProgressDialog.show(
+                                    ScreenHome.this,
+                                    //R.drawable.exit_48,
+                                    "Start Tethering",
+                                    "Please wait while starting...",
+                                    true, false,
+                                    new DialogInterface.OnCancelListener() {
+                                        @Override
+                                        public void onCancel(DialogInterface dialog) {
+                                            //finish();
+                                        }
+                                    });
+                            break;
+                        case UNREGISTRATION_INPROGRESS:
+                            if(mStartStopProgressDialog.isShowing()) { mStartStopProgressDialog.dismiss(); }
+                            mStartStopProgressDialog = ProgressDialog.show(
+                                    ScreenHome.this,
+                                    //R.drawable.exit_48,
+                                    "Stop Tethering",
+                                    "Please wait while stopping...",
+                                    true, false,
+                                    new DialogInterface.OnCancelListener() {
+                                        @Override
+                                        public void onCancel(DialogInterface dialog) {
+                                            //finish();
+                                        }
+                                    });
+                            break;
+                        case REGISTRATION_NOK:
+                        case UNREGISTRATION_OK:
+                        case REGISTRATION_OK:
+                        case UNREGISTRATION_NOK:
+                        default:
+                            if(mStartStopProgressDialog.isShowing()) { mStartStopProgressDialog.dismiss(); }
+                            break;
+                    }
 					switch(args.getEventType()){
 						case REGISTRATION_NOK:
 						case UNREGISTRATION_OK:

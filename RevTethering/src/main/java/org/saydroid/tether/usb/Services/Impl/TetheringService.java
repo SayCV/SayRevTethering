@@ -399,7 +399,7 @@ implements ITetheringService {
     	 *    2 = Fatal error
     	 */
 
-        //broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_INPROGRESS, (short)0, null));
+        broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_INPROGRESS, (short)0, null));
         // check if usb is plugged
         if (!((TetheringNetworkService)mTetheringNetworkService).isUsbConnected()) {
             /*Toast.makeText(MainActivity.currentInstance,
@@ -475,8 +475,8 @@ implements ITetheringService {
             broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_OK, (short)0, null));
             return 0;
         }
-        mRegSession.setConnectionState(ConnectionState.CONNECTING);
-        //broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
+        mRegSession.setConnectionState(ConnectionState.NONE);
+        broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
         return 2;
     }
 
@@ -495,6 +495,7 @@ implements ITetheringService {
         if(((TetheringNetworkService)mTetheringNetworkService).setSystemUsbTetherEnabled(false) == false ) {
             Log.d(TAG, "Unable to set sys.usb.config ");
         }
+        ((TetheringNetworkService)mTetheringNetworkService).waitForFinish(1000);
         ((TetheringNetworkService) mTetheringNetworkService).setMobileNetworkEnabled(false);
 
         //((TetheringNetworkService) mTetheringNetworkService).setTrafficCounterThreadClassEnabled(false);
