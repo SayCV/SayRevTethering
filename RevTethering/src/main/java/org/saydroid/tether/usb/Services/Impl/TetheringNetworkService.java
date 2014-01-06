@@ -65,6 +65,7 @@ import android.net.wifi.WifiConfiguration.GroupCipher;
 import android.net.wifi.WifiConfiguration.KeyMgmt;
 import android.net.wifi.WifiManager.WifiLock;
 import android.os.BatteryManager;
+import android.os.Message;
 import android.support.v7.appcompat.R;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
@@ -719,6 +720,7 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
     class IpConfigureThreadClass implements Runnable {
 
         String[] network;
+        String message = null;
 
         public IpConfigureThreadClass(String[] network) {
             this.network = network;
@@ -739,25 +741,29 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
                         String[] currentGW = getCurrentGW();
                         if ((currentGW[0].equals(network[1])==false)  || (currentGW[1].equals(mUsbInterface)==false)){
                             if(ifConfigSetGW(mUsbInterface, network[1])) {
-                                Log.d(TAG, "ifconfig setup success");
-                                return;
+                                message = "ifconfig setup success";
                             } else {
-                                Log.d(TAG, "cannot set default gate way");
+                                message = "cannot set default gate way";
                             }
                         } else {
-                            Log.d(TAG, "existing gateway is already correct");
+                            message = "existing gateway is already correct";
                         }
                     } else {
-                        Log.d(TAG, "cannot dump system gate way");
+                        message = "cannot dump system gate way";
                     }
                 } else { //ifConfigSetInterface(mUsbInterface, network)){
-                    Log.d(TAG, "cannot set ifconfig inteface");
+                    message = "cannot set ifconfig inteface";
                 }
             } else {
-                Log.d(TAG, "cannot up usb interface");
+                message = "cannot up usb interface";
             }
-            // add failure event
-            ((Engine)Engine.getInstance()).showAppMessage("Found error when ifconfig " + mUsbInterface);
+
+            Log.d(TAG, message);
+            // Sending message
+            Message msg = new Message();
+            msg.obj = message;
+            ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
+            //((Engine)Engine.getInstance()).showAppMessage("Found error when ifconfig " + mUsbInterface);
         }
     }
 

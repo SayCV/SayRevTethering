@@ -40,6 +40,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
+import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
@@ -115,6 +116,15 @@ public class Engine extends SgsEngine{
 	public boolean stop() {
 		return super.stop();
 	}
+
+    public Handler displayMessageHandler = new Handler(){
+        public void handleMessage(Message msg) {
+            if (msg.obj != null) {
+                showAppMessage((String) msg.obj);
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     // Display Toast-Message
     public void showAppMessage(String message) {
