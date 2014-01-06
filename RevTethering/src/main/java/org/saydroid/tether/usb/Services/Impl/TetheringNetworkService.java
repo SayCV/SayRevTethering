@@ -44,6 +44,7 @@ import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsFileUtils;
 import org.saydroid.sgs.utils.SgsObservableList;
 import org.saydroid.sgs.utils.SgsStringUtils;
+import org.saydroid.tether.usb.Engine;
 import org.saydroid.tether.usb.MainActivity;
 import org.saydroid.tether.usb.Services.ITetheringNetworkService;
 import org.saydroid.tether.usb.Services.Impl.TetheringNetworkService.DNS_TYPE;
@@ -739,6 +740,7 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
                         if ((currentGW[0].equals(network[1])==false)  || (currentGW[1].equals(mUsbInterface)==false)){
                             if(ifConfigSetGW(mUsbInterface, network[1])) {
                                 Log.d(TAG, "ifconfig setup success");
+                                return;
                             } else {
                                 Log.d(TAG, "cannot set default gate way");
                             }
@@ -754,6 +756,8 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
             } else {
                 Log.d(TAG, "cannot up usb interface");
             }
+            // add failure event
+            ((Engine)Engine.getInstance()).showAppMessage("Found error when ifconfig " + mUsbInterface);
         }
     }
 

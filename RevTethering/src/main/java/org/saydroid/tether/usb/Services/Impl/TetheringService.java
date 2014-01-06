@@ -406,14 +406,14 @@ implements ITetheringService {
                     "usb is not pluged, retry",
                     Toast.LENGTH_LONG).show();*/
             Log.d(TAG, "usb is not pluged, retry ");
-            //broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
+            broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
             return 13; //MESSAGE_USB_ACTION_DETACH
         }
 
         // pre turn on Settings USB Tethering
         if(((TetheringNetworkService)mTetheringNetworkService).setSystemUsbTetherEnabled(true) == false ) {
             Log.d(TAG, "Unable to set sys.usb.config ");
-            //broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
+            broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
             return 2;
         }
         ((TetheringNetworkService)mTetheringNetworkService).waitForFinish(1000);
@@ -485,9 +485,6 @@ implements ITetheringService {
         if(mRegSession.getConnectionState() == ConnectionState.TERMINATED) { return true; }
         broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.UNREGISTRATION_INPROGRESS, (short)0, null));
         String usbIface = mTetheringStack.getTetherableIfaces();
-        // Release Wakelock
-        //SgsApplication.getInstance().releasePowerLock();
-        SgsApplication.getInstance().releaseWakeLock();
 
         ((TetheringNetworkService) mTetheringNetworkService).setTetherableIfaces(usbIface);
         mTetheringStack.setTetherableIfacesDisabled(usbIface);
@@ -502,6 +499,10 @@ implements ITetheringService {
 
         ((TetheringNetworkService) mTetheringNetworkService).setDnsUpdateThreadClassEnabled(false);
         ((TetheringNetworkService) mTetheringNetworkService).setIpConfigureThreadClassEnabled(false);
+
+        // Release Wakelock
+        //SgsApplication.getInstance().releasePowerLock();
+        SgsApplication.getInstance().releaseWakeLock();
 
         mRegSession.setConnectionState(ConnectionState.TERMINATED);
         Engine.getInstance().getConfigurationService().putBoolean(SgsConfigurationEntry.NETWORK_CONNECTED, false);

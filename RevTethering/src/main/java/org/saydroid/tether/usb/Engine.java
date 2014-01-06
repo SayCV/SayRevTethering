@@ -43,6 +43,7 @@ import android.net.ConnectivityManager;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import org.saydroid.logger.Log;
 
@@ -114,7 +115,12 @@ public class Engine extends SgsEngine{
 	public boolean stop() {
 		return super.stop();
 	}
-	
+
+    // Display Toast-Message
+    public void showAppMessage(String message) {
+        Toast.makeText(SRTDroid.getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
 	private void showNotification(int notifId, int drawableId, String tickerText) {
 		if(!mStarted){
 			return;

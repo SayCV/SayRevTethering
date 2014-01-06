@@ -35,6 +35,7 @@ import org.saydroid.tether.usb.Tethering.TetheringRegistrationSession;
 import org.saydroid.tether.usb.Tethering.TetheringSession.ConnectionState;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -67,6 +68,8 @@ public class ScreenHome extends BaseScreen {
 	private GridView mGridView;
 
     private ProgressDialog mStartStopProgressDialog;
+    private static int ID_DIALOG_STARTING = 0;
+    private static int ID_DIALOG_STOPPING = 1;
 
     private RelativeLayout mTrafficRow = null;
     private TextView mDownloadText = null;
@@ -92,6 +95,26 @@ public class ScreenHome extends BaseScreen {
         if (count < 1e6 * 2)
             return ((float)((int)(count*10/1024))/10 + (rate ? "kbps" : "kB"));
         return ((float)((int)(count*100/1024/1024))/100 + (rate ? "mbps" : "MB"));
+    }
+
+    protected Dialog onCreateDialog(int id) {
+        if (id == ID_DIALOG_STARTING) {
+            mStartStopProgressDialog = new ProgressDialog(this);
+            mStartStopProgressDialog.setTitle("Start Tethering");
+            mStartStopProgressDialog.setMessage("Please wait while starting...");
+            mStartStopProgressDialog.setIndeterminate(false);
+            mStartStopProgressDialog.setCancelable(true);
+            return mStartStopProgressDialog;
+        }
+        else if (id == ID_DIALOG_STOPPING) {
+            mStartStopProgressDialog = new ProgressDialog(this);
+            mStartStopProgressDialog.setTitle("Stop Tethering");
+            mStartStopProgressDialog.setMessage("Please wait while stopping...");
+            mStartStopProgressDialog.setIndeterminate(false);
+            mStartStopProgressDialog.setCancelable(true);
+            return mStartStopProgressDialog;
+        }
+        return null;
     }
 
 	@Override
@@ -120,9 +143,45 @@ public class ScreenHome extends BaseScreen {
                         if(mTetheringService.getRegistrationState() == ConnectionState.CONNECTING || mTetheringService.getRegistrationState() == ConnectionState.TERMINATING){
                             mTetheringService.stopStack();
                         } else if (mTetheringService.isRegistered()){
-                            mTetheringService.unRegister();
+                            //showDialog(ID_DIALOG_STOPPING);
+                            mStartStopProgressDialog = ProgressDialog.show(
+                                    ScreenHome.this,
+                                    //R.drawable.exit_48,
+                                    "Stop Tethering",
+                                    "Please wait while stopping...",
+                                    true, false,
+                                    new DialogInterface.OnCancelListener() {
+                                        @Override
+                                        public void onCancel(DialogInterface dialog) {
+                                            //finish();
+                                        }
+                                    });
+                            new Thread(new Runnable(){
+                                public void run(){
+                                    mTetheringService.unRegister();
+                                    //dismissDialog(ID_DIALOG_STOPPING);
+                                }
+                            }).start();
                         } else {
-                            mTetheringService.register(ScreenHome.this);
+                            //showDialog(ID_DIALOG_STARTING);
+                            mStartStopProgressDialog = ProgressDialog.show(
+                                    ScreenHome.this,
+                                    //R.drawable.exit_48,
+                                    "Start Tethering",
+                                    "Please wait while starting...",
+                                    true, false,
+                                    new DialogInterface.OnCancelListener() {
+                                        @Override
+                                        public void onCancel(DialogInterface dialog) {
+                                            //finish();
+                                        }
+                                    });
+                            new Thread(new Runnable(){
+                                public void run(){
+                                    mTetheringService.register(ScreenHome.this);
+                                    //dismissDialog(ID_DIALOG_STARTING);
+                                }
+                            }).start();
                         }
 					} else if (position == ScreenHomeItem.ITEM_EXIT_POS){
 						CustomDialog.show(
@@ -163,8 +222,8 @@ public class ScreenHome extends BaseScreen {
 						return;
 					}
                     switch(args.getEventType()){
-                        case REGISTRATION_INPROGRESS:
-                            if(mStartStopProgressDialog.isShowing()) { mStartStopProgressDialog.dismiss(); }
+                        /*case REGISTRATION_INPROGRESS:
+                            //if(mStartStopProgressDialog.isShowing()) { mStartStopProgressDialog.dismiss(); }
                             mStartStopProgressDialog = ProgressDialog.show(
                                     ScreenHome.this,
                                     //R.drawable.exit_48,
@@ -179,7 +238,7 @@ public class ScreenHome extends BaseScreen {
                                     });
                             break;
                         case UNREGISTRATION_INPROGRESS:
-                            if(mStartStopProgressDialog.isShowing()) { mStartStopProgressDialog.dismiss(); }
+                            //if(mStartStopProgressDialog.isShowing()) { mStartStopProgressDialog.dismiss(); }
                             mStartStopProgressDialog = ProgressDialog.show(
                                     ScreenHome.this,
                                     //R.drawable.exit_48,
@@ -192,13 +251,19 @@ public class ScreenHome extends BaseScreen {
                                             //finish();
                                         }
                                     });
-                            break;
+                            break;*/
                         case REGISTRATION_NOK:
-                        case UNREGISTRATION_OK:
                         case REGISTRATION_OK:
+                            //dismissDialog(ID_DIALOG_STARTING);
+                            //break;
+                        case UNREGISTRATION_OK:
                         case UNREGISTRATION_NOK:
+                            //dismissDialog(ID_DIALOG_STOPPING);
+                            mStartStopProgressDialog.dismiss();
+                            break;
                         default:
-                            if(mStartStopProgressDialog.isShowing()) { mStartStopProgressDialog.dismiss(); }
+                            //if(mStartStopProgressDialog.isShowing()) { mStartStopProgressDialog.dismiss(); }
+
                             break;
                     }
 					switch(args.getEventType()){
