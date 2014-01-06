@@ -74,6 +74,8 @@ public class SgsConfigurationEntry {
 	public static final String NETWORK_USE_SIGCOMP = "NETWORK_USE_SIGCOMP." + TAG;
 	public static final String NETWORK_TRANSPORT = "NETWORK_TRANSPORT." + TAG;
 
+    public static final String NETWORK_TRAFFIC_COUNT_RX_AT_START = "NETWORK_TRAFFIC_COUNT_RX_AT_START." + TAG;
+    public static final String NETWORK_TRAFFIC_COUNT_TX_AT_START = "NETWORK_TRAFFIC_COUNT_TX_AT_START." + TAG;
     public static final String NETWORK_IP_STYLE = "NETWORK_IP_STYLE." + TAG;
     public static final String NETWORK_CONNECTED = "NETWORK_CONNECTED." + TAG;
     public static final String NETWORK_NOTIFICATION_RING_TONE = "NETWORK_NOTIFICATION_RING_TONE." + TAG;
@@ -182,6 +184,8 @@ public class SgsConfigurationEntry {
 	public static final String DEFAULT_NETWORK_IP_VERSION = "ipv4";
 	public static final boolean DEFAULT_NETWORK_USE_EARLY_IMS = false;
 
+    public static final long DEFAULT_NETWORK_TRAFFIC_RX_COUNT_AT_START = 0l;
+    public static final long DEFAULT_NETWORK_TRAFFIC_TX_COUNT_AT_START = 0l;
     public static final String DEFAULT_NETWORK_IP_STYLE = "ip_style_winxp";
     public static final boolean DEFAULT_NETWORK_CONNECTED = false;
     public static final String DEFAULT_NETWORK_NOTIFICATION_RING_TONE = "";

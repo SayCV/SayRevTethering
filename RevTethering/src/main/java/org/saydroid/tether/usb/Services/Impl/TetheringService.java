@@ -419,7 +419,7 @@ implements ITetheringService {
 
         // pre turn on Settings USB Tethering
         if(((TetheringNetworkService)mTetheringNetworkService).setSystemUsbTetherEnabled(true) == false ) {
-            message = "Unable to set sys.usb.config ";
+            message = "Unable to set sys.usb.config: rndis,adb";
             Log.d(TAG, message);
             // Sending message
             Message msg = new Message();
@@ -508,7 +508,7 @@ implements ITetheringService {
         mTetheringStack.setTetherableIfacesDisabled(usbIface);
 
         if(((TetheringNetworkService)mTetheringNetworkService).setSystemUsbTetherEnabled(false) == false ) {
-            message = "Unable to set sys.usb.config ";
+            message = "Unable to set sys.usb.config: mtp,adb";
             Log.d(TAG, message);
             // Sending message
             Message msg = new Message();
@@ -523,7 +523,7 @@ implements ITetheringService {
         ((TetheringNetworkService) mTetheringNetworkService).setDnsUpdateThreadClassEnabled(false);
         ((TetheringNetworkService) mTetheringNetworkService).setIpConfigureThreadClassEnabled(false);
 
-        message = "tethering started ...";
+        message = "tethering stopped ...";
         Log.d(TAG, message);
         // Sending message
         Message msg = new Message();

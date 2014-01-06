@@ -20,6 +20,7 @@ package org.saydroid.tether.usb.Tethering;
 
 
 import org.saydroid.logger.Log;
+import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsDateTimeUtils;
 import org.saydroid.sgs.utils.SgsFileUtils;
 import org.saydroid.tether.usb.Engine;
@@ -125,7 +126,12 @@ public class TetheringRegistrationSession extends TetheringSession {
                 // nothing
             }
 
-            long [] trafficCountAtStart = getDataTraffic(mTetherNetworkDevice);
+            //long [] trafficCountAtStart = getDataTraffic(mTetherNetworkDevice);
+            long [] trafficCountAtStart = new long[2];
+            trafficCountAtStart[0] = (long)Engine.getInstance().getConfigurationService().getFloat(
+                    SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_RX_AT_START, SgsConfigurationEntry.DEFAULT_NETWORK_TRAFFIC_RX_COUNT_AT_START);
+            trafficCountAtStart[1] = (long)Engine.getInstance().getConfigurationService().getFloat(
+                    SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_TX_AT_START, SgsConfigurationEntry.DEFAULT_NETWORK_TRAFFIC_TX_COUNT_AT_START);
 
             while (!Thread.currentThread().isInterrupted()) {
                 // Check data count
@@ -138,6 +144,7 @@ public class TetheringRegistrationSession extends TetheringSession {
                 datacount.totalDownload = trafficCount[1]-trafficCountAtStart[1];
                 datacount.uploadRate = (long) ((datacount.totalUpload - this.previousUpload)*8/elapsedTime);
                 datacount.downloadRate = (long) ((datacount.totalDownload - this.previousDownload)*8/elapsedTime);
+
                 /*Message message = Message.obtain();
                 message.what = MainActivity.MESSAGE_TRAFFIC_COUNT;
                 message.obj = datacount;
@@ -150,12 +157,22 @@ public class TetheringRegistrationSession extends TetheringSession {
 
                 this.previousUpload = datacount.totalUpload;
                 this.previousDownload = datacount.totalDownload;
+                Engine.getInstance().getConfigurationService().putFloat(
+                        SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_RX_AT_START, this.previousDownload);
+                Engine.getInstance().getConfigurationService().putFloat(
+                        SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_TX_AT_START, this.previousUpload);
+                Engine.getInstance().getConfigurationService().commit();
                 try {
                     Thread.sleep(INTERVAL * 1000);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             }
+            Engine.getInstance().getConfigurationService().putFloat(
+                    SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_RX_AT_START, 0l);
+            Engine.getInstance().getConfigurationService().putFloat(
+                    SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_TX_AT_START, 0l);
+            Engine.getInstance().getConfigurationService().commit();
             /*Message message = Message.obtain();
             message.what = MainActivity.MESSAGE_TRAFFIC_END;
             MainActivity.currentInstance.viewUpdateHandler.sendMessage(message);*/
