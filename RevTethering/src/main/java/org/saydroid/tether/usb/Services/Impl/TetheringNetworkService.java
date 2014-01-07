@@ -764,7 +764,7 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
                 Log.d(TAG, message);
                 // Sending message
                 Message msg = new Message();
-                msg.obj = message + ", will try again!!1";
+                msg.obj = message + (again == true ? "" : ", will try again!!1");
                 ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
                 //((Engine)Engine.getInstance()).showAppMessage("Found error when ifconfig " + mUsbInterface);
                 // Taking a nap
