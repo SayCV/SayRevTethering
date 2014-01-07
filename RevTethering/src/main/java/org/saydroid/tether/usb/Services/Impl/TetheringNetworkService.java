@@ -733,7 +733,7 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
     	 * but the ifconfig only need setup once.
     	 */
         public void run() {
-            while( again ) {
+            while( again && !Thread.currentThread().isInterrupted() ) {
                 //while (!Thread.currentThread().isInterrupted()) {
                 //String[] currentDns = TetherApplication.this.coretask.getCurrentDns();//current means current system setting, not setting inside file.
                 //if (this.dns == null || this.dns[0].equals(currentDns[0]) == false || this.dns[1].equals(currentDns[1]) == false) {
@@ -764,7 +764,7 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
                 Log.d(TAG, message);
                 // Sending message
                 Message msg = new Message();
-                msg.obj = message + (again == false ? "" : ", will try again!!1");
+                msg.obj = message + (again == false ? "" : ", will try again!!!");
                 ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
                 //((Engine)Engine.getInstance()).showAppMessage("Found error when ifconfig " + mUsbInterface);
                 // Taking a nap
@@ -773,7 +773,7 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
-            }// while( again )
+            } //while( again && !Thread.currentThread().isInterrupted() ) {
         }
     }
 

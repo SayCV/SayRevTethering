@@ -75,7 +75,7 @@ public class ScreenNetwork extends BaseScreen {
         mEtSecondaryDNS = (EditText)findViewById(R.id.screen_network_editText_secondary_dns);
 
 
-        mCbFaked3G.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_WIFI, SgsConfigurationEntry.DEFAULT_NETWORK_USE_WIFI));
+        mCbFaked3G.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_FAKED_3G, SgsConfigurationEntry.DEFAULT_NETWORK_USE_FAKED_3G));
         mCb3G.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.NETWORK_USE_3G, SgsConfigurationEntry.DEFAULT_NETWORK_USE_3G));
         mRbIPv4.setChecked(mConfigurationService.getString(SgsConfigurationEntry.NETWORK_IP_VERSION,
         		SgsConfigurationEntry.DEFAULT_NETWORK_IP_VERSION).equalsIgnoreCase("ipv4"));
