@@ -469,8 +469,14 @@ implements ITetheringService {
 
             ((TetheringNetworkService) mTetheringNetworkService).setIpConfigureThreadClassEnabled(network, true);
 
-            ((TetheringNetworkService) mTetheringNetworkService).setMobileNetworkEnabled(true);
-            ((TetheringNetworkService) mTetheringNetworkService).setMobileNetworkFakedEnabled(true);
+            if(Engine.getInstance().getConfigurationService().getBoolean(
+                    SgsConfigurationEntry.NETWORK_USE_3G, SgsConfigurationEntry.DEFAULT_NETWORK_USE_3G)) {
+                ((TetheringNetworkService) mTetheringNetworkService).setMobileNetworkEnabled(true);
+            }
+            if(Engine.getInstance().getConfigurationService().getBoolean(
+                    SgsConfigurationEntry.NETWORK_USE_FAKED_3G, SgsConfigurationEntry.DEFAULT_NETWORK_USE_FAKED_3G)) {
+                ((TetheringNetworkService) mTetheringNetworkService).setMobileNetworkFakedEnabled(true);
+            }
 
             //debug here
             message = "tethering started ...";
@@ -482,7 +488,10 @@ implements ITetheringService {
 
             // Acquire Wakelock
             //SgsApplication.getInstance().acquirePowerLock();
-            SgsApplication.getInstance().acquireWakeLock();
+            if(!Engine.getInstance().getConfigurationService().getBoolean(
+                    SgsConfigurationEntry.GENERAL_DWL, SgsConfigurationEntry.DEFAULT_GENERAL_DWL)) {
+                SgsApplication.getInstance().acquireWakeLock();
+            }
 
             //indicate the tether_stop is not valid
             //this.tetherStopped = -1;

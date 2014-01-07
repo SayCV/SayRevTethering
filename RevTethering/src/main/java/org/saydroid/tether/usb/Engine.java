@@ -71,8 +71,8 @@ public class Engine extends SgsEngine{
 	private static final String LIBS_FOLDER = String.format("%s/lib", Engine.DATA_FOLDER);
 
     private static final String SETTING_DB_PATH = "/data/data/com.android.providers.settings/databases/";
-    private  static final String mGlobalSetting_tether_supported = "tether_supported"; //valid setting is 1
-    private  static final String mGlobalSetting_tether_dun_required = "tether_dun_required"; //valid setting is 0
+    private static final String mGlobalSetting_tether_supported = "tether_supported"; //valid setting is 1
+    private static final String mGlobalSetting_tether_dun_required = "tether_dun_required"; //valid setting is 0
 
 	
 	private IScreenService mScreenService;
