@@ -4,7 +4,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/usb_144"
         android:theme="@style/AppTheme"
         android:label="@string/app_name"
         android:persistent="true"
