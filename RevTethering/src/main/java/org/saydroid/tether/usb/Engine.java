@@ -19,6 +19,7 @@
 package org.saydroid.tether.usb;
 
 import org.saydroid.rootcommands.RootCommands;
+import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsFileUtils;
 import org.saydroid.tether.usb.Services.IScreenService;
 import org.saydroid.tether.usb.Services.ITetheringNetworkService;
@@ -108,8 +109,14 @@ public class Engine extends SgsEngine{
 	
 	@Override
 	public boolean start() {
-        this.startupCheck();
-		return super.start();
+        boolean result;
+        result = super.start();
+        // we can use getConfigurationService() after call SgsEngine.Start()
+        if(getConfigurationService().getBoolean(SgsConfigurationEntry.GENERAL_STARTUP_CHECK,
+                SgsConfigurationEntry.DEFAULT_GENERAL_STARTUP_CHECK)) {
+            this.startupCheck();
+        }
+		return result;
 	}
 	
 	@Override
@@ -717,6 +724,9 @@ public class Engine extends SgsEngine{
         //this.toggleStartStop();
 
         startupCheckSuccess = true;
+        getConfigurationService().putBoolean(SgsConfigurationEntry.GENERAL_STARTUP_CHECK,
+                !startupCheckSuccess);
+
         return startupCheckSuccess;
     }
 }

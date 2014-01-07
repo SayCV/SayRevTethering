@@ -37,6 +37,7 @@ public class SgsConfigurationEntry {
 	public static final String PCSCF_DISCOVERY_DNS_SRV = "DNS NAPTR+SRV";
 	
 	// General
+    public static final String GENERAL_STARTUP_CHECK = "GENERAL_STARTUP_CHECK." + TAG;
 	public static final String GENERAL_AUTOSTART = "GENERAL_AUTOSTART." + TAG;
 	public static final String GENERAL_SHOW_WELCOME_SCREEN = "GENERAL_SHOW_WELCOME_SCREEN." + TAG;
 	public static final String GENERAL_FULL_SCREEN_VIDEO = "GENERAL_FULL_SCREEN_VIDEO." + TAG;
@@ -147,6 +148,7 @@ public class SgsConfigurationEntry {
 	//
 	
 	// General
+    public static final boolean DEFAULT_GENERAL_STARTUP_CHECK = true;
 	public static final boolean DEFAULT_GENERAL_SHOW_WELCOME_SCREEN = true;
 	public static final boolean DEFAULT_GENERAL_FULL_SCREEN_VIDEO = true;
 	public static final boolean DEFAULT_GENERAL_INTERCEPT_OUTGOING_CALLS = true;

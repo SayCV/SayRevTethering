@@ -127,11 +127,11 @@ public class TetheringRegistrationSession extends TetheringSession {
             }
 
             //long [] trafficCountAtStart = getDataTraffic(mTetherNetworkDevice);
-            long [] trafficCountAtStart = new long[2];
-            trafficCountAtStart[0] = (long)Engine.getInstance().getConfigurationService().getFloat(
+            long [] trafficCountAtStart = new long[] {0, 0};
+            /*trafficCountAtStart[0] = (long)Engine.getInstance().getConfigurationService().getFloat(
                     SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_RX_AT_START, SgsConfigurationEntry.DEFAULT_NETWORK_TRAFFIC_RX_COUNT_AT_START);
             trafficCountAtStart[1] = (long)Engine.getInstance().getConfigurationService().getFloat(
-                    SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_TX_AT_START, SgsConfigurationEntry.DEFAULT_NETWORK_TRAFFIC_TX_COUNT_AT_START);
+                    SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_TX_AT_START, SgsConfigurationEntry.DEFAULT_NETWORK_TRAFFIC_TX_COUNT_AT_START);*/
 
             while (!Thread.currentThread().isInterrupted()) {
                 // Check data count
@@ -157,22 +157,22 @@ public class TetheringRegistrationSession extends TetheringSession {
 
                 this.previousUpload = datacount.totalUpload;
                 this.previousDownload = datacount.totalDownload;
-                Engine.getInstance().getConfigurationService().putFloat(
+                /*Engine.getInstance().getConfigurationService().putFloat(
                         SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_RX_AT_START, this.previousDownload);
                 Engine.getInstance().getConfigurationService().putFloat(
                         SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_TX_AT_START, this.previousUpload);
-                Engine.getInstance().getConfigurationService().commit();
+                Engine.getInstance().getConfigurationService().commit();*/
                 try {
                     Thread.sleep(INTERVAL * 1000);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             }
-            Engine.getInstance().getConfigurationService().putFloat(
+            /*Engine.getInstance().getConfigurationService().putFloat(
                     SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_RX_AT_START, 0l);
             Engine.getInstance().getConfigurationService().putFloat(
                     SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_TX_AT_START, 0l);
-            Engine.getInstance().getConfigurationService().commit();
+            Engine.getInstance().getConfigurationService().commit();*/
             /*Message message = Message.obtain();
             message.what = MainActivity.MESSAGE_TRAFFIC_END;
             MainActivity.currentInstance.viewUpdateHandler.sendMessage(message);*/
