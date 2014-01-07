@@ -721,6 +721,7 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 
         String[] network;
         String message = null;
+        boolean again = true;
 
         public IpConfigureThreadClass(String[] network) {
             this.network = network;
@@ -732,38 +733,47 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
     	 * but the ifconfig only need setup once.
     	 */
         public void run() {
-            //while (!Thread.currentThread().isInterrupted()) {
-            //String[] currentDns = TetherApplication.this.coretask.getCurrentDns();//current means current system setting, not setting inside file.
-            //if (this.dns == null || this.dns[0].equals(currentDns[0]) == false || this.dns[1].equals(currentDns[1]) == false) {
-            if(ifConfigUpInterface(mUsbInterface)){ //ifconfig usb up command execution
-                if(ifConfigSetInterface(mUsbInterface, network[0], network[2])){
-                    if(dumpDefaultGW()) {
-                        String[] currentGW = getCurrentGW();
-                        if ((currentGW[0].equals(network[1])==false)  || (currentGW[1].equals(mUsbInterface)==false)){
-                            if(ifConfigSetGW(mUsbInterface, network[1])) {
-                                message = "ifconfig setup success";
+            while( again ) {
+                //while (!Thread.currentThread().isInterrupted()) {
+                //String[] currentDns = TetherApplication.this.coretask.getCurrentDns();//current means current system setting, not setting inside file.
+                //if (this.dns == null || this.dns[0].equals(currentDns[0]) == false || this.dns[1].equals(currentDns[1]) == false) {
+                if(ifConfigUpInterface(mUsbInterface)){ //ifconfig usb up command execution
+                    if(ifConfigSetInterface(mUsbInterface, network[0], network[2])){
+                        if(dumpDefaultGW()) {
+                            String[] currentGW = getCurrentGW();
+                            if ((currentGW[0].equals(network[1])==false)  || (currentGW[1].equals(mUsbInterface)==false)){
+                                if(ifConfigSetGW(mUsbInterface, network[1])) {
+                                    message = "ifconfig setup success";
+                                    again = false;
+                                } else {
+                                    message = "cannot set default gate way";
+                                }
                             } else {
-                                message = "cannot set default gate way";
+                                message = "existing gateway is already correct";
                             }
                         } else {
-                            message = "existing gateway is already correct";
+                            message = "cannot dump system gate way";
                         }
-                    } else {
-                        message = "cannot dump system gate way";
+                    } else { //ifConfigSetInterface(mUsbInterface, network)){
+                        message = "cannot set ifconfig inteface";
                     }
-                } else { //ifConfigSetInterface(mUsbInterface, network)){
-                    message = "cannot set ifconfig inteface";
+                } else {
+                    message = "cannot up usb interface";
                 }
-            } else {
-                message = "cannot up usb interface";
-            }
 
-            Log.d(TAG, message);
-            // Sending message
-            Message msg = new Message();
-            msg.obj = message;
-            ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
-            //((Engine)Engine.getInstance()).showAppMessage("Found error when ifconfig " + mUsbInterface);
+                Log.d(TAG, message);
+                // Sending message
+                Message msg = new Message();
+                msg.obj = message + ", will try again!!1";
+                ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
+                //((Engine)Engine.getInstance()).showAppMessage("Found error when ifconfig " + mUsbInterface);
+                // Taking a nap
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }// while( again )
         }
     }
 
