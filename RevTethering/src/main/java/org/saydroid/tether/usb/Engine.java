@@ -115,6 +115,10 @@ public class Engine extends SgsEngine{
         if(getConfigurationService().getBoolean(SgsConfigurationEntry.GENERAL_STARTUP_CHECK,
                 SgsConfigurationEntry.DEFAULT_GENERAL_STARTUP_CHECK)) {
             this.startupCheck();
+        } else {
+            if (!this.hasRootPermission()){
+                Log.d(TAG, "No Root Permission!!!");
+            }
         }
 		return result;
 	}
@@ -726,6 +730,7 @@ public class Engine extends SgsEngine{
         startupCheckSuccess = true;
         getConfigurationService().putBoolean(SgsConfigurationEntry.GENERAL_STARTUP_CHECK,
                 !startupCheckSuccess);
+        getConfigurationService().commit();
 
         return startupCheckSuccess;
     }
