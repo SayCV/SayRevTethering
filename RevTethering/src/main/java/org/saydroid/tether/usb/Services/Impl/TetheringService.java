@@ -22,7 +22,9 @@ package org.saydroid.tether.usb.Services.Impl;
 import android.content.Context;
 import android.content.Intent;
 import android.os.ConditionVariable;
+import android.os.Looper;
 import android.os.Message;
+import android.widget.Toast;
 
 import org.saydroid.logger.Log;
 import org.saydroid.sgs.SgsApplication;
@@ -261,6 +263,15 @@ implements ITetheringService {
 		// should be done after setProxyCSCF())
 		// SigComp (only update compartment Id if changed)
 		// Start the Stack
+        // Start the Stack
+        if (!mTetheringStack.start()) {
+            if(context != null && Thread.currentThread() == Looper.getMainLooper().getThread()){
+                Toast.makeText(context, "Failed to start the Tethering stack", Toast.LENGTH_LONG).show();
+            }
+            Log.e(TAG, "Failed to start the Tethering stack");
+            return false;
+        }
+
 		// Preference values
 		// Create registration session
         // Create registration session

@@ -101,9 +101,7 @@ public class TetheringStack {
 		return mState;
 	}
 
-    public boolean isValid(){
-        return true;
-    }
+    public boolean isValid() { return true; }
 	
 	public String getSigCompId(){
 		return mCompId;
