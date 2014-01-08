@@ -93,8 +93,8 @@ public class ScreenHome extends BaseScreen {
         // Under 2Mb, returns "xxx.xKb"
         // Over 2Mb, returns "xxx.xxMb"
         if (count < 1e6 * 2)
-            return ((float)((int)(count*10/1024))/10 + (rate ? "kbps" : "kB"));
-        return ((float)((int)(count*100/1024/1024))/100 + (rate ? "mbps" : "MB"));
+            return ((float)((int)(count*10/1024))/10 + (rate ? "KB/S" : "kB"));
+        return ((float)((int)(count*100/1024/1024))/100 + (rate ? "MB/s" : "MB"));
     }
 
     protected Dialog onCreateDialog(int id) {

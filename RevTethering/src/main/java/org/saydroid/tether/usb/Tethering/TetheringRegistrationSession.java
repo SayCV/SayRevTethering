@@ -142,8 +142,10 @@ public class TetheringRegistrationSession extends TetheringSession {
                 DataCount datacount = new DataCount();
                 datacount.totalUpload = trafficCount[0]-trafficCountAtStart[0];
                 datacount.totalDownload = trafficCount[1]-trafficCountAtStart[1];
-                datacount.uploadRate = (long) ((datacount.totalUpload - this.previousUpload)*8/elapsedTime);
-                datacount.downloadRate = (long) ((datacount.totalDownload - this.previousDownload)*8/elapsedTime);
+                //datacount.uploadRate = (long) ((datacount.totalUpload - this.previousUpload)*8/elapsedTime);
+                //datacount.downloadRate = (long) ((datacount.totalDownload - this.previousDownload)*8/elapsedTime);
+                datacount.uploadRate = (long) ((datacount.totalUpload - this.previousUpload)/elapsedTime);
+                datacount.downloadRate = (long) ((datacount.totalDownload - this.previousDownload)/elapsedTime);
 
                 /*Message message = Message.obtain();
                 message.what = MainActivity.MESSAGE_TRAFFIC_COUNT;
