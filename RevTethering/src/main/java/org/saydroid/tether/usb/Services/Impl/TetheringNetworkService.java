@@ -400,6 +400,8 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
 
             }
             updateConnectionState();
+        } else if(WifiManager.WIFI_STATE_CHANGED_ACTION.equals(action)) {
+
         }
 	}
 	
@@ -457,6 +459,37 @@ public class TetheringNetworkService  extends SgsBaseService implements ITetheri
             return false;
         }
         return true;
+    }
+
+    public int setUsbTetheringEnabled(boolean enabled) {
+        int setUsbTethering = -1;
+        ConnectivityManager cm = SgsApplication.getConnectivityManager();
+        Method setUsbTetheringLocal = null;
+        try {
+            setUsbTetheringLocal = cm.getClass().getMethod("setUsbTethering", String.class);
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Log.d(TAG, "setUsbTethering method got security exception ...");
+        } catch (NoSuchMethodException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        try {
+            setUsbTethering = (Integer)setUsbTetheringLocal.invoke(cm, enabled);
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Log.d(TAG, "setUsbTetheringLocal returned value is: " + setUsbTethering);
+        return setUsbTethering;
     }
 
     public synchronized String[] getSystemDnsServer() {

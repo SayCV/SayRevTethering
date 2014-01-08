@@ -21,6 +21,7 @@ package org.saydroid.tether.usb.Services.Impl;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.ConditionVariable;
 import android.os.Looper;
 import android.os.Message;
@@ -44,6 +45,7 @@ import org.saydroid.sgs.sip.SgsRegistrationSession;
 import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsDateTimeUtils;
 import org.saydroid.tether.usb.Engine;
+import org.saydroid.tether.usb.Events.TetheringErrorsEventTypes;
 import org.saydroid.tether.usb.Events.TrafficCountEventArgs;
 import org.saydroid.tether.usb.MainActivity;
 import org.saydroid.tether.usb.Services.ITetheringNetworkService;
@@ -68,7 +70,6 @@ implements ITetheringService {
 	
 	private ConditionVariable mCondHackAoR;
 
-	
 	public TetheringService() {
 		super();
 		
@@ -425,10 +426,12 @@ implements ITetheringService {
             msg.obj = message;
             ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
             broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
-            return 13; //MESSAGE_USB_ACTION_DETACH
+            return 2; //MESSAGE_USB_ACTION_DETACH
         }
 
         // pre turn on Settings USB Tethering
+        // error return TETHER_ERROR_SERVICE_UNAVAIL
+        // if(((TetheringNetworkService)mTetheringNetworkService).setUsbTetheringEnabled(true)) {
         if(((TetheringNetworkService)mTetheringNetworkService).setSystemUsbTetherEnabled(true) == false ) {
             message = "Unable to set sys.usb.config: rndis,adb";
             Log.d(TAG, message);
@@ -514,7 +517,7 @@ implements ITetheringService {
         }
         mRegSession.setConnectionState(ConnectionState.NONE);
         broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.REGISTRATION_NOK, (short)0, null));
-        return 2;
+        return 2;//Enum.valueOf(TetheringErrorsEventTypes.class, "TETHER_ERROR_SERVICE_UNAVAIL").ordinal();
     }
 
     public boolean stopTether() {

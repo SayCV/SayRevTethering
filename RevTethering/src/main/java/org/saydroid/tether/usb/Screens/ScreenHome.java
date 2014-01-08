@@ -159,7 +159,11 @@ public class ScreenHome extends BaseScreen {
                                     });
                             new Thread(new Runnable(){
                                 public void run(){
-                                    mTetheringService.unRegister();
+                                    if(mTetheringService.unRegister() == false){
+                                        if(mStartStopProgressDialog != null && mStartStopProgressDialog.isShowing()){
+                                            mStartStopProgressDialog.dismiss();
+                                        }
+                                    }
                                     //dismissDialog(ID_DIALOG_STOPPING);
                                 }
                             }).start();
@@ -179,7 +183,11 @@ public class ScreenHome extends BaseScreen {
                                     });
                             new Thread(new Runnable(){
                                 public void run(){
-                                    mTetheringService.register(ScreenHome.this);
+                                    if(mTetheringService.register(ScreenHome.this) == false){
+                                        if(mStartStopProgressDialog != null && mStartStopProgressDialog.isShowing()){
+                                            mStartStopProgressDialog.dismiss();
+                                        }
+                                    }
                                     //dismissDialog(ID_DIALOG_STARTING);
                                 }
                             }).start();
