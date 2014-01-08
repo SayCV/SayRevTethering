@@ -264,14 +264,6 @@ implements ITetheringService {
 		// should be done after setProxyCSCF())
 		// SigComp (only update compartment Id if changed)
 		// Start the Stack
-        // Start the Stack
-        if (!mTetheringStack.start()) {
-            if(context != null && Thread.currentThread() == Looper.getMainLooper().getThread()){
-                Toast.makeText(context, "Failed to start the Tethering stack", Toast.LENGTH_LONG).show();
-            }
-            Log.e(TAG, "Failed to start the Tethering stack");
-            return false;
-        }
 
 		// Preference values
 		// Create registration session
@@ -286,6 +278,15 @@ implements ITetheringService {
 		}
         if (!mRegSession.register()) {
             Log.e(TAG, "Failed to send REGISTER request");
+            return false;
+        }
+
+        // Start the Stack
+        if (!mTetheringStack.start()) {
+            if(context != null && Thread.currentThread() == Looper.getMainLooper().getThread()){
+                Toast.makeText(context, "Failed to start the Tethering stack", Toast.LENGTH_LONG).show();
+            }
+            Log.e(TAG, "Failed to start the Tethering stack");
             return false;
         }
 
