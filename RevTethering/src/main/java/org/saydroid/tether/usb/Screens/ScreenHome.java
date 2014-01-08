@@ -92,8 +92,9 @@ public class ScreenHome extends BaseScreen {
         // 'rate' indicates whether is a total bytes, or bits per sec.
         // Under 2Mb, returns "xxx.xKb"
         // Over 2Mb, returns "xxx.xxMb"
-        if (count < 1e6 * 2)
-            return ((float)((int)(count*10/1024))/10 + (rate ? "KB/S" : "kB"));
+        //if (count < 1e6 * 2)
+        if (count < 1e6 * 1)
+            return ((float)((int)(count*10/1024))/10 + (rate ? "KB/s" : "KB"));
         return ((float)((int)(count*100/1024/1024))/100 + (rate ? "MB/s" : "MB"));
     }
 
