@@ -36,6 +36,7 @@ import org.saydroid.tether.usb.Services.Impl.TetheringNetworkService;
 import org.saydroid.tether.usb.Services.Impl.TetheringService;
 import org.saydroid.utils.AndroidUtils;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -590,7 +591,7 @@ public class Engine extends SgsEngine{
         command = "sqlite3 "+ this.SETTING_DB_PATH + "settings.db "+ "\'insert into global values(" +String.valueOf(intId)+","+ "\""+ stringSetting +"\","+ String.valueOf(iValue) + ")\'" ;
         Log.d(TAG, "command to insert" + stringSetting + "is :" + command);
         if(RootCommands.run(command)==false){
-            Log.e(TAG, "Unable to insert" + stringSetting + "global Setting for the setting of" + stringSetting);
+            Log.e(TAG, "Unable to insert " + stringSetting + " global Setting for the setting of" + stringSetting);
             return false;
         }
         insertSuccess = true;

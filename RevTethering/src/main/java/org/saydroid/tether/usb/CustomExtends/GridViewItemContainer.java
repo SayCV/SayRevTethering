@@ -19,6 +19,7 @@
 package org.saydroid.tether.usb.CustomExtends;
 
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -47,6 +48,7 @@ public class GridViewItemContainer extends RelativeLayout {
         super(context, attrs);
     }
 
+    @TargetApi(11)
     public void setViewsInRow(View[] viewsInRow) {
         if  (viewsInRow != null) {
             if (this.viewsInRow == null) {
