@@ -467,7 +467,7 @@ public class ScreenHome extends BaseScreen {
 				((TextView) view.findViewById(R.id.screen_home_item_text)).setText(item.mText);
 				((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(item.mIconResId);
 			}
-
+            /*
             // convertView has been just been inflated or came from getView parameter.
             if (!(view instanceof GridViewItemContainer)) {
                 ViewGroup container = new GridViewItemContainer(mInflater.getContext());
@@ -492,7 +492,7 @@ public class ScreenHome extends BaseScreen {
             else {
                 referenceView.setViewsInRow(null);
             }
-			
+			*/
 			return view;
 		}
 		
