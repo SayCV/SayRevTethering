@@ -124,7 +124,7 @@ public class NativeService extends SgsNativeService {
                     }
                 }
                 if(TrafficCountEventArgs.ACTION_TRAFFIC_COUNT_EVENT.equals(action)){
-                    TrafficCountEventArgs args = intent.getParcelableExtra(SgsEventArgs.EXTRA_EMBEDDED);
+                    /*TrafficCountEventArgs args = intent.getParcelableExtra(SgsEventArgs.EXTRA_EMBEDDED);
                     final TrafficCountEventTypes type;
                     if(args == null){
                         Log.e(TAG, "Invalid event args");
@@ -155,7 +155,7 @@ public class NativeService extends SgsNativeService {
                         default:
                             Log.d(TAG, "Traffic Count thread has disposed.");
                             break;
-                    }
+                    }*/
                 }
 				// PagerMode Messaging Events
 				//if(SgsMessagingEventArgs.ACTION_MESSAGING_EVENT.equals(action)){ }
