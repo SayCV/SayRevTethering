@@ -459,11 +459,11 @@ public class ScreenHome extends BaseScreen {
                        Engine.getInstance().getConfigurationService().getBoolean(SgsConfigurationEntry.NETWORK_CONNECTED,
                                 SgsConfigurationEntry.DEFAULT_NETWORK_CONNECTED)*/){
                     //((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Stop tethering");
-                    ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("tethering");
+                    ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Tethering");
                     ((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(R.drawable.stop_48);
                 } else {
                     //((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Start tethering");
-                    ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("tethering");
+                    ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Tethering");
                     ((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(R.drawable.start_48);
                 }
             } else {
