@@ -60,12 +60,12 @@ import org.saydroid.logger.Log;
 import org.saydroid.tether.usb.Services.ITetheringService;
 
 public class ScreenHome extends BaseScreen {
-	private static String TAG = ScreenHome.class.getCanonicalName();
-	
-	private static final int MENU_EXIT = 0;
-	private static final int MENU_SETTINGS = 1;
-	
-	private GridView mGridView;
+    private static String TAG = ScreenHome.class.getCanonicalName();
+
+    private static final int MENU_EXIT = 0;
+    private static final int MENU_SETTINGS = 1;
+
+    private GridView mGridView;
 
     private ProgressDialog mStartStopProgressDialog;
     private static int ID_DIALOG_STARTING = 0;
@@ -77,15 +77,15 @@ public class ScreenHome extends BaseScreen {
     private TextView mDownloadRateText = null;
     private TextView mUploadRateText = null;
 
-	private final ITetheringService mTetheringService;
-	
-	private BroadcastReceiver mTetheringBroadCastRecv;
-	
-	public ScreenHome() {
-		super(SCREEN_TYPE.HOME_T, TAG);
+    private final ITetheringService mTetheringService;
+
+    private BroadcastReceiver mTetheringBroadCastRecv;
+
+    public ScreenHome() {
+        super(SCREEN_TYPE.HOME_T, TAG);
 
         mTetheringService = getEngine().getTetheringService();
-	}
+    }
 
     private String formatCount(long count, boolean rate) {
         // Converts the supplied argument into a string.
@@ -118,10 +118,10 @@ public class ScreenHome extends BaseScreen {
         return null;
     }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.screen_home);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.screen_home);
 
         mTrafficRow = (RelativeLayout)findViewById(R.id.screen_home_trafficRow);
         mDownloadText = (TextView)findViewById(R.id.screen_home_trafficDown);
@@ -134,13 +134,13 @@ public class ScreenHome extends BaseScreen {
             //TetheringRegistrationSession.setTrafficCounterThreadClassEnabled(true);
         }*/
 
-		mGridView = (GridView) findViewById(R.id.screen_home_gridview);
-		mGridView.setAdapter(new ScreenHomeAdapter(this));
-		mGridView.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				final ScreenHomeItem item = (ScreenHomeItem)parent.getItemAtPosition(position);
-				if (item != null) {
-					if(position == ScreenHomeItem.ITEM_SIGNIN_SIGNOUT_POS){
+        mGridView = (GridView) findViewById(R.id.screen_home_gridview);
+        mGridView.setAdapter(new ScreenHomeAdapter(this));
+        mGridView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final ScreenHomeItem item = (ScreenHomeItem)parent.getItemAtPosition(position);
+                if (item != null) {
+                    if(position == ScreenHomeItem.ITEM_SIGNIN_SIGNOUT_POS){
                         if(mTetheringService.getRegistrationState() == ConnectionState.CONNECTING || mTetheringService.getRegistrationState() == ConnectionState.TERMINATING){
                             mTetheringService.stopStack();
                         } else if (mTetheringService.isRegistered()){
@@ -192,44 +192,44 @@ public class ScreenHome extends BaseScreen {
                                 }
                             }).start();
                         }
-					} else if (position == ScreenHomeItem.ITEM_EXIT_POS){
-						CustomDialog.show(
-								ScreenHome.this,
-								R.drawable.exit_48,
-								null,
-								"Are you sure you want to exit?",
-								"Yes",
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										((MainActivity)(getEngine().getMainActivity())).exit();
-									}
-								}, "No",
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										dialog.cancel();
-									}
-								});
-					} else {
-						mScreenService.show(item.mClass, item.mClass.getCanonicalName());
-					}
-				}
-			}
-		});
+                    } else if (position == ScreenHomeItem.ITEM_EXIT_POS){
+                        CustomDialog.show(
+                                ScreenHome.this,
+                                R.drawable.exit_48,
+                                null,
+                                "Are you sure you want to exit?",
+                                "Yes",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ((MainActivity)(getEngine().getMainActivity())).exit();
+                                    }
+                                }, "No",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                    } else {
+                        mScreenService.show(item.mClass, item.mClass.getCanonicalName());
+                    }
+                }
+            }
+        });
 
         mTetheringBroadCastRecv = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				final String action = intent.getAction();
-				
-				// Registration Event
-				if(SgsRegistrationEventArgs.ACTION_REGISTRATION_EVENT.equals(action)){
-					SgsRegistrationEventArgs args = intent.getParcelableExtra(SgsEventArgs.EXTRA_EMBEDDED);
-					if(args == null){
-						Log.e(TAG, "Invalid event args");
-						return;
-					}
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                final String action = intent.getAction();
+
+                // Registration Event
+                if(SgsRegistrationEventArgs.ACTION_REGISTRATION_EVENT.equals(action)){
+                    SgsRegistrationEventArgs args = intent.getParcelableExtra(SgsEventArgs.EXTRA_EMBEDDED);
+                    if(args == null){
+                        Log.e(TAG, "Invalid event args");
+                        return;
+                    }
                     switch(args.getEventType()){
                         /*case REGISTRATION_INPROGRESS:
                             //if(mStartStopProgressDialog.isShowing()) { mStartStopProgressDialog.dismiss(); }
@@ -275,18 +275,18 @@ public class ScreenHome extends BaseScreen {
 
                             break;
                     }
-					switch(args.getEventType()){
-						case REGISTRATION_NOK:
-						case UNREGISTRATION_OK:
-						case REGISTRATION_OK:
-						case REGISTRATION_INPROGRESS:
-						case UNREGISTRATION_INPROGRESS:
-						case UNREGISTRATION_NOK:
-						default:
-							((ScreenHomeAdapter)mGridView.getAdapter()).refresh();
-							break;
-					}
-				}
+                    switch(args.getEventType()){
+                        case REGISTRATION_NOK:
+                        case UNREGISTRATION_OK:
+                        case REGISTRATION_OK:
+                        case REGISTRATION_INPROGRESS:
+                        case UNREGISTRATION_INPROGRESS:
+                        case UNREGISTRATION_NOK:
+                        default:
+                            ((ScreenHomeAdapter)mGridView.getAdapter()).refresh();
+                            break;
+                    }
+                }
                 if(TrafficCountEventArgs.ACTION_TRAFFIC_COUNT_EVENT.equals(action)){
                     TrafficCountEventArgs args = intent.getParcelableExtra(SgsEventArgs.EXTRA_EMBEDDED);
                     final TrafficCountEventTypes type;
@@ -327,129 +327,130 @@ public class ScreenHome extends BaseScreen {
                             break;
                     }
                 }
-			}
-		};
-		final IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(SgsRegistrationEventArgs.ACTION_REGISTRATION_EVENT);
+            }
+        };
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SgsRegistrationEventArgs.ACTION_REGISTRATION_EVENT);
         intentFilter.addAction(TrafficCountEventArgs.ACTION_TRAFFIC_COUNT_EVENT);
-	    registerReceiver(mTetheringBroadCastRecv, intentFilter);
-	}
+        registerReceiver(mTetheringBroadCastRecv, intentFilter);
+    }
 
-	@Override
-	protected void onDestroy() {
-       if(mTetheringBroadCastRecv != null){
-    	   unregisterReceiver(mTetheringBroadCastRecv);
-           mTetheringBroadCastRecv = null;
-       }
-        
-       super.onDestroy();
-	}
-	
-	@Override
-	public boolean hasMenu() {
-		return true;
-	}
-	
-	@Override
-	public boolean createOptionsMenu(Menu menu) {
-		menu.add(0, ScreenHome.MENU_SETTINGS, 0, "Settings");
+    @Override
+    protected void onDestroy() {
+        if(mTetheringBroadCastRecv != null){
+            unregisterReceiver(mTetheringBroadCastRecv);
+            mTetheringBroadCastRecv = null;
+        }
+
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean hasMenu() {
+        return true;
+    }
+
+    @Override
+    public boolean createOptionsMenu(Menu menu) {
+        menu.add(0, ScreenHome.MENU_SETTINGS, 0, "Settings");
 		/*MenuItem itemExit =*/ menu.add(0, ScreenHome.MENU_EXIT, 0, "Exit");
-		
-		return true;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()){
-			case ScreenHome.MENU_EXIT:
-				((MainActivity)getEngine().getMainActivity()).exit();
-				break;
-			case ScreenHome.MENU_SETTINGS:
-				mScreenService.show(ScreenSettings.class);
-				break;
-		}
-		return true;
-	}
-	
-	
-	/**
-	 * ScreenHomeItem
-	 */
-	static class ScreenHomeItem {
-		static final int ITEM_SIGNIN_SIGNOUT_POS = 0;
-		static final int ITEM_EXIT_POS = 3;
-		final int mIconResId;
-		final String mText;
-		final Class<? extends Activity> mClass;
 
-		private ScreenHomeItem(int iconResId, String text, Class<? extends Activity> _class) {
-			mIconResId = iconResId;
-			mText = text;
-			mClass = _class;
-		}
-	}
-	
-	/**
-	 * ScreenHomeAdapter
-	 */
-	static class ScreenHomeAdapter extends BaseAdapter{
-		static final int ALWAYS_VISIBLE_ITEMS_COUNT = 5;
-		static final ScreenHomeItem[] sItems =  new ScreenHomeItem[]{
-			// always visible
-    		new ScreenHomeItem(R.drawable.start_48, "Start Tethering", null),
-    		new ScreenHomeItem(R.drawable.options_48, "Options", ScreenSettings.class),
-    		new ScreenHomeItem(R.drawable.about_48, "About", ScreenAbout.class),
-            new ScreenHomeItem(R.drawable.exit_48, "Exit/Quit", null),
-            new ScreenHomeItem(R.drawable.history_48, "History", ScreenTabHistory.class),
-    		// visible only if connected
-    		//new ScreenHomeItem(R.drawable.stop_48, "Stop Tethering", null),
-    		//new ScreenHomeItem(R.drawable.dialer_48, "Dialer", ScreenTabDialer.class),
-    		//new ScreenHomeItem(R.drawable.eab2_48, "Address Book", ScreenTabContacts.class),
-    		//new ScreenHomeItem(R.drawable.history_48, "History", ScreenTabHistory.class),
-    		//new ScreenHomeItem(R.drawable.chat_48, "Messages", ScreenTabMessages.class),
-		};
+        return true;
+    }
 
-		private final LayoutInflater mInflater;
-		private final ScreenHome mBaseScreen;
-		
-		ScreenHomeAdapter(ScreenHome baseScreen){
-			mInflater = LayoutInflater.from(baseScreen);
-			mBaseScreen = baseScreen;
-		}
-		
-		void refresh(){
-			notifyDataSetChanged();
-		}
-		
-		@Override
-		public int getCount() {
-			return ALWAYS_VISIBLE_ITEMS_COUNT;
-		}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case ScreenHome.MENU_EXIT:
+                ((MainActivity)getEngine().getMainActivity()).exit();
+                break;
+            case ScreenHome.MENU_SETTINGS:
+                mScreenService.show(ScreenSettings.class);
+                break;
+        }
+        return true;
+    }
 
-		@Override
-		public Object getItem(int position) {
-			return sItems[position];
-		}
 
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
+    /**
+     * ScreenHomeItem
+     */
+    static class ScreenHomeItem {
+        static final int ITEM_SIGNIN_SIGNOUT_POS = 0;
+        static final int ITEM_EXIT_POS = 3;
+        final int mIconResId;
+        final String mText;
+        final Class<? extends Activity> mClass;
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View view = convertView;
-			final ScreenHomeItem item = (ScreenHomeItem)getItem(position);
-			
-			if(item == null){
-				return null;
-			}
+        private ScreenHomeItem(int iconResId, String text, Class<? extends Activity> _class) {
+            mIconResId = iconResId;
+            mText = text;
+            mClass = _class;
+        }
+    }
 
-			if (view == null) {
-				view = mInflater.inflate(R.layout.screen_home_item, null);
-			}
-			
-			if(position == ScreenHomeItem.ITEM_SIGNIN_SIGNOUT_POS){
+    /**
+     * ScreenHomeAdapter
+     */
+    static class ScreenHomeAdapter extends BaseAdapter{
+        static final int ALWAYS_VISIBLE_ITEMS_COUNT = 5;
+        static final ScreenHomeItem[] sItems =  new ScreenHomeItem[]{
+                // always visible
+                //new ScreenHomeItem(R.drawable.start_48, "Start Tethering", null),
+                new ScreenHomeItem(R.drawable.start_48, "Tethering", null),
+                new ScreenHomeItem(R.drawable.options_48, "Options", ScreenSettings.class),
+                new ScreenHomeItem(R.drawable.about_48, "About", ScreenAbout.class),
+                new ScreenHomeItem(R.drawable.exit_48, "Exit/Quit", null),
+                new ScreenHomeItem(R.drawable.history_48, "History", ScreenTabHistory.class),
+                // visible only if connected
+                //new ScreenHomeItem(R.drawable.stop_48, "Stop Tethering", null),
+                //new ScreenHomeItem(R.drawable.dialer_48, "Dialer", ScreenTabDialer.class),
+                //new ScreenHomeItem(R.drawable.eab2_48, "Address Book", ScreenTabContacts.class),
+                //new ScreenHomeItem(R.drawable.history_48, "History", ScreenTabHistory.class),
+                //new ScreenHomeItem(R.drawable.chat_48, "Messages", ScreenTabMessages.class),
+        };
+
+        private final LayoutInflater mInflater;
+        private final ScreenHome mBaseScreen;
+
+        ScreenHomeAdapter(ScreenHome baseScreen){
+            mInflater = LayoutInflater.from(baseScreen);
+            mBaseScreen = baseScreen;
+        }
+
+        void refresh(){
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount() {
+            return ALWAYS_VISIBLE_ITEMS_COUNT;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return sItems[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = convertView;
+            final ScreenHomeItem item = (ScreenHomeItem)getItem(position);
+
+            if(item == null){
+                return null;
+            }
+
+            if (view == null) {
+                view = mInflater.inflate(R.layout.screen_home_item, null);
+            }
+
+            if(position == ScreenHomeItem.ITEM_SIGNIN_SIGNOUT_POS){
                 if(mBaseScreen.mTetheringService.getRegistrationState() == ConnectionState.CONNECTING ||
                         mBaseScreen.mTetheringService.getRegistrationState() == ConnectionState.TERMINATING){
                     ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Cancel");
@@ -457,16 +458,16 @@ public class ScreenHome extends BaseScreen {
                 } else if(mBaseScreen.mTetheringService.isRegistered()/* ||
                        Engine.getInstance().getConfigurationService().getBoolean(SgsConfigurationEntry.NETWORK_CONNECTED,
                                 SgsConfigurationEntry.DEFAULT_NETWORK_CONNECTED)*/){
-                    ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Stop tethering");
+                    //((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Stop tethering");
                     ((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(R.drawable.stop_48);
                 } else {
-                    ((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Start tethering");
+                    //((TextView) view.findViewById(R.id.screen_home_item_text)).setText("Start tethering");
                     ((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(R.drawable.start_48);
                 }
-			} else {
-				((TextView) view.findViewById(R.id.screen_home_item_text)).setText(item.mText);
-				((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(item.mIconResId);
-			}
+            } else {
+                ((TextView) view.findViewById(R.id.screen_home_item_text)).setText(item.mText);
+                ((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(item.mIconResId);
+            }
             /*
             // convertView has been just been inflated or came from getView parameter.
             if (!(view instanceof GridViewItemContainer)) {
@@ -493,8 +494,8 @@ public class ScreenHome extends BaseScreen {
                 referenceView.setViewsInRow(null);
             }
 			*/
-			return view;
-		}
-		
-	}
+            return view;
+        }
+
+    }
 }
