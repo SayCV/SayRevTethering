@@ -1,44 +1,44 @@
-/* Copyright (C) 2010-2011, Mamadou Diop.
-*  Copyright (C) 2011, Doubango Telecom.
-*
-* Contact: Mamadou Diop <diopmamadou(at)saydroid(dot)org>
-*	
-* This file is part of imsdroid Project (http://code.google.com/p/imsdroid)
-*
-* imsdroid is free software: you can redistribute it and/or modify it under the terms of 
-* the GNU General Public License as published by the Free Software Foundation, either version 3 
-* of the License, or (at your option) any later version.
-*	
-* imsdroid is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-* without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
-* See the GNU General Public License for more details.
-*	
-* You should have received a copy of the GNU General Public License along 
-* with this program; if not, write to the Free Software Foundation, Inc., 
-* 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
-package org.saydroid.sgs.model;
+/*
+ * Copyright (C) 2013, sayDroid.
+ *
+ * Copyright 2013 The sayDroid Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import java.util.ArrayList;
-import java.util.List;
+package org.saydroid.tether.usb.Model;
 
 import org.saydroid.sgs.media.SgsMediaType;
+import org.saydroid.sgs.model.SgsHistoryEvent;
 import org.saydroid.sgs.utils.SgsPredicate;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Root
-public class SgsHistorySMSEvent extends SgsHistoryEvent{
+public class HistoryTrafficCountEvent extends SgsHistoryEvent {
 	
 	@Element(data=true, required=false)
 	protected String mContent;
-	
-	SgsHistorySMSEvent(){
+
+    HistoryTrafficCountEvent(){
 		this(null, StatusType.Failed);
 	}
 	
-	public SgsHistorySMSEvent(String remoteParty, StatusType status) {
-		super(SgsMediaType.SMS, remoteParty);
+	public HistoryTrafficCountEvent(String remoteParty, StatusType status) {
+		super(SgsMediaType.TrafficCount, remoteParty);
 		super.setStatus(status);
 	}
 	
@@ -50,7 +50,7 @@ public class SgsHistorySMSEvent extends SgsHistoryEvent{
 		return this.mContent;
 	}
 	
-	public static class HistoryEventSMSIntelligentFilter implements SgsPredicate<SgsHistoryEvent>{
+	public static class HistoryEventTrafficCountIntelligentFilter implements SgsPredicate<SgsHistoryEvent> {
 		private final List<String> mRemoteParties = new ArrayList<String>();
 		
 		protected void reset(){
@@ -59,7 +59,7 @@ public class SgsHistorySMSEvent extends SgsHistoryEvent{
 		
 		@Override
 		public boolean apply(SgsHistoryEvent event) {
-			if (event != null && (event.getMediaType() == SgsMediaType.SMS || event.getMediaType() == SgsMediaType.Chat)){
+			if (event != null && (event.getMediaType() == SgsMediaType.TrafficCount)){
 				if(!mRemoteParties.contains(event.getRemoteParty())){
 					mRemoteParties.add(event.getRemoteParty());
 					return true;
@@ -69,10 +69,10 @@ public class SgsHistorySMSEvent extends SgsHistoryEvent{
 		}
 	}
 	
-	public static class HistoryEventSMSFilter implements SgsPredicate<SgsHistoryEvent>{
+	public static class HistoryEventTrafficCountFilter implements SgsPredicate<SgsHistoryEvent>{
 		@Override
 		public boolean apply(SgsHistoryEvent event) {
-			return (event != null && (event.getMediaType() == SgsMediaType.SMS || event.getMediaType() == SgsMediaType.Chat));
+			return (event != null && (event.getMediaType() == SgsMediaType.TrafficCount));
 		}
 	}
 }

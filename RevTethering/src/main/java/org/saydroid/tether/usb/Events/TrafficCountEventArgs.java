@@ -31,7 +31,7 @@ public class TrafficCountEventArgs extends SgsEventArgs {
 	//private long mSessionId;
     private TrafficCountEventTypes mEventType;
     //private String mPhrase;
-    //private byte[] mPayload;
+    private long[] mPayload;
    // private DataCount mContent;
 
     // Total data uploaded
@@ -48,11 +48,12 @@ public class TrafficCountEventArgs extends SgsEventArgs {
     public static final String EXTRA_EMBEDDED = SgsEventArgs.EXTRA_EMBEDDED;
     public static final String EXTRA_SESSION = TAG + "session";
     public static final String EXTRA_CODE = TAG + "code";
+    public static final String EXTRA_REMOTE_PARTY = TAG + "from";
+    public static final String EXTRA_DATE = TAG + "date";
     public static final String EXTRA_DATA_COUNT_TOTAL_UPLOAD = TAG + "totalUpload";
     public static final String EXTRA_DATA_COUNT_TOTAL_DOWNLOAD = TAG + "totalDownload";
     public static final String EXTRA_DATA_COUNT_UPLOAD_RATE = TAG + "uploadRate";
     public static final String EXTRA_DATA_COUNT_DOWNLOAD_RATE = TAG + "downloadRate";
-    public static final String EXTRA_DATE = TAG + "date";
 
     public static class DataCount {
         // Total data uploaded

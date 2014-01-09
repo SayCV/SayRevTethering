@@ -67,6 +67,7 @@ public class ScreenTabHistory extends BaseScreen {
 	private final ActionItem mAItemVideoCall;
 	private final ActionItem mAItemChat;
 	private final ActionItem mAItemSMS;
+    private final ActionItem mAItemTrafficCount;
 	private final ActionItem mAItemShare;
 	
 	private SgsHistoryEvent mSelectedEvent;
@@ -151,6 +152,20 @@ public class ScreenTabHistory extends BaseScreen {
 				}
 			}
 		});
+
+        mAItemTrafficCount = new ActionItem();
+        mAItemTrafficCount.setTitle("TrafficCount");
+        mAItemTrafficCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mSelectedEvent != null){
+                    //ScreenChat.startChat(mSelectedEvent.getRemoteParty(), true);
+                    if(mLasQuickAction != null){
+                        mLasQuickAction.dismiss();
+                    }
+                }
+            }
+        });
 	}
 
 	@Override
@@ -169,6 +184,7 @@ public class ScreenTabHistory extends BaseScreen {
 		mAItemChat.setIcon(getResources().getDrawable(R.drawable.chat_25));
 		mAItemSMS.setIcon(getResources().getDrawable(R.drawable.sms_25));
 		mAItemShare.setIcon(getResources().getDrawable(R.drawable.image_gallery_25));
+        mAItemTrafficCount.setIcon(getResources().getDrawable(R.drawable.sms_25));
 	}
 	
 	@Override
@@ -196,6 +212,7 @@ public class ScreenTabHistory extends BaseScreen {
 					mLasQuickAction.addActionItem(mAItemChat);
 					mLasQuickAction.addActionItem(mAItemSMS);
 					mLasQuickAction.addActionItem(mAItemShare);
+                    mLasQuickAction.addActionItem(mAItemTrafficCount);
 				}
 				mLasQuickAction.setAnimStyle(QuickAction.ANIM_AUTO);
 				mLasQuickAction.show();
@@ -239,7 +256,8 @@ public class ScreenTabHistory extends BaseScreen {
 		private final static int TYPE_ITEM_AV = 0;
 		private final static int TYPE_ITEM_SMS = 1;
 		private final static int TYPE_ITEM_FILE_TRANSFER = 2;
-		private final static int TYPE_COUNT = 3;
+        private final static int TYPE_ITEM_TRAFFIC_COUNT = 3;
+		private final static int TYPE_COUNT = 4;
 		
 		ScreenTabHistoryAdapter(ScreenTabHistory baseSceen) {
 			mBaseScreen = baseSceen;
@@ -274,6 +292,8 @@ public class ScreenTabHistory extends BaseScreen {
 						return TYPE_ITEM_FILE_TRANSFER;
 					case SMS:
 						return TYPE_ITEM_SMS;
+                    case TrafficCount:
+                        return TYPE_ITEM_TRAFFIC_COUNT;
 				}
 			}
 			return TYPE_ITEM_AV;
@@ -326,13 +346,15 @@ public class ScreenTabHistory extends BaseScreen {
 						break;
 					case FileTransfer:
 					case SMS:
+                    case TrafficCount:
 					default:
 						Log.e(TAG, "Invalid media type");
 						return null;
 				}
 			}
 			
-			String remoteParty = SgsUriUtils.getDisplayName(event.getRemoteParty());
+			//String remoteParty = SgsUriUtils.getDisplayName(event.getRemoteParty());
+            String remoteParty = "HistoryTrafficCountEvent";
 			
 			if(event != null){
 				switch(event.getMediaType()){

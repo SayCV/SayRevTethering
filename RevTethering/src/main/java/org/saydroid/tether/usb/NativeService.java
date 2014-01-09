@@ -50,6 +50,7 @@ import android.view.WindowManager;
 import org.saydroid.logger.Log;
 import org.saydroid.tether.usb.Events.TrafficCountEventArgs;
 import org.saydroid.tether.usb.Events.TrafficCountEventTypes;
+import org.saydroid.tether.usb.Model.HistoryTrafficCountEvent;
 import org.saydroid.tether.usb.Services.Impl.TetheringService;
 import org.saydroid.tether.usb.Tethering.TetheringSession;
 
@@ -129,11 +130,28 @@ public class NativeService extends SgsNativeService {
                         Log.e(TAG, "Invalid event args");
                         return;
                     }
+                    String dateString = intent.getStringExtra(TrafficCountEventArgs.EXTRA_DATE);
+                    String remoteParty = intent.getStringExtra(TrafficCountEventArgs.EXTRA_REMOTE_PARTY);
+                    if(SgsStringUtils.isNullOrEmpty(remoteParty)){
+                        remoteParty = SgsStringUtils.nullValue();
+                    }
+                    remoteParty = "HistoryTrafficCountEvent";//SgsUriUtils.getUserName(remoteParty);
+                    HistoryTrafficCountEvent event;
                     switch((type = args.getEventType())){
                         case COUNTING:
-
+                            event = new HistoryTrafficCountEvent(remoteParty, StatusType.Incoming);
+                            event.setContent(new String("Start Tethering -- TotalUpload: " +
+                                    Long.toString(args.getTotalUpload()) + ", TotalDownload: " + Long.toString(args.getTotalDownload())));
+                            event.setStartTime(SgsDateTimeUtils.parseDate(dateString).getTime());
+                            mEngine.getHistoryService().addEvent(event);
+                            //mEngine.showSMSNotif(R.drawable.sms_25, "New message");
                             break;
                         case END:
+                            event = new HistoryTrafficCountEvent(remoteParty, StatusType.Missed);
+                            event.setContent(new String("Start Tethering -- TotalUpload: " +
+                                    Long.toString(args.getTotalUpload()) + ", TotalDownload: " + Long.toString(args.getTotalDownload())));
+                            event.setStartTime(SgsDateTimeUtils.parseDate(dateString).getTime());
+                            mEngine.getHistoryService().addEvent(event);
                         default:
                             Log.d(TAG, "Traffic Count thread has disposed.");
                             break;

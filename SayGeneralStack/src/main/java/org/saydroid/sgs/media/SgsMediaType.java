@@ -19,6 +19,8 @@
 */
 package org.saydroid.sgs.media;
 
+import android.net.TrafficStats;
+
 public enum SgsMediaType {
 	None,
 	Audio,
@@ -26,7 +28,8 @@ public enum SgsMediaType {
 	AudioVideo,
 	SMS,
 	Chat,
-	FileTransfer;
+	FileTransfer,
+    TrafficCount;
 	
 	public static boolean isAudioVideoType(SgsMediaType type){
 		return type == Audio || type == AudioVideo || type == Video;
@@ -40,4 +43,7 @@ public enum SgsMediaType {
 	public static boolean isMsrpType(SgsMediaType type){
 		return isFileTransfer(type) || isChat(type);
 	}
+    public static boolean isTrafficCountType(SgsMediaType type){
+        return type == TrafficCount;
+    }
 }
