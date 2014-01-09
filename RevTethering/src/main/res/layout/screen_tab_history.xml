@@ -13,7 +13,7 @@
         android:layout_width="fill_parent"
         android:gravity="center"
         android:textColor="@color/color_white"
-        android:text="Call History"
+        android:text="Tethering History"
         android:background="@drawable/grad_dark">
 
         </TextView>

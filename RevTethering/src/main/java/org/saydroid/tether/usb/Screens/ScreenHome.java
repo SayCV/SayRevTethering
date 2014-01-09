@@ -22,6 +22,7 @@ import org.saydroid.sgs.events.SgsRegistrationEventTypes;
 import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsUriUtils;
 import org.saydroid.tether.usb.CustomDialog;
+import org.saydroid.tether.usb.CustomExtends.GridViewItemContainer;
 import org.saydroid.tether.usb.Engine;
 import org.saydroid.tether.usb.Events.TrafficCountEventArgs;
 import org.saydroid.tether.usb.Events.TrafficCountEventTypes;
@@ -392,13 +393,14 @@ public class ScreenHome extends BaseScreen {
 	 * ScreenHomeAdapter
 	 */
 	static class ScreenHomeAdapter extends BaseAdapter{
-		static final int ALWAYS_VISIBLE_ITEMS_COUNT = 4;
+		static final int ALWAYS_VISIBLE_ITEMS_COUNT = 5;
 		static final ScreenHomeItem[] sItems =  new ScreenHomeItem[]{
 			// always visible
     		new ScreenHomeItem(R.drawable.start_48, "Start Tethering", null),
     		new ScreenHomeItem(R.drawable.options_48, "Options", ScreenSettings.class),
     		new ScreenHomeItem(R.drawable.about_48, "About", ScreenAbout.class),
             new ScreenHomeItem(R.drawable.exit_48, "Exit/Quit", null),
+            new ScreenHomeItem(R.drawable.history_48, "History", ScreenTabHistory.class),
     		// visible only if connected
     		//new ScreenHomeItem(R.drawable.stop_48, "Stop Tethering", null),
     		//new ScreenHomeItem(R.drawable.dialer_48, "Dialer", ScreenTabDialer.class),
@@ -406,7 +408,7 @@ public class ScreenHome extends BaseScreen {
     		//new ScreenHomeItem(R.drawable.history_48, "History", ScreenTabHistory.class),
     		//new ScreenHomeItem(R.drawable.chat_48, "Messages", ScreenTabMessages.class),
 		};
-		
+
 		private final LayoutInflater mInflater;
 		private final ScreenHome mBaseScreen;
 		
@@ -465,6 +467,31 @@ public class ScreenHome extends BaseScreen {
 				((TextView) view.findViewById(R.id.screen_home_item_text)).setText(item.mText);
 				((ImageView) view .findViewById(R.id.screen_home_item_icon)).setImageResource(item.mIconResId);
 			}
+
+            // convertView has been just been inflated or came from getView parameter.
+            if (!(view instanceof GridViewItemContainer)) {
+                ViewGroup container = new GridViewItemContainer(mInflater.getContext());
+
+                // If you have tags, move them to the new top element. E.g.:
+                //container.setTag(convertView.getTag());
+                //convertView.setTag(null);
+
+                container.addView(view);
+                view = container;
+            }
+
+            // Where numColumns is the number of columns in the GridView and
+            // 'viewsInRow' is an list of View on the current row of where 'position' is located.
+            int numColumns = ((GridView)convertView).getNumColumns();
+            View[] viewsInRow = new View[numColumns];
+            viewsInRow[position % numColumns] = view;
+            GridViewItemContainer referenceView = (GridViewItemContainer)view;
+            if ((position % numColumns == (numColumns-1)) || (position == getCount()-1)) {
+                referenceView.setViewsInRow(viewsInRow);
+            }
+            else {
+                referenceView.setViewsInRow(null);
+            }
 			
 			return view;
 		}

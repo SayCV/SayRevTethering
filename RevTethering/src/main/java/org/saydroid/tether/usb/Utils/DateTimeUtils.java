@@ -18,7 +18,7 @@
 
 package org.saydroid.tether.usb.Utils;
 
-import org.saydroid.sgs.R;
+import org.saydroid.tether.usb.R;
 import org.saydroid.sgs.utils.SgsDateTimeUtils;
 import org.saydroid.tether.usb.SRTDroid;
 

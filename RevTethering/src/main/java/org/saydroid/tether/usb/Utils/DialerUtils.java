@@ -23,7 +23,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.saydroid.sgs.R;
+import org.saydroid.tether.usb.R;
 
 public class DialerUtils {
 	public static final int TAG_0 = 0;

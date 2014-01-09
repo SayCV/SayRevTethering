@@ -15,7 +15,12 @@
         android:paddingTop="10dp"
         android:columnWidth="80dp"
         android:layout_height="wrap_content"
-        android:stretchMode="columnWidth">
+        android:stretchMode="columnWidth"
+        android:textFilterEnabled="false"
+        android:stackFromBottom="false"
+        android:scrollingCache="false"
+        android:longClickable="false"
+        android:focusableInTouchMode="false">
 
     </GridView>
     <RelativeLayout android:id="@+id/screen_home_trafficRow"

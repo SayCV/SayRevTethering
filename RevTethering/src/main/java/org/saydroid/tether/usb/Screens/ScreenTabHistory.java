@@ -50,6 +50,7 @@ import org.saydroid.sgs.utils.SgsStringUtils;
 import org.saydroid.sgs.utils.SgsUriUtils;
 import org.saydroid.tether.usb.QuickAction.ActionItem;
 import org.saydroid.tether.usb.QuickAction.QuickAction;
+import org.saydroid.tether.usb.Services.ITetheringService;
 import org.saydroid.tether.usb.Utils.DateTimeUtils;
 
 public class ScreenTabHistory extends BaseScreen {
@@ -57,7 +58,7 @@ public class ScreenTabHistory extends BaseScreen {
 	private static final int SELECT_CONTENT = 1;
 	
 	private final ISgsHistoryService mHistorytService;
-	private final ISgsSipService mSipService;
+	private final ITetheringService mTetheringService;
 	
 	private ScreenTabHistoryAdapter mAdapter;
 	private ListView mListView;
@@ -75,7 +76,7 @@ public class ScreenTabHistory extends BaseScreen {
 		super(SCREEN_TYPE.TAB_HISTORY_T, TAG);
 		
 		mHistorytService = getEngine().getHistoryService();
-		mSipService = getEngine().getSipService();
+		mTetheringService = getEngine().getTetheringService();
 		
 		mAItemVoiceCall = new ActionItem();
 		mAItemVoiceCall.setTitle("Voice");
@@ -181,7 +182,7 @@ public class ScreenTabHistory extends BaseScreen {
 	
 	private final OnItemClickListener mOnItemListViewClickListener = new OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			if(!mSipService.isRegistered()){
+			if(!mTetheringService.isRegistered()){
 				Log.e(TAG, "Not registered yet");
 				return;
 			}

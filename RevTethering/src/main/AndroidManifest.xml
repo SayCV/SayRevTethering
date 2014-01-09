@@ -28,6 +28,7 @@
         <activity android:name=".Screens.ScreenAbout"></activity>
         <activity android:name=".Screens.ScreenGeneral"></activity>
         <activity android:name=".Screens.ScreenNetwork"></activity>
+        <activity android:name=".Screens.ScreenTabHistory"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
