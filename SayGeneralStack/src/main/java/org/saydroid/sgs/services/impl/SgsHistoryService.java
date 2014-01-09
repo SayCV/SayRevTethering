@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.saydroid.logger.Log;
 import org.saydroid.sgs.SgsEngine;
 import org.saydroid.sgs.model.SgsHistoryEvent;
 import org.saydroid.sgs.model.SgsHistoryList;
@@ -31,8 +32,6 @@ import org.saydroid.sgs.utils.SgsObservableList;
 import org.saydroid.sgs.utils.SgsPredicate;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
-
-import android.util.Log;
 
 
 public class SgsHistoryService extends SgsBaseService implements ISgsHistoryService {
