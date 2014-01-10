@@ -332,8 +332,8 @@ implements ITetheringService {
 	@Override
 	public boolean unRegister() {
 		if (isRegistered()) {
-            stopTether();
             mRegSession.unregister();
+            stopTether();
 			new Thread(new Runnable(){
 				@Override
 				public void run() {
