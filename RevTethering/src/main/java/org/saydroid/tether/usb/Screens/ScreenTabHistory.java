@@ -421,7 +421,7 @@ public class ScreenTabHistory extends BaseScreen {
                                 break;
                             case Failed:
                             case Missed:
-                                ivTrafficCountType.setImageResource(R.drawable.call_missed_45);
+                                ivTrafficCountType.setImageResource(R.drawable.traffic_48);
                                 break;
                         }
                         break;

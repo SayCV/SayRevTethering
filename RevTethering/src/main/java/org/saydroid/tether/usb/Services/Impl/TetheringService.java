@@ -196,7 +196,7 @@ implements ITetheringService {
 
 	@Override
 	public boolean stopStack() {
-		if(mTetheringStack != null){
+		if(mTetheringStack != null && (mTetheringStack.getState() == STACK_STATE.STARTING)){
             mTetheringStack.stop();
 		}
         stopTether();
@@ -313,7 +313,8 @@ implements ITetheringService {
                 new Thread(new Runnable(){
                     @Override
                     public void run() {
-                        mTetheringStack.stop();
+                        stop();
+                        //mTetheringStack.stop();
                     }
                 }).start();
                 return false;
@@ -337,7 +338,8 @@ implements ITetheringService {
 			new Thread(new Runnable(){
 				@Override
 				public void run() {
-                    mTetheringStack.stop();
+                    stop();
+                    //mTetheringStack.stop();
 				}
 			}).start();
 		}
