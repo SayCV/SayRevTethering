@@ -408,9 +408,10 @@ public class ScreenTabHistory extends BaseScreen {
                         final HistoryTrafficCountEvent TrafficCountEvent = (HistoryTrafficCountEvent)event;
                         //final String content = TrafficCountEvent.getContent();
                         //final boolean bIncoming = TrafficCountEvent.getStatus() == SgsHistoryEvent.StatusType.Incoming;
-;
-                        tvSend.setText(formatCount(Long.parseLong(TrafficCountEvent.getTotalUpload()), false));
-                        tvReceive.setText(formatCount(Long.parseLong(TrafficCountEvent.getTotalDownload()), false));
+                        // Up and Download is defines by based on Tether
+                        // Now RevTether is oppose to the defines: Upload, Download
+                        tvSend.setText(formatCount(Long.parseLong(TrafficCountEvent.getTotalDownload()), false));
+                        tvReceive.setText(formatCount(Long.parseLong(TrafficCountEvent.getTotalUpload()), false));
                         switch(event.getStatus()){
                             case Outgoing:
                                 ivTrafficCountType.setImageResource(R.drawable.call_outgoing_45);

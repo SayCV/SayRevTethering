@@ -151,8 +151,8 @@ public class NativeService extends SgsNativeService {
                             /*event.setContent(new String("Start Tethering -- TotalUpload: " +
                                     Long.toString(args.getTotalUpload()) + ", TotalDownload: " + Long.toString(args.getTotalDownload())));
                             */
-                            Log.d(TAG, "Traffic Count getTotalUpload = " + args.getTotalUpload());
-                            Log.d(TAG, "Traffic Count getTotalDownload = " + args.getTotalDownload());
+                            //Log.d(TAG, "Traffic Count getTotalUpload = " + args.getTotalUpload());
+                            //Log.d(TAG, "Traffic Count getTotalDownload = " + args.getTotalDownload());
                             event.setTotalUpload(Long.toString(args.getTotalUpload()));
                             event.setTotalDownload(Long.toString(args.getTotalDownload()));
                             event.setStartTime(SgsDateTimeUtils.parseDate(dateString).getTime());

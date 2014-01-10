@@ -55,6 +55,10 @@ public class TrafficCountEventArgs extends SgsEventArgs {
     public static final String EXTRA_DATA_COUNT_UPLOAD_RATE = TAG + "uploadRate";
     public static final String EXTRA_DATA_COUNT_DOWNLOAD_RATE = TAG + "downloadRate";
 
+    /*
+     * DataCount Defines: Tether oppose to RevTether
+     * Here is based on Tether Defines
+     */
     public static class DataCount {
         // Total data uploaded
         public long totalUpload;

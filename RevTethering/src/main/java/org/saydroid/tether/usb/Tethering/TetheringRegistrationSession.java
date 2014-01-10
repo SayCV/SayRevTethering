@@ -114,7 +114,7 @@ public class TetheringRegistrationSession extends TetheringSession {
         long previousDownload;
         long previousUpload;
         long lastTimeChecked;
-        long [] trafficCount = new long[] {0, 0};
+        //long [] trafficCount = new long[] {0, 0};
 
         //@Override
         public void run() {
@@ -136,7 +136,7 @@ public class TetheringRegistrationSession extends TetheringSession {
 
             while (!Thread.currentThread().isInterrupted()) {
                 // Check data count
-                trafficCount = getDataTraffic(mTetherNetworkDevice);
+                long [] trafficCount = getDataTraffic(mTetherNetworkDevice);
                 long currentTime = new Date().getTime();
                 float elapsedTime = (float) ((currentTime - this.lastTimeChecked) / 1000);
                 this.lastTimeChecked = currentTime;
@@ -180,10 +180,12 @@ public class TetheringRegistrationSession extends TetheringSession {
             message.what = MainActivity.MESSAGE_TRAFFIC_END;
             MainActivity.currentInstance.viewUpdateHandler.sendMessage(message);*/
             //long [] trafficCount = getDataTraffic(mTetherNetworkDevice);
+            //Log.d(TAG, "Traffic Count Thread previousUpload = " + this.previousUpload);
+            //Log.d(TAG, "Traffic Count Thread previousDownload = " + this.previousDownload);
             ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
                     new TrafficCountEventArgs(TrafficCountEventTypes.END,
-                            trafficCount[0],
-                            trafficCount[1],
+                            this.previousUpload,
+                            this.previousDownload,
                             0,
                             0),
                     SgsDateTimeUtils.now()
