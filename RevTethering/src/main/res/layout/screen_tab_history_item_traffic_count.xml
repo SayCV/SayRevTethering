@@ -112,7 +112,7 @@
         android:orientation="horizontal"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent">
-        <TextView
+        <org.saydroid.tether.usb.CustomExtends.AutoResizeTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="left"
@@ -120,7 +120,7 @@
             android:text="2013/12/31 12:59:59"
             android:textSize="16dp">
 
-        </TextView>
+        </org.saydroid.tether.usb.CustomExtends.AutoResizeTextView>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
@@ -130,7 +130,7 @@
             android:src="@android:drawable/button_onoff_indicator_on">
 
         </ImageView>
-        <TextView
+        <org.saydroid.tether.usb.CustomExtends.AutoResizeTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
@@ -138,6 +138,6 @@
             android:text="2013/12/31 12:59:59"
             android:textSize="16dp">
 
-        </TextView>
+        </org.saydroid.tether.usb.CustomExtends.AutoResizeTextView>
     </LinearLayout>
 </LinearLayout>

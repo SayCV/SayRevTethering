@@ -41,6 +41,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
+import org.saydroid.tether.usb.CustomExtends.AutoResizeTextView;
 import org.saydroid.tether.usb.Model.HistoryTrafficCountEvent;
 import org.saydroid.tether.usb.Model.HistoryTrafficCountEvent.HistoryEventTrafficCountFilter;
 import org.saydroid.tether.usb.R;
@@ -391,20 +392,25 @@ public class ScreenTabHistory extends BaseScreen {
                         final ImageView ivTrafficCountType = (ImageView)view.findViewById(R.id.screen_tab_history_item_trafficCount_imageView_type);
                         final TextView tvSend = (TextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_upTotal);
                         final TextView tvReceive = (TextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_downloadTotal);
-                        final TextView tvStartDate = (TextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_startDate);
-                        final TextView tvEndDate = (TextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_endDate);
+                        final AutoResizeTextView tvStartDate = (AutoResizeTextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_startDate);
+                        final AutoResizeTextView tvEndDate = (AutoResizeTextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_endDate);
                         final String startDate = DateTimeUtils.getFriendlyDateString(new Date(event.getStartTime()));
                         final String endDate = DateTimeUtils.getFriendlyDateString(new Date(event.getEndTime()));
                         tvStartDate.setText(startDate);
                         tvEndDate.setText(endDate);
-                        tvStartDate.set
+                        tvStartDate.setMinTextSize(4f);
+                        tvStartDate.setTextSize(10f);
+                        tvStartDate.resizeText();
+                        tvEndDate.setMinTextSize(4f);
+                        tvEndDate.setTextSize(10f);
+                        tvEndDate.resizeText();
 
                         final HistoryTrafficCountEvent TrafficCountEvent = (HistoryTrafficCountEvent)event;
                         //final String content = TrafficCountEvent.getContent();
                         //final boolean bIncoming = TrafficCountEvent.getStatus() == SgsHistoryEvent.StatusType.Incoming;
-
-                        tvSend.setText(TrafficCountEvent.getTotalUpload());
-                        tvReceive.setText(TrafficCountEvent.getTotalUpload());
+;
+                        tvSend.setText(formatCount(Long.parseLong(TrafficCountEvent.getTotalUpload()), false));
+                        tvReceive.setText(formatCount(Long.parseLong(TrafficCountEvent.getTotalUpload()), false));
                         switch(event.getStatus()){
                             case Outgoing:
                                 ivTrafficCountType.setImageResource(R.drawable.call_outgoing_45);
@@ -423,5 +429,16 @@ public class ScreenTabHistory extends BaseScreen {
 			
 			return view;
 		}
+
+        private String formatCount(long count, boolean rate) {
+            // Converts the supplied argument into a string.
+            // 'rate' indicates whether is a total bytes, or bits per sec.
+            // Under 2Mb, returns "xxx.xKb"
+            // Over 2Mb, returns "xxx.xxMb"
+            //if (count < 1e6 * 2)
+            if (count < 1e6 * 1)
+                return ((float)((int)(count*10/1024))/10 + (rate ? "KB/s" : "KB"));
+            return ((float)((int)(count*100/1024/1024))/100 + (rate ? "MB/s" : "MB"));
+        }
 	}
 }

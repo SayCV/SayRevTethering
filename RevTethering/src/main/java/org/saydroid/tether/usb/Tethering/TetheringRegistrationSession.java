@@ -180,7 +180,10 @@ public class TetheringRegistrationSession extends TetheringSession {
             MainActivity.currentInstance.viewUpdateHandler.sendMessage(message);*/
             ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
                     new TrafficCountEventArgs(TrafficCountEventTypes.END,
-                            0, 0, 0, 0),
+                            getDataTraffic(mTetherNetworkDevice)[0],
+                            getDataTraffic(mTetherNetworkDevice)[1],
+                            getDataTraffic(mTetherNetworkDevice)[2],
+                            getDataTraffic(mTetherNetworkDevice)[3]),
                     SgsDateTimeUtils.now()
             );
         }

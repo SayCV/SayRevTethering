@@ -273,10 +273,12 @@ public class AutoResizeTextView extends TextView {
         int loop_counter=1;
         float targetTextSize = (lower+upper)/2;
         int textHeight = getTextHeight(text, textPaint, width, targetTextSize);
+        int textWidth  = getTextWidth(text, textPaint, width, targetTextSize);
         while(loop_counter < BISECTION_LOOP_WATCH_DOG && upper - lower > 1) {
             targetTextSize = (lower+upper)/2;
             textHeight = getTextHeight(text, textPaint, width, targetTextSize);
-            if(textHeight > height)
+            textWidth  = getTextWidth(text, textPaint, width, targetTextSize);
+            if((textHeight > height) || (textWidth > width) )
                 upper = targetTextSize;
             else
                 lower = targetTextSize;
@@ -287,7 +289,7 @@ public class AutoResizeTextView extends TextView {
         textHeight = getTextHeight(text, textPaint, width, targetTextSize);
 
         // If we had reached our minimum text size and still don't fit, append an ellipsis
-        if(mAddEllipsis && targetTextSize == mMinTextSize && textHeight > height) {
+        if(mAddEllipsis && targetTextSize == mMinTextSize && ((textHeight >= height) || (textWidth >= width))) {
             // Draw using a static layout
             // modified: use a copy of TextPaint for measuring
             TextPaint paintCopy = new TextPaint(textPaint);
@@ -344,5 +346,13 @@ public class AutoResizeTextView extends TextView {
         StaticLayout layout = new StaticLayout(source, paint, width, Alignment.ALIGN_NORMAL, mSpacingMult, mSpacingAdd, true);
         return layout.getHeight();
     }
-
+    // Set the text size of the text paint object and use a static layout to render text off screen before measuring
+    private int getTextWidth(CharSequence source, TextPaint originalPaint, int width, float textSize) {
+        TextPaint paint = new TextPaint(originalPaint);
+        // Update the text paint object
+        paint.setTextSize(textSize);
+        // Draw using a static layout
+        StaticLayout layout = new StaticLayout(source, paint, width, Alignment.ALIGN_NORMAL, mSpacingMult, mSpacingAdd, true);
+        return layout.getWidth();
+    }
 }
