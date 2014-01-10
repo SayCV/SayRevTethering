@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:id="@+id/screen_tab_history_item_trafficCount_imageView_type"
-            android:src="@drawable/sms_25"
+            android:src="@drawable/traffic_48"
             android:layout_gravity="center|right">
 
         </ImageView>
@@ -116,17 +116,17 @@
         <org.saydroid.tether.usb.CustomExtends.AutoResizeTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="left"
             android:id="@+id/screen_tab_history_item_trafficCount_textView_startDate"
             android:text="2013/12/31 12:59:59"
-            android:textSize="16dp">
+            android:textSize="16dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_weight="1">
 
         </org.saydroid.tether.usb.CustomExtends.AutoResizeTextView>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:id="@+id/screen_tab_history_item_trafficCount_imageView_arrow"
             android:src="@drawable/abc_list_divider_holo_light">
 
@@ -134,10 +134,11 @@
         <org.saydroid.tether.usb.CustomExtends.AutoResizeTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="right"
             android:id="@+id/screen_tab_history_item_trafficCount_textView_endDate"
             android:text="2013/12/31 12:59:59"
-            android:textSize="16dp">
+            android:textSize="16dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_weight="1">
 
         </org.saydroid.tether.usb.CustomExtends.AutoResizeTextView>
     </LinearLayout>

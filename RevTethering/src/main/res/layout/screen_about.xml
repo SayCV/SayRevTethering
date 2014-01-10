@@ -1,100 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
-    <LinearLayout
-        android:orientation="vertical"
+    android:layout_height="fill_parent">
+    <!--android:background="@drawable/background">-->
+    <TextView
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:padding="10px"
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:textColor="@color/color_white"
+        android:text="About"
+        android:background="@drawable/grad_dark">
+
+    </TextView>
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-        <TextView android:text="Version: "
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="15dp"
-            android:paddingLeft="15dp"
-            android:textStyle="bold"
-            android:textColor="#ffffff" />
-        <TextView android:text="- 1.0 -"
-            android:id="@+id/versionName"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:layout_gravity="center_vertical"
-            android:textColor="#ffffff" />
-        <TextView android:text="Project-Home: "
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="15dp"
-            android:paddingLeft="15dp"
-            android:textStyle="bold"
-            android:textColor="#ffffff" />
+            android:layout_height="wrap_content">
+            <TextView android:text="Version: "
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp"
+                android:textStyle="bold"
+                android:textColor="#ffffff" />
+            <TextView android:text="- 1.0 -"
+                android:id="@+id/versionName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:layout_gravity="center_vertical"
+                android:textColor="#ffffff" />
+            <TextView android:text="Project-Home: "
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp"
+                android:textStyle="bold"
+                android:textColor="#ffffff" />
 
-        <TextView android:text="Authors: "
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="15dp"
-            android:paddingLeft="15dp"
-            android:textStyle="bold"
-            android:textColor="#ffffff" />
-        <TextView android:text="sayCV"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:textColor="#ffffff" />
-        <TextView android:text="Contributors: "
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="15dp"
-            android:paddingLeft="15dp"
-            android:textStyle="bold"
-            android:textColor="#ffffff" />
-        <TextView android:text="sayCV"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:textColor="#ffffff" />
+            <TextView android:text="Authors: "
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp"
+                android:textStyle="bold"
+                android:textColor="#ffffff" />
+            <TextView android:text="sayCV"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:textColor="#ffffff" />
+            <TextView android:text="Contributors: "
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp"
+                android:textStyle="bold"
+                android:textColor="#ffffff" />
+            <TextView android:text="sayCV"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:textColor="#ffffff" />
 
-        <TextView
-            android:text="@string/thanks_title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="15dp"
-            android:paddingLeft="15dp"
-            android:textStyle="bold"
-            android:textColor="#ffffff"
-            android:id="@+id/textView" />
+            <TextView
+                android:text="@string/thanks_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp"
+                android:textStyle="bold"
+                android:textColor="#ffffff"
+                android:id="@+id/textView" />
 
-        <TextView
-            android:text="@string/thanks_name"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:textColor="#ffffff"
-            android:id="@+id/textView2" />
+            <TextView
+                android:text="@string/thanks_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:textColor="#ffffff"
+                android:id="@+id/textView2" />
 
-        <TextView android:text="License: "
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="15dp"
-            android:paddingLeft="15dp"
-            android:textStyle="bold"
-            android:textColor="#ffffff" />
+            <TextView android:text="License: "
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp"
+                android:textStyle="bold"
+                android:textColor="#ffffff" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autoLink="web"
-            android:text="@string/copyright"
-            android:id="@+id/screen_about_textView_copyright"
-            android:layout_marginTop="10px"
-            android:paddingLeft="15dp"
-            android:textSize="12sp"
-            android:isScrollContainer="true"
-            android:scrollbars="vertical"
-            android:textColor="#ffffff" />
-
-
-    </LinearLayout>
-
-
-</ScrollView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:text="@string/copyright"
+                android:id="@+id/screen_about_textView_copyright"
+                android:layout_marginTop="10px"
+                android:paddingLeft="15dp"
+                android:textSize="12sp"
+                android:isScrollContainer="true"
+                android:scrollbars="vertical"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

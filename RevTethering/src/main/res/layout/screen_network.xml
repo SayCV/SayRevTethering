@@ -1,221 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
+    <!--android:background="@drawable/background">-->
+    <TextView
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:padding="10px"
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:textColor="@color/color_white"
+        android:text="Network Settings"
+        android:background="@drawable/grad_dark">
 
-    <RelativeLayout
-        android:orientation="vertical"
-        android:scrollbars="vertical"
-        android:isScrollContainer="true"
+    </TextView>
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:id="@+id/screen_network_linearLayout_network"
+        <RelativeLayout
+            android:orientation="vertical"
+            android:scrollbars="vertical"
+            android:isScrollContainer="true"
             android:layout_width="fill_parent"
-            android:layout_marginBottom="5px">
+            android:layout_height="fill_parent">
 
-            <CheckBox
+            <LinearLayout
                 android:layout_height="wrap_content"
-                android:id="@+id/screen_network_checkBox_3g"
-                android:layout_marginLeft="5px"
-                android:text="Enable 3G"
-                android:layout_width="wrap_content"/>
-            <CheckBox
-                android:layout_height="wrap_content"
-                android:text="Faked 3G IP"
-                android:id="@+id/screen_network_checkBox_faked_3g_ip"
-                android:layout_marginLeft="5px"
-                android:layout_width="wrap_content"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:id="@+id/screen_network_linearLayout_ipversion"
-            android:layout_below="@+id/screen_network_linearLayout_network"
-            android:layout_width="fill_parent">
-
-            <RadioGroup
-                android:layout_height="wrap_content"
-                android:id="@+id/screen_network_radioGroup_ipversion"
-                android:orientation="horizontal"
+                android:id="@+id/screen_network_linearLayout_network"
                 android:layout_width="fill_parent"
                 android:layout_marginBottom="5px">
-                <RadioButton
-                    android:layout_width="wrap_content"
+
+                <CheckBox
                     android:layout_height="wrap_content"
-                    android:text="IPv4"
-                    android:id="@+id/screen_network_radioButton_ipv4"
+                    android:id="@+id/screen_network_checkBox_3g"
                     android:layout_marginLeft="5px"
-                    android:checked="true">
-
-                </RadioButton>
-                <RadioButton
-                    android:layout_width="wrap_content"
+                    android:text="Enable 3G"
+                    android:layout_width="wrap_content"/>
+                <CheckBox
                     android:layout_height="wrap_content"
-                    android:id="@+id/screen_network_radioButton_ipv6"
-                    android:text="IPv6"
-                    android:layout_marginLeft="5px">
+                    android:text="Faked 3G IP"
+                    android:id="@+id/screen_network_checkBox_faked_3g_ip"
+                    android:layout_marginLeft="5px"
+                    android:layout_width="wrap_content"/>
 
-                </RadioButton>
-            </RadioGroup>
-        </LinearLayout>
+            </LinearLayout>
 
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:id="@+id/screen_network_linearLayout_ip_style"
-            android:layout_below="@+id/screen_network_linearLayout_ipversion"
-            android:layout_width="fill_parent">
-            <RadioGroup
+            <LinearLayout
                 android:layout_height="wrap_content"
-                android:id="@+id/screen_network_radioGroup_ip_style"
-                android:orientation="horizontal"
+                android:id="@+id/screen_network_linearLayout_ipversion"
+                android:layout_below="@+id/screen_network_linearLayout_network"
+                android:layout_width="fill_parent">
+
+                <RadioGroup
+                    android:layout_height="wrap_content"
+                    android:id="@+id/screen_network_radioGroup_ipversion"
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_marginBottom="5px">
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="IPv4"
+                        android:id="@+id/screen_network_radioButton_ipv4"
+                        android:layout_marginLeft="5px"
+                        android:checked="true">
+
+                    </RadioButton>
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/screen_network_radioButton_ipv6"
+                        android:text="IPv6"
+                        android:layout_marginLeft="5px">
+
+                    </RadioButton>
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:id="@+id/screen_network_linearLayout_ip_style"
+                android:layout_below="@+id/screen_network_linearLayout_ipversion"
+                android:layout_width="fill_parent">
+                <RadioGroup
+                    android:layout_height="wrap_content"
+                    android:id="@+id/screen_network_radioGroup_ip_style"
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_marginBottom="5px">
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="WIN XP"
+                        android:id="@+id/screen_network_radioButton_ip_style_winxp"
+                        android:layout_marginLeft="5px"
+                        android:checked="true">
+
+                    </RadioButton>
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/screen_network_radioButton_ip_style_win7"
+                        android:text="WIN 7/8"
+                        android:layout_marginLeft="5px">
+
+                    </RadioButton>
+                </RadioGroup>
+            </LinearLayout>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="IP Address"
                 android:layout_width="fill_parent"
-                android:layout_marginBottom="5px">
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="WIN XP"
-                    android:id="@+id/screen_network_radioButton_ip_style_winxp"
-                    android:layout_marginLeft="5px"
-                    android:checked="true">
+                android:id="@+id/screen_network_textView_ip_address"
+                android:layout_marginLeft="5px"
+                android:layout_marginRight="5px"
+                android:layout_below="@+id/screen_network_linearLayout_ip_style"
+                android:textSize="16dp">
 
-                </RadioButton>
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/screen_network_radioButton_ip_style_win7"
-                    android:text="WIN 7/8"
-                    android:layout_marginLeft="5px">
+            </TextView>
 
-                </RadioButton>
-            </RadioGroup>
-        </LinearLayout>
+            <EditText
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/screen_network_textView_ip_address"
+                android:id="@+id/screen_network_textView_local_ip"
+                android:inputType="number"
+                android:text="192.168.0.252"
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5px"
+                android:layout_marginRight="5px">
 
-        <TextView
-            android:layout_height="wrap_content"
-            android:text="IP Address"
-            android:layout_width="fill_parent"
-            android:id="@+id/screen_network_textView_ip_address"
-            android:layout_marginLeft="5px"
-            android:layout_marginRight="5px"
-            android:layout_below="@+id/screen_network_linearLayout_ip_style"
-            android:textSize="16dp">
+            </EditText>
 
-        </TextView>
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/screen_network_textView_local_ip"
+                android:id="@+id/screen_network_textView_sub_mask"
+                android:text="Sub Mask"
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5px"
+                android:layout_marginRight="5px"
+                android:textSize="16dp">
 
-        <EditText
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/screen_network_textView_ip_address"
-            android:id="@+id/screen_network_textView_local_ip"
-            android:inputType="number"
-            android:text="192.168.0.252"
-            android:layout_width="fill_parent"
-            android:layout_marginLeft="5px"
-            android:layout_marginRight="5px">
+            </TextView>
 
-        </EditText>
+            <EditText
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/screen_network_textView_sub_mask"
+                android:id="@+id/screen_network_editText_sub_mask"
+                android:layout_width="fill_parent"
+                android:inputType="number"
+                android:text="255.255.0.0"
+                android:layout_marginLeft="5px"
+                android:layout_marginRight="5px">
 
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/screen_network_textView_local_ip"
-            android:id="@+id/screen_network_textView_sub_mask"
-            android:text="Sub Mask"
-            android:layout_width="fill_parent"
-            android:layout_marginLeft="5px"
-            android:layout_marginRight="5px"
-            android:textSize="16dp">
+            </EditText>
 
-        </TextView>
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/screen_network_editText_sub_mask"
+                android:id="@+id/screen_network_textView_gateway"
+                android:text="Gateway"
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5px"
+                android:layout_marginRight="5px"
+                android:textSize="16dp">
 
-        <EditText
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/screen_network_textView_sub_mask"
-            android:id="@+id/screen_network_editText_sub_mask"
-            android:layout_width="fill_parent"
-            android:inputType="number"
-            android:text="255.255.0.0"
-            android:layout_marginLeft="5px"
-            android:layout_marginRight="5px">
+            </TextView>
 
-        </EditText>
+            <EditText
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/screen_network_textView_gateway"
+                android:id="@+id/screen_network_editText_gateway"
+                android:layout_width="fill_parent"
+                android:inputType="number"
+                android:text="192.168.0.1"
+                android:layout_marginLeft="5px"
+                android:layout_marginRight="5px">
 
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/screen_network_editText_sub_mask"
-            android:id="@+id/screen_network_textView_gateway"
-            android:text="Gateway"
-            android:layout_width="fill_parent"
-            android:layout_marginLeft="5px"
-            android:layout_marginRight="5px"
-            android:textSize="16dp">
+            </EditText>
 
-        </TextView>
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/screen_network_editText_gateway"
+                android:id="@+id/screen_network_textView_preferred_dns"
+                android:text="Preferred DNS"
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5px"
+                android:layout_marginRight="5px"
+                android:textSize="16dp">
 
-        <EditText
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/screen_network_textView_gateway"
-            android:id="@+id/screen_network_editText_gateway"
-            android:layout_width="fill_parent"
-            android:inputType="number"
-            android:text="192.168.0.1"
-            android:layout_marginLeft="5px"
-            android:layout_marginRight="5px">
+            </TextView>
+            <EditText
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/screen_network_textView_preferred_dns"
+                android:id="@+id/screen_network_editText_preferred_dns"
+                android:layout_width="fill_parent"
+                android:inputType="number"
+                android:text="8.8.4.4"
+                android:layout_marginLeft="5px"
+                android:layout_marginRight="5px">
 
-        </EditText>
+            </EditText>
 
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/screen_network_editText_gateway"
-            android:id="@+id/screen_network_textView_preferred_dns"
-            android:text="Preferred DNS"
-            android:layout_width="fill_parent"
-            android:layout_marginLeft="5px"
-            android:layout_marginRight="5px"
-            android:textSize="16dp">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/screen_network_editText_preferred_dns"
+                android:id="@+id/screen_network_textView_secondary_dns"
+                android:text="Secondary DNS"
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="5px"
+                android:layout_marginRight="5px"
+                android:textSize="16dp">
 
-        </TextView>
-        <EditText
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/screen_network_textView_preferred_dns"
-            android:id="@+id/screen_network_editText_preferred_dns"
-            android:layout_width="fill_parent"
-            android:inputType="number"
-            android:text="8.8.4.4"
-            android:layout_marginLeft="5px"
-            android:layout_marginRight="5px">
+            </TextView>
 
-        </EditText>
+            <EditText
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/screen_network_textView_secondary_dns"
+                android:id="@+id/screen_network_editText_secondary_dns"
+                android:layout_width="fill_parent"
+                android:inputType="number"
+                android:text="8.8.8.8"
+                android:layout_marginLeft="5px"
+                android:layout_marginRight="5px">
 
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/screen_network_editText_preferred_dns"
-            android:id="@+id/screen_network_textView_secondary_dns"
-            android:text="Secondary DNS"
-            android:layout_width="fill_parent"
-            android:layout_marginLeft="5px"
-            android:layout_marginRight="5px"
-            android:textSize="16dp">
-
-        </TextView>
-
-        <EditText
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/screen_network_textView_secondary_dns"
-            android:id="@+id/screen_network_editText_secondary_dns"
-            android:layout_width="fill_parent"
-            android:inputType="number"
-            android:text="8.8.8.8"
-            android:layout_marginLeft="5px"
-            android:layout_marginRight="5px">
-
-        </EditText>
-
-
-    </RelativeLayout>
-
-
-</ScrollView>
+            </EditText>
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>

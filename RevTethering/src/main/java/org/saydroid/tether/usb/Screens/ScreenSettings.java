@@ -81,7 +81,7 @@ public class ScreenSettings extends BaseScreen {
 		final static ScreenSettingsItem[] sItems =  new ScreenSettingsItem[]{
     		new ScreenSettingsItem(R.drawable.general_48, "General", ScreenGeneral.class),
     		//new ScreenSettingsItem(R.drawable.identity_48, "Identity", ScreenIdentity.class ),
-    		new ScreenSettingsItem(R.drawable.network_48, "Network", ScreenNetwork.class),
+    		new ScreenSettingsItem(R.drawable.network_service_48, "Network", ScreenNetwork.class),
     		//new ScreenSettingsItem(R.drawable.lock_48, "Security", ScreenSecurity.class),
     		//new ScreenSettingsItem(R.drawable.eab_48, "Contacts", ScreenContacts.class),
     		//new ScreenSettingsItem(R.drawable.im_invisible_user_48, "Presence", ScreenPresence.class),

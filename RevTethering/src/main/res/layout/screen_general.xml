@@ -1,72 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <!--android:background="@drawable/background">-->
+    <TextView
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:padding="10px"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:isScrollContainer="true"
-        android:scrollbars="vertical" >
+        android:gravity="center"
+        android:textColor="@color/color_white"
+        android:text="General Settings"
+        android:background="@drawable/grad_dark">
 
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:id="@+id/screen_general_textView_Notifications"
-            android:text="Notifications"
-            android:textSize="16dp">
+    </TextView>
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:isScrollContainer="true"
+            android:scrollbars="vertical" >
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:id="@+id/screen_general_textView_Notifications"
+                android:text="Notifications"
+                android:textSize="16dp">
 
             </TextView>
-        <Spinner
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/screen_general_textView_Notifications"
-            android:id="@+id/screen_general_spinner_NotificationRingtone"
-            android:layout_width="fill_parent"
-            android:layout_marginLeft="10px"
-            android:layout_marginRight="5px"
-            android:layout_marginTop="2px">
+            <Spinner
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/screen_general_textView_Notifications"
+                android:id="@+id/screen_general_spinner_NotificationRingtone"
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="5px"
+                android:layout_marginTop="2px">
 
             </Spinner>
 
 
-        <CheckBox
-            android:layout_height="wrap_content"
-            android:text="Vibrate On Connected"
-            android:defaultValue="true"
-            android:id="@+id/screen_general_checkBox_VibrateOnConnected"
-            android:layout_below="@+id/screen_general_spinner_NotificationRingtone"
-            android:layout_width="fill_parent">
-        </CheckBox>
+            <CheckBox
+                android:layout_height="wrap_content"
+                android:text="Vibrate On Connected"
+                android:defaultValue="true"
+                android:id="@+id/screen_general_checkBox_VibrateOnConnected"
+                android:layout_below="@+id/screen_general_spinner_NotificationRingtone"
+                android:layout_width="fill_parent">
+            </CheckBox>
 
 
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="Miscellaneous"
-            android:id="@+id/screen_general_textView_Miscellaneous"
-            android:layout_below="@+id/screen_general_checkBox_VibrateOnConnected"
-            android:textSize="16dp">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Miscellaneous"
+                android:id="@+id/screen_general_textView_Miscellaneous"
+                android:layout_below="@+id/screen_general_checkBox_VibrateOnConnected"
+                android:textSize="16dp">
 
             </TextView>
-        <CheckBox
-            android:layout_height="wrap_content"
-            android:text="Disable Update-Check"
-            android:defaultValue="true"
-            android:id="@+id/screen_general_checkBox_DisableUpdateCheck"
-            android:layout_below="@+id/screen_general_textView_Miscellaneous"
-            android:layout_width="fill_parent">
-        </CheckBox>
-        <CheckBox
-            android:layout_height="wrap_content"
-            android:text="Disable Wake-Lock"
-            android:defaultValue="true"
-            android:id="@+id/screen_general_checkBox_DisableWakeLock"
-            android:layout_below="@+id/screen_general_checkBox_DisableUpdateCheck"
-            android:layout_width="fill_parent">
-        </CheckBox>
+            <CheckBox
+                android:layout_height="wrap_content"
+                android:text="Disable Update-Check"
+                android:defaultValue="true"
+                android:id="@+id/screen_general_checkBox_DisableUpdateCheck"
+                android:layout_below="@+id/screen_general_textView_Miscellaneous"
+                android:layout_width="fill_parent">
+            </CheckBox>
+            <CheckBox
+                android:layout_height="wrap_content"
+                android:text="Disable Wake-Lock"
+                android:defaultValue="true"
+                android:id="@+id/screen_general_checkBox_DisableWakeLock"
+                android:layout_below="@+id/screen_general_checkBox_DisableUpdateCheck"
+                android:layout_width="fill_parent">
+            </CheckBox>
 
-
-
-    </RelativeLayout>
-</ScrollView>
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>
