@@ -113,15 +113,15 @@ public class TetheringRegistrationSession extends TetheringSession {
         private static final int INTERVAL = 2;  // Sample rate in seconds.
         long previousDownload;
         long previousUpload;
-        long firstTimeChecked;
-        long lastTimeChecked;
+        String firstTimeChecked;
+        String lastTimeChecked;
         //long [] trafficCount = new long[] {0, 0};
 
         //@Override
         public void run() {
             this.previousDownload = this.previousUpload = 0;
-            this.firstTimeChecked = new Date().getTime();
-            this.lastTimeChecked = new Date().getTime();
+            this.firstTimeChecked = SgsDateTimeUtils.now();// new Date().getTime();
+            this.lastTimeChecked = SgsDateTimeUtils.now();
 
             try {
                 Thread.sleep(2000);
@@ -139,8 +139,9 @@ public class TetheringRegistrationSession extends TetheringSession {
             while (!Thread.currentThread().isInterrupted()) {
                 // Check data count
                 long [] trafficCount = getDataTraffic(mTetherNetworkDevice);
-                long currentTime = new Date().getTime();
-                float elapsedTime = (float) ((currentTime - this.lastTimeChecked) / 1000);
+                //long currentTime = new Date().getTime();
+                String currentTime = SgsDateTimeUtils.now();
+                float elapsedTime = (float) ((SgsDateTimeUtils.parseDate(currentTime).getTime() - SgsDateTimeUtils.parseDate(this.lastTimeChecked).getTime()) / 1000);
                 this.lastTimeChecked = currentTime;
                 DataCount datacount = new DataCount();
                 datacount.totalUpload = trafficCount[0]-trafficCountAtStart[0];
@@ -157,7 +158,7 @@ public class TetheringRegistrationSession extends TetheringSession {
                 ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
                         new TrafficCountEventArgs(TrafficCountEventTypes.COUNTING,
                                 datacount.totalUpload, datacount.totalDownload, datacount.uploadRate, datacount.downloadRate),
-                        SgsDateTimeUtils.now()
+                        this.lastTimeChecked//SgsDateTimeUtils.now()
                 );
 
                 this.previousUpload = datacount.totalUpload;
@@ -184,13 +185,14 @@ public class TetheringRegistrationSession extends TetheringSession {
             //long [] trafficCount = getDataTraffic(mTetherNetworkDevice);
             //Log.d(TAG, "Traffic Count Thread previousUpload = " + this.previousUpload);
             //Log.d(TAG, "Traffic Count Thread previousDownload = " + this.previousDownload);
+            //Log.d(TAG, "Traffic Count Tx End date = " + this.firstTimeChecked);
             ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
                     new TrafficCountEventArgs(TrafficCountEventTypes.END,
                             this.previousUpload,
                             this.previousDownload,
                             0,
                             0),
-                    Long.toString(this.firstTimeChecked)//SgsDateTimeUtils.now()
+                    this.firstTimeChecked//SgsDateTimeUtils.now()
             );
         }
     }

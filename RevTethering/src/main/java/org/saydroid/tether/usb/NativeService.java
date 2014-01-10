@@ -153,6 +153,7 @@ public class NativeService extends SgsNativeService {
                             */
                             //Log.d(TAG, "Traffic Count getTotalUpload = " + args.getTotalUpload());
                             //Log.d(TAG, "Traffic Count getTotalDownload = " + args.getTotalDownload());
+                            //Log.d(TAG, "Traffic Count Rx End date = " + dateString);
                             event.setTotalUpload(Long.toString(args.getTotalUpload()));
                             event.setTotalDownload(Long.toString(args.getTotalDownload()));
                             event.setStartTime(SgsDateTimeUtils.parseDate(dateString).getTime());
