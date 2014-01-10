@@ -32,7 +32,9 @@ public class HistoryTrafficCountEvent extends SgsHistoryEvent {
 	
 	@Element(data=true, required=false)
 	protected String mContent;
+    @Element(name = "TotalUpload", required = true)
     protected String mTotalUpload;
+    @Element(name = "TotalDownload", required = true)
     protected String mTotalDownload;
 
     HistoryTrafficCountEvent(){
