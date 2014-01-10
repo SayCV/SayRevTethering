@@ -410,7 +410,7 @@ public class ScreenTabHistory extends BaseScreen {
                         //final boolean bIncoming = TrafficCountEvent.getStatus() == SgsHistoryEvent.StatusType.Incoming;
 ;
                         tvSend.setText(formatCount(Long.parseLong(TrafficCountEvent.getTotalUpload()), false));
-                        tvReceive.setText(formatCount(Long.parseLong(TrafficCountEvent.getTotalUpload()), false));
+                        tvReceive.setText(formatCount(Long.parseLong(TrafficCountEvent.getTotalDownload()), false));
                         switch(event.getStatus()){
                             case Outgoing:
                                 ivTrafficCountType.setImageResource(R.drawable.call_outgoing_45);
