@@ -117,7 +117,7 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:id="@+id/screen_tab_history_item_trafficCount_textView_startDate"
-            android:text="2013/9/1 09:01:01"
+            android:text="2013/12/31 12:59:59"
             android:textSize="16dp">
 
         </TextView>
@@ -135,7 +135,7 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:id="@+id/screen_tab_history_item_trafficCount_textView_endDate"
-            android:text="2013/9/1 09:01:01"
+            android:text="2013/12/31 12:59:59"
             android:textSize="16dp">
 
         </TextView>

@@ -397,6 +397,7 @@ public class ScreenTabHistory extends BaseScreen {
                         final String endDate = DateTimeUtils.getFriendlyDateString(new Date(event.getEndTime()));
                         tvStartDate.setText(startDate);
                         tvEndDate.setText(endDate);
+                        tvStartDate.set
 
                         final HistoryTrafficCountEvent TrafficCountEvent = (HistoryTrafficCountEvent)event;
                         //final String content = TrafficCountEvent.getContent();

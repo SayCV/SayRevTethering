@@ -97,7 +97,7 @@ public class SgsHistoryService extends SgsBaseService implements ISgsHistoryServ
 			result = false;
             mLoadingHistory = false;
 		}
-
+        mLoadingHistory = false;
 		return result;
 	}
 	
