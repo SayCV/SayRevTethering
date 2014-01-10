@@ -42,6 +42,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 import org.saydroid.tether.usb.Model.HistoryTrafficCountEvent;
+import org.saydroid.tether.usb.Model.HistoryTrafficCountEvent.HistoryEventTrafficCountFilter;
 import org.saydroid.tether.usb.R;
 import org.saydroid.sgs.model.SgsHistoryAVCallEvent.HistoryEventAVFilter;
 import org.saydroid.sgs.model.SgsHistoryEvent;
@@ -264,8 +265,10 @@ public class ScreenTabHistory extends BaseScreen {
 			mBaseScreen = baseSceen;
 			mHandler = new Handler();
 			mInflater = LayoutInflater.from(mBaseScreen);
-			mEvents = mBaseScreen.mHistorytService.getObservableEvents()
-					.filter(new HistoryEventAVFilter());
+			/*mEvents = mBaseScreen.mHistorytService.getObservableEvents()
+					.filter(new HistoryEventAVFilter());*/
+            mEvents = mBaseScreen.mHistorytService.getObservableEvents()
+                    .filter(new HistoryEventTrafficCountFilter());
 			mBaseScreen.mHistorytService.getObservableEvents().addObserver(this);
 		}
 		
@@ -317,7 +320,9 @@ public class ScreenTabHistory extends BaseScreen {
 
 		@Override
 		public void update(Observable observable, Object data) {
-			mEvents = mBaseScreen.mHistorytService.getObservableEvents().filter(new HistoryEventAVFilter());
+			//mEvents = mBaseScreen.mHistorytService.getObservableEvents().filter(new HistoryEventAVFilter());
+            mEvents = mBaseScreen.mHistorytService.getObservableEvents().filter(new HistoryEventTrafficCountFilter());
+
 			if(Thread.currentThread() == Looper.getMainLooper().getThread()){
 				notifyDataSetChanged();
 			}
