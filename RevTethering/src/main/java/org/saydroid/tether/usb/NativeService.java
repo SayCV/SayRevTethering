@@ -124,7 +124,7 @@ public class NativeService extends SgsNativeService {
                     }
                 }
                 if(TrafficCountEventArgs.ACTION_TRAFFIC_COUNT_EVENT.equals(action)){
-                    /*TrafficCountEventArgs args = intent.getParcelableExtra(SgsEventArgs.EXTRA_EMBEDDED);
+                    TrafficCountEventArgs args = intent.getParcelableExtra(SgsEventArgs.EXTRA_EMBEDDED);
                     final TrafficCountEventTypes type;
                     if(args == null){
                         Log.e(TAG, "Invalid event args");
@@ -139,23 +139,26 @@ public class NativeService extends SgsNativeService {
                     HistoryTrafficCountEvent event;
                     switch((type = args.getEventType())){
                         case COUNTING:
-                            event = new HistoryTrafficCountEvent(remoteParty, StatusType.Incoming);
+                            /*event = new HistoryTrafficCountEvent(remoteParty, StatusType.Incoming);
                             event.setContent(new String("Start Tethering -- TotalUpload: " +
                                     Long.toString(args.getTotalUpload()) + ", TotalDownload: " + Long.toString(args.getTotalDownload())));
                             event.setStartTime(SgsDateTimeUtils.parseDate(dateString).getTime());
-                            mEngine.getHistoryService().addEvent(event);
+                            mEngine.getHistoryService().addEvent(event);*/
                             //mEngine.showSMSNotif(R.drawable.sms_25, "New message");
                             break;
                         case END:
                             event = new HistoryTrafficCountEvent(remoteParty, StatusType.Missed);
-                            event.setContent(new String("Start Tethering -- TotalUpload: " +
+                            /*event.setContent(new String("Start Tethering -- TotalUpload: " +
                                     Long.toString(args.getTotalUpload()) + ", TotalDownload: " + Long.toString(args.getTotalDownload())));
+                            */
+                            event.setTotalUpload(Long.toString(args.getTotalUpload()));
+                            event.setTotalDownload(Long.toString(args.getTotalDownload()));
                             event.setStartTime(SgsDateTimeUtils.parseDate(dateString).getTime());
                             mEngine.getHistoryService().addEvent(event);
                         default:
                             Log.d(TAG, "Traffic Count thread has disposed.");
                             break;
-                    }*/
+                    }
                 }
 				// PagerMode Messaging Events
 				//if(SgsMessagingEventArgs.ACTION_MESSAGING_EVENT.equals(action)){ }
