@@ -95,8 +95,9 @@ public class SgsHistoryService extends SgsBaseService implements ISgsHistoryServ
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			result = false;
+            mLoadingHistory = false;
 		}
-		mLoadingHistory = false;
+		
 		return result;
 	}
 	
