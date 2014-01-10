@@ -113,12 +113,14 @@ public class TetheringRegistrationSession extends TetheringSession {
         private static final int INTERVAL = 2;  // Sample rate in seconds.
         long previousDownload;
         long previousUpload;
+        long firstTimeChecked;
         long lastTimeChecked;
         //long [] trafficCount = new long[] {0, 0};
 
         //@Override
         public void run() {
             this.previousDownload = this.previousUpload = 0;
+            this.firstTimeChecked = new Date().getTime();
             this.lastTimeChecked = new Date().getTime();
 
             try {
@@ -188,7 +190,7 @@ public class TetheringRegistrationSession extends TetheringSession {
                             this.previousDownload,
                             0,
                             0),
-                    SgsDateTimeUtils.now()
+                    Long.toString(this.firstTimeChecked)//SgsDateTimeUtils.now()
             );
         }
     }
