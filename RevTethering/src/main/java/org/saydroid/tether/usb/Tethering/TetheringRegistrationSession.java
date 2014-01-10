@@ -178,12 +178,13 @@ public class TetheringRegistrationSession extends TetheringSession {
             /*Message message = Message.obtain();
             message.what = MainActivity.MESSAGE_TRAFFIC_END;
             MainActivity.currentInstance.viewUpdateHandler.sendMessage(message);*/
+            long [] trafficCount = getDataTraffic(mTetherNetworkDevice);
             ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
                     new TrafficCountEventArgs(TrafficCountEventTypes.END,
-                            getDataTraffic(mTetherNetworkDevice)[0],
-                            getDataTraffic(mTetherNetworkDevice)[1],
-                            getDataTraffic(mTetherNetworkDevice)[2],
-                            getDataTraffic(mTetherNetworkDevice)[3]),
+                            trafficCount[0],
+                            trafficCount[1],
+                            0,
+                            0),
                     SgsDateTimeUtils.now()
             );
         }
