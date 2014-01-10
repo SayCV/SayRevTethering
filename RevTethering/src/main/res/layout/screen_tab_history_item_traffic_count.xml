@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_weight="3"
+            android:layout_gravity="left"
+            android:gravity="left">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent">
+                <TextView
+                    android:layout_marginTop="2px"
+                    android:layout_marginLeft="2px"
+                    android:layout_width="wrap_content"
+                    android:textStyle="bold"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:id="@+id/screen_tab_history_item_trafficCount_textView_upTotal"
+                    android:layout_marginRight="2px"
+                    android:text="0MB"
+                    android:textColor="@color/color_white"
+                    android:layout_height="wrap_content"
+                    android:textSize="25dp"
+                    android:layout_gravity="left"
+                    android:layout_weight="5">
+
+                </TextView>
+
+                <TextView
+                    android:layout_marginTop="2px"
+                    android:layout_marginLeft="2px"
+                    android:layout_width="wrap_content"
+                    android:textStyle="bold"
+                    android:layout_weight="5"
+                    android:id="@+id/screen_tab_history_item_trafficCount_textView_downloadTotal"
+                    android:layout_marginRight="2px"
+                    android:text="0MB"
+                    android:textColor="@color/color_white"
+                    android:layout_height="wrap_content"
+                    android:textSize="25dp"
+                    android:layout_gravity="right"
+                    android:gravity="center_vertical|center_horizontal">
+
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent">
+                <TextView
+                    android:layout_marginTop="2px"
+                    android:layout_marginLeft="2px"
+                    android:layout_width="wrap_content"
+                    android:textStyle="bold"
+                    android:id="@+id/screen_tab_history_item_trafficCount_textView_send"
+                    android:layout_marginRight="2px"
+                    android:text="Send"
+                    android:textColor="@color/color_white"
+                    android:layout_height="wrap_content"
+                    android:textSize="25dp"
+                    android:layout_weight="5"
+                    android:gravity="center_vertical|center_horizontal">
+
+                </TextView>
+
+                <TextView
+                    android:layout_marginTop="2px"
+                    android:layout_marginLeft="2px"
+                    android:layout_width="wrap_content"
+                    android:textStyle="bold"
+                    android:layout_weight="5"
+                    android:id="@+id/screen_tab_history_item_trafficCount_textView_receive"
+                    android:layout_marginRight="2px"
+                    android:text="Receive"
+                    android:textColor="@color/color_white"
+                    android:layout_height="wrap_content"
+                    android:textSize="25dp"
+                    android:layout_gravity="right"
+                    android:gravity="center_vertical|center_horizontal">
+
+                </TextView>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:id="@+id/screen_tab_history_item_trafficCount_imageView_type"
+            android:src="@drawable/sms_25"
+            android:layout_gravity="center|right">
+
+        </ImageView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:id="@+id/screen_tab_history_item_trafficCount_textView_startDate"
+            android:text="2013/9/1 09:01:01"
+            android:textSize="16dp">
+
+        </TextView>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/screen_tab_history_item_trafficCount_imageView_arrow"
+            android:src="@android:drawable/button_onoff_indicator_on">
+
+        </ImageView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:id="@+id/screen_tab_history_item_trafficCount_textView_endDate"
+            android:text="2013/9/1 09:01:01"
+            android:textSize="16dp">
+
+        </TextView>
+    </LinearLayout>
+</LinearLayout>

@@ -41,6 +41,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
+import org.saydroid.tether.usb.Model.HistoryTrafficCountEvent;
 import org.saydroid.tether.usb.R;
 import org.saydroid.sgs.model.SgsHistoryAVCallEvent.HistoryEventAVFilter;
 import org.saydroid.sgs.model.SgsHistoryEvent;
@@ -344,9 +345,11 @@ public class ScreenTabHistory extends BaseScreen {
 					case AudioVideo:
 						view = mInflater.inflate(R.layout.screen_tab_history_item_av, null);
 						break;
+                    case TrafficCount:
+                        view = mInflater.inflate(R.layout.screen_tab_history_item_traffic_count, null);
+                        break;
 					case FileTransfer:
 					case SMS:
-                    case TrafficCount:
 					default:
 						Log.e(TAG, "Invalid media type");
 						return null;
@@ -379,6 +382,36 @@ public class ScreenTabHistory extends BaseScreen {
 								break;
 						}
 						break;
+                    case TrafficCount:
+                        final ImageView ivTrafficCountType = (ImageView)view.findViewById(R.id.screen_tab_history_item_trafficCount_imageView_type);
+                        final TextView tvSend = (TextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_upTotal);
+                        final TextView tvReceive = (TextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_downloadTotal);
+                        final TextView tvStartDate = (TextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_startDate);
+                        final TextView tvEndDate = (TextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_endDate);
+                        final String startDate = DateTimeUtils.getFriendlyDateString(new Date(event.getStartTime()));
+                        final String endDate = DateTimeUtils.getFriendlyDateString(new Date(event.getEndTime()));
+                        tvStartDate.setText(startDate);
+                        tvEndDate.setText(endDate);
+
+                        final HistoryTrafficCountEvent TrafficCountEvent = (HistoryTrafficCountEvent)event;
+                        //final String content = TrafficCountEvent.getContent();
+                        //final boolean bIncoming = TrafficCountEvent.getStatus() == SgsHistoryEvent.StatusType.Incoming;
+
+                        tvSend.setText(TrafficCountEvent.getTotalUpload());
+                        tvReceive.setText(TrafficCountEvent.getTotalUpload());
+                        switch(event.getStatus()){
+                            case Outgoing:
+                                ivTrafficCountType.setImageResource(R.drawable.call_outgoing_45);
+                                break;
+                            case Incoming:
+                                ivTrafficCountType.setImageResource(R.drawable.call_incoming_45);
+                                break;
+                            case Failed:
+                            case Missed:
+                                ivTrafficCountType.setImageResource(R.drawable.call_missed_45);
+                                break;
+                        }
+                        break;
 				}
 			}
 			

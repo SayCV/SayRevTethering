@@ -32,6 +32,8 @@ public class HistoryTrafficCountEvent extends SgsHistoryEvent {
 	
 	@Element(data=true, required=false)
 	protected String mContent;
+    protected String mTotalUpload;
+    protected String mTotalDownload;
 
     HistoryTrafficCountEvent(){
 		this(null, StatusType.Failed);
@@ -45,10 +47,15 @@ public class HistoryTrafficCountEvent extends SgsHistoryEvent {
 	public void setContent(String content){
 		this.mContent = content;
 	}
-	
-	public String getContent(){
-		return this.mContent;
-	}
+    public String getContent(){
+        return this.mContent;
+    }
+
+    public void setTotalUpload(String content) { this.mTotalUpload = content; }
+    public void setTotalDownload(String content) { this.mTotalDownload = content; }
+
+    public String getTotalUpload() { return this.mTotalUpload; }
+    public String getTotalDownload() { return this.mTotalDownload; }
 	
 	public static class HistoryEventTrafficCountIntelligentFilter implements SgsPredicate<SgsHistoryEvent> {
 		private final List<String> mRemoteParties = new ArrayList<String>();
