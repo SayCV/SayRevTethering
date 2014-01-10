@@ -114,6 +114,7 @@ public class TetheringRegistrationSession extends TetheringSession {
         long previousDownload;
         long previousUpload;
         long lastTimeChecked;
+        long [] trafficCount = new long[] {0, 0};
 
         //@Override
         public void run() {
@@ -135,7 +136,7 @@ public class TetheringRegistrationSession extends TetheringSession {
 
             while (!Thread.currentThread().isInterrupted()) {
                 // Check data count
-                long [] trafficCount = getDataTraffic(mTetherNetworkDevice);
+                trafficCount = getDataTraffic(mTetherNetworkDevice);
                 long currentTime = new Date().getTime();
                 float elapsedTime = (float) ((currentTime - this.lastTimeChecked) / 1000);
                 this.lastTimeChecked = currentTime;
@@ -178,7 +179,7 @@ public class TetheringRegistrationSession extends TetheringSession {
             /*Message message = Message.obtain();
             message.what = MainActivity.MESSAGE_TRAFFIC_END;
             MainActivity.currentInstance.viewUpdateHandler.sendMessage(message);*/
-            long [] trafficCount = getDataTraffic(mTetherNetworkDevice);
+            //long [] trafficCount = getDataTraffic(mTetherNetworkDevice);
             ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
                     new TrafficCountEventArgs(TrafficCountEventTypes.END,
                             trafficCount[0],
