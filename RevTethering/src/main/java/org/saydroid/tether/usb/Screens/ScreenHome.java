@@ -402,6 +402,7 @@ public class ScreenHome extends BaseScreen {
                 new ScreenHomeItem(R.drawable.about_48, "About", ScreenAbout.class),
                 new ScreenHomeItem(R.drawable.exit_48, "Exit/Quit", null),
                 new ScreenHomeItem(R.drawable.history_48, "History", ScreenTabHistory.class),
+                new ScreenHomeItem(R.drawable.loaded_hand_truck_48, "Manual", ScreenTabHistory.class),
                 // visible only if connected
                 //new ScreenHomeItem(R.drawable.stop_48, "Stop Tethering", null),
                 //new ScreenHomeItem(R.drawable.dialer_48, "Dialer", ScreenTabDialer.class),

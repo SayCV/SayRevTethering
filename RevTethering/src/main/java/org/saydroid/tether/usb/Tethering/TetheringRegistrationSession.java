@@ -120,6 +120,7 @@ public class TetheringRegistrationSession extends TetheringSession {
 
         //@Override
         public void run() {
+            sTrafficCounterThreadEndWithOnce = false;
             this.previousDownload = this.previousUpload = 0;
             this.firstTimeChecked = SgsDateTimeUtils.now();// new Date().getTime();
             this.lastTimeChecked = SgsDateTimeUtils.now();

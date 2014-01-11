@@ -56,6 +56,7 @@ public abstract class BaseScreen extends Activity implements IBaseScreen {
 	public static enum SCREEN_TYPE {
 		// Well-Known
 		ABOUT_T,
+        MANUAL_T,
 		AV_QUEUE_T,
 		CHAT_T,
 		CHAT_QUEUE_T,
