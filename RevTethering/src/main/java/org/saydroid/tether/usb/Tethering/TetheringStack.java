@@ -269,11 +269,11 @@ public class TetheringStack {
         return tetherStarted;
     }
 
-    public int setTetherableIfacesDisabled(String usbIf){
+    public int setTetheredIfacesDisabled(){
         int tetherStopped = -1;
         ConnectivityManager cm = SgsApplication.getConnectivityManager();
 
-        usbIf =  getTetheredIfaces(mUsbRegexs);
+        String usbIf =  getTetheredIfaces(mUsbRegexs);
         if (usbIf == null) {
             //TO DO : return with a pop up message
             //MainActivity.currentInstance.openNoUSBIfaceDialog();

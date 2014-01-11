@@ -199,7 +199,7 @@ implements ITetheringService {
 		if(mTetheringStack != null && (mTetheringStack.getState() == STACK_STATE.STARTING)){
             mTetheringStack.stop();
 		}
-        stopTether();
+        /*stopTether();*/
 		return false;
 	}
 
@@ -528,10 +528,9 @@ implements ITetheringService {
 
         if(mRegSession.getConnectionState() == ConnectionState.TERMINATED) { return true; }
         broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.UNREGISTRATION_INPROGRESS, (short)0, null));
-        String usbIface = mTetheringStack.getTetherableIfaces();
-
-        ((TetheringNetworkService) mTetheringNetworkService).setTetherableIfaces(usbIface);
-        mTetheringStack.setTetherableIfacesDisabled(usbIface);
+        /*String usbIface = mTetheringStack.getTetherableIfaces();
+        ((TetheringNetworkService) mTetheringNetworkService).setTetherableIfaces(usbIface);*/
+        mTetheringStack.setTetheredIfacesDisabled();
 
         if(((TetheringNetworkService)mTetheringNetworkService).setSystemUsbTetherEnabled(false) == false ) {
             message = "Unable to set sys.usb.config: mtp,adb";
