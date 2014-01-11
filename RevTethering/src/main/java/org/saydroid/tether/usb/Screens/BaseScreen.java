@@ -110,7 +110,7 @@ public abstract class BaseScreen extends Activity implements IBaseScreen {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+        setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT);
         mHandler = new Handler();
 	}
 
