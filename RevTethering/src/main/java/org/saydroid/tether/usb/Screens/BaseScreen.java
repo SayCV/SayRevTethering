@@ -28,10 +28,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -149,6 +151,34 @@ public abstract class BaseScreen extends Activity implements IBaseScreen {
 	public boolean createOptionsMenu(Menu menu) {
 		return false;
 	}
+
+    // setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT)
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+
+        //newConfig.orientation获得当前屏幕状态是横向或者竖向
+        //Configuration.ORIENTATION_PORTRAIT 表示竖向
+        //Configuration.ORIENTATION_LANDSCAPE 表示横屏
+        if(newConfig.orientation==Configuration.ORIENTATION_PORTRAIT){
+            String message = "Now Screen Changes to Portrait";
+            Log.d(TAG, message);
+            // Sending message
+            Message msg = new Message();
+            msg.obj = message;
+            ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
+            return ;
+        }
+        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE) {
+            String message = "Now Screen Changes to Landscape";
+            Log.d(TAG, message);
+            // Sending message
+            Message msg = new Message();
+            msg.obj = message;
+            ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
+            return ;
+        }
+        super.onConfigurationChanged(newConfig);
+    }
 
 	protected void addConfigurationListener(RadioButton radioButton) {
 		radioButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
