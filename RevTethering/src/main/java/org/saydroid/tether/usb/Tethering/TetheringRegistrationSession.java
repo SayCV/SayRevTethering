@@ -38,7 +38,7 @@ public class TetheringRegistrationSession extends TetheringSession {
     private static final String TAG = TetheringRegistrationSession.class.getCanonicalName();
 
     //private final TetheringRegistrationSession mSession;
-
+    private static boolean sTrafficCounterThreadEndWithOnce = false;
     private String mTetherNetworkDevice = "";
     private Thread mTrafficCounterThread = null;
 
@@ -111,6 +111,7 @@ public class TetheringRegistrationSession extends TetheringSession {
 
     class TrafficCounterThreadClass implements Runnable {
         private static final int INTERVAL = 2;  // Sample rate in seconds.
+
         long previousDownload;
         long previousUpload;
         String firstTimeChecked;
@@ -186,14 +187,17 @@ public class TetheringRegistrationSession extends TetheringSession {
             //Log.d(TAG, "Traffic Count Thread previousUpload = " + this.previousUpload);
             //Log.d(TAG, "Traffic Count Thread previousDownload = " + this.previousDownload);
             //Log.d(TAG, "Traffic Count Tx End date = " + this.firstTimeChecked);
-            ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
-                    new TrafficCountEventArgs(TrafficCountEventTypes.END,
-                            this.previousUpload,
-                            this.previousDownload,
-                            0,
-                            0),
-                    this.firstTimeChecked//SgsDateTimeUtils.now()
-            );
+            if(sTrafficCounterThreadEndWithOnce == false) {
+                ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
+                        new TrafficCountEventArgs(TrafficCountEventTypes.END,
+                                this.previousUpload,
+                                this.previousDownload,
+                                0,
+                                0),
+                        this.firstTimeChecked//SgsDateTimeUtils.now()
+                );
+                sTrafficCounterThreadEndWithOnce = true;
+            }
         }
     }
 }
