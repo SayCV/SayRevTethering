@@ -42,7 +42,7 @@ public class ScreenManual extends BaseScreen {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.screen_manual);
 
-        ConnectivityManager
+        
 
 	}
 

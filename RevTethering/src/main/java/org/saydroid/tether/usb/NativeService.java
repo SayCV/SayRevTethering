@@ -158,8 +158,9 @@ public class NativeService extends SgsNativeService {
                             event.setTotalDownload(Long.toString(args.getTotalDownload()));
                             event.setStartTime(SgsDateTimeUtils.parseDate(dateString).getTime());
                             mEngine.getHistoryService().addEvent(event);
+                            break;
                         default:
-                            Log.d(TAG, "Traffic Count thread has disposed.");
+                            Log.d(TAG, "Invalid event args.getEventType().");
                             break;
                     }
                 }

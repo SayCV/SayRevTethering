@@ -189,6 +189,7 @@ public class TetheringRegistrationSession extends TetheringSession {
             //Log.d(TAG, "Traffic Count Thread previousDownload = " + this.previousDownload);
             //Log.d(TAG, "Traffic Count Tx End date = " + this.firstTimeChecked);
             if(sTrafficCounterThreadEndWithOnce == false) {
+                sTrafficCounterThreadEndWithOnce = true;
                 ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
                         new TrafficCountEventArgs(TrafficCountEventTypes.END,
                                 this.previousUpload,
@@ -197,7 +198,6 @@ public class TetheringRegistrationSession extends TetheringSession {
                                 0),
                         this.firstTimeChecked//SgsDateTimeUtils.now()
                 );
-                sTrafficCounterThreadEndWithOnce = true;
             }
         }
     }
