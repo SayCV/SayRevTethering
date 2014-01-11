@@ -19,10 +19,13 @@
 package org.saydroid.tether.usb.Screens;
 
 
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -31,6 +34,7 @@ import org.saydroid.sgs.SgsApplication;
 import org.saydroid.sgs.services.ISgsConfigurationService;
 import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsRingToneUtils;
+import org.saydroid.tether.usb.Engine;
 import org.saydroid.tether.usb.R;
 
 import java.util.List;
@@ -109,8 +113,20 @@ public class ScreenGeneral  extends BaseScreen {
         super.addConfigurationListener(mCbDisableUpdateCheck);
         super.addConfigurationListener(mCbDisableWakeLock);
         super.addConfigurationListener(mCbDisableScreenOrientation);
+
+        mCbDisableScreenOrientation.setOnCheckedChangeListener(rbLocal_OnCheckedChangeListener);
 	}
-	
+
+    private CompoundButton.OnCheckedChangeListener rbLocal_OnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener(){
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if(mCbDisableScreenOrientation.isChecked() == false) {
+                Engine.getInstance().getMainActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+            } else {
+                Engine.getInstance().getMainActivity().setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT);
+            }
+        }
+    };
+
 	protected void onPause() {
 		if(super.mComputeConfiguration){
 
