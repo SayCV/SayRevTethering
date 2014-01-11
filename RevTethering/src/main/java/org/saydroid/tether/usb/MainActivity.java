@@ -21,8 +21,10 @@ package org.saydroid.tether.usb;
 import android.app.Activity;
 import android.app.ActivityGroup;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -39,6 +41,7 @@ import android.view.Window;
 
 import org.saydroid.logger.Log;
 import org.saydroid.logger.LogConfiguration;
+import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsStringUtils;
 
 
@@ -77,6 +80,9 @@ public class MainActivity extends ActivityGroup {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(((Engine)Engine.getInstance()).getConfigurationService().getBoolean(SgsConfigurationEntry.GENERAL_DSO,SgsConfigurationEntry.DEFAULT_GENERAL_DSO)) {
+            setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT);
+        }
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
@@ -98,6 +104,28 @@ public class MainActivity extends ActivityGroup {
         } else if (mScreenService != null) {
             mScreenService.show(ScreenHome.class);
         }
+    }
+
+    // setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT)
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if(newConfig.orientation==Configuration.ORIENTATION_PORTRAIT){
+            String message = "Now Screen Changes to Portrait";
+            Log.d(TAG, message);
+            // Sending message
+            Message msg = new Message();
+            msg.obj = message;
+            //((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
+        }
+        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE) {
+            String message = "Now Screen Changes to Landscape";
+            Log.d(TAG, message);
+            // Sending message
+            Message msg = new Message();
+            msg.obj = message;
+            //((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
+        }
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override

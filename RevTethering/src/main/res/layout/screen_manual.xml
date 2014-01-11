@@ -17,16 +17,42 @@
         android:background="@drawable/grad_dark">
 
     </TextView>
+
     <ListView
         android:id="@+id/screen_manual_listView"
         android:layout_width="fill_parent"
         android:scrollbars="vertical"
         android:smoothScrollbar="true"
         android:isScrollContainer="true"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:padding="5px"
         android:layout_gravity="fill_vertical|fill_horizontal"
-        android:layout_weight="4">
+        android:layout_weight="2">
     </ListView>
+
+    <CheckBox
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/screen_manual_listView"
+        android:id="@+id/screen_manual_checkBox_enable_usbTetherConnect"
+        android:text="Enable USB Tether Connect"
+        android:layout_width="fill_parent">
+
+        </CheckBox>
+    <CheckBox
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/screen_manual_checkBox_enable_usbTetherConnect"
+        android:id="@+id/screen_manual_checkBox_enable_mobileDataAndFaked"
+        android:text="Enable MobileData and Faked"
+        android:layout_width="fill_parent">
+
+    </CheckBox>
+    <CheckBox
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/screen_manual_checkBox_enable_mobileDataAndFaked"
+        android:id="@+id/screen_manual_checkBox_autoConfigUsbTetherIP"
+        android:text="Auto Config USB Tether IP"
+        android:layout_width="fill_parent">
+
+    </CheckBox>
 
 </LinearLayout>

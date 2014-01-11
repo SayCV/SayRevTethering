@@ -21,6 +21,8 @@ package org.saydroid.tether.usb.Screens;
 import org.saydroid.tether.usb.SRTDroid;
 import org.saydroid.tether.usb.R;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,9 +41,16 @@ public class ScreenManual extends BaseScreen {
         setContentView(R.layout.screen_manual);
                 
         
-        TextView textView = (TextView)this.findViewById(R.id.screen_about_textView_copyright);
-        String copyright = this.getString(R.string.copyright);
-		textView.setText(String.format(copyright,
-				SRTDroid.getVersionName(), this.getString(R.string.srt_revision)));
+
 	}
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

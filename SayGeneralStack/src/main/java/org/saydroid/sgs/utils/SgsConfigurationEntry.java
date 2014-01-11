@@ -54,6 +54,7 @@ public class SgsConfigurationEntry {
     public static final String GENERAL_VOC = "GENERAL_VOC."+ TAG ;
     public static final String GENERAL_DUC = "GENERAL_DUC."+ TAG ;
     public static final String GENERAL_DWL = "GENERAL_DWL."+ TAG ;
+    public static final String GENERAL_DSO = "GENERAL_DSO."+ TAG ;
 
     // Identity
 	public static final String IDENTITY_DISPLAY_NAME = "IDENTITY_DISPLAY_NAME." + TAG;
@@ -165,6 +166,7 @@ public class SgsConfigurationEntry {
     public static final boolean DEFAULT_GENERAL_VOC = true;
     public static final boolean DEFAULT_GENERAL_DUC = false;
     public static final boolean DEFAULT_GENERAL_DWL = false;
+    public static final boolean DEFAULT_GENERAL_DSO = true;
 	
 	//	Identity
 	public static final String DEFAULT_IDENTITY_DISPLAY_NAME = "sayDroid";

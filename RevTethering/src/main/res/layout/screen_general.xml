@@ -69,7 +69,7 @@
             <CheckBox
                 android:layout_height="wrap_content"
                 android:text="Disable Update-Check"
-                android:defaultValue="true"
+                android:defaultValue="false"
                 android:id="@+id/screen_general_checkBox_DisableUpdateCheck"
                 android:layout_below="@+id/screen_general_textView_Miscellaneous"
                 android:layout_width="fill_parent">
@@ -77,9 +77,17 @@
             <CheckBox
                 android:layout_height="wrap_content"
                 android:text="Disable Wake-Lock"
-                android:defaultValue="true"
+                android:defaultValue="false"
                 android:id="@+id/screen_general_checkBox_DisableWakeLock"
                 android:layout_below="@+id/screen_general_checkBox_DisableUpdateCheck"
+                android:layout_width="fill_parent">
+            </CheckBox>
+            <CheckBox
+                android:layout_height="wrap_content"
+                android:text="Disable Screen Orientation"
+                android:defaultValue="true"
+                android:id="@+id/screen_general_checkBox_DisableScreenOrientation"
+                android:layout_below="@+id/screen_general_checkBox_DisableWakeLock"
                 android:layout_width="fill_parent">
             </CheckBox>
 

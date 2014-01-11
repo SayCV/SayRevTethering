@@ -21,6 +21,7 @@ package org.saydroid.tether.usb.Screens;
 import org.saydroid.tether.usb.SRTDroid;
 import org.saydroid.tether.usb.R;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;

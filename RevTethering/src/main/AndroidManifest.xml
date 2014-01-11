@@ -15,11 +15,10 @@
         <activity
             android:name="org.saydroid.tether.usb.MainActivity"
             android:label="@string/app_name"
-            android:configChanges="orientation|keyboardHidden|keyboard"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
             android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -30,6 +29,7 @@
         <activity android:name=".Screens.ScreenGeneral"></activity>
         <activity android:name=".Screens.ScreenNetwork"></activity>
         <activity android:name=".Screens.ScreenTabHistory"></activity>
+        <activity android:name=".Screens.ScreenManual"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -42,6 +42,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -335,6 +336,11 @@ public class ScreenHome extends BaseScreen {
         registerReceiver(mTetheringBroadCastRecv, intentFilter);
     }
 
+    /*@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }*/
+
     @Override
     protected void onDestroy() {
         if(mTetheringBroadCastRecv != null){
@@ -393,7 +399,7 @@ public class ScreenHome extends BaseScreen {
      * ScreenHomeAdapter
      */
     static class ScreenHomeAdapter extends BaseAdapter{
-        static final int ALWAYS_VISIBLE_ITEMS_COUNT = 5;
+        static final int ALWAYS_VISIBLE_ITEMS_COUNT = 6;
         static final ScreenHomeItem[] sItems =  new ScreenHomeItem[]{
                 // always visible
                 //new ScreenHomeItem(R.drawable.start_48, "Start Tethering", null),
@@ -402,7 +408,7 @@ public class ScreenHome extends BaseScreen {
                 new ScreenHomeItem(R.drawable.about_48, "About", ScreenAbout.class),
                 new ScreenHomeItem(R.drawable.exit_48, "Exit/Quit", null),
                 new ScreenHomeItem(R.drawable.history_48, "History", ScreenTabHistory.class),
-                new ScreenHomeItem(R.drawable.loaded_hand_truck_48, "Manual", ScreenTabHistory.class),
+                new ScreenHomeItem(R.drawable.loaded_hand_truck_48, "Manual", ScreenManual.class),
                 // visible only if connected
                 //new ScreenHomeItem(R.drawable.stop_48, "Stop Tethering", null),
                 //new ScreenHomeItem(R.drawable.dialer_48, "Dialer", ScreenTabDialer.class),

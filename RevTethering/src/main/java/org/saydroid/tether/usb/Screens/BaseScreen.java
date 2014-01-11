@@ -18,6 +18,7 @@
 
 package org.saydroid.tether.usb.Screens;
 
+import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.tether.usb.CustomDialog;
 import org.saydroid.tether.usb.Engine;
 import org.saydroid.tether.usb.R;
@@ -111,7 +112,7 @@ public abstract class BaseScreen extends Activity implements IBaseScreen {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT);
+
         mHandler = new Handler();
 	}
 
@@ -152,34 +153,6 @@ public abstract class BaseScreen extends Activity implements IBaseScreen {
 	public boolean createOptionsMenu(Menu menu) {
 		return false;
 	}
-
-    // setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT)
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-
-        //newConfig.orientation获得当前屏幕状态是横向或者竖向
-        //Configuration.ORIENTATION_PORTRAIT 表示竖向
-        //Configuration.ORIENTATION_LANDSCAPE 表示横屏
-        if(newConfig.orientation==Configuration.ORIENTATION_PORTRAIT){
-            String message = "Now Screen Changes to Portrait";
-            Log.d(TAG, message);
-            // Sending message
-            Message msg = new Message();
-            msg.obj = message;
-            ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
-            return ;
-        }
-        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE) {
-            String message = "Now Screen Changes to Landscape";
-            Log.d(TAG, message);
-            // Sending message
-            Message msg = new Message();
-            msg.obj = message;
-            ((Engine)Engine.getInstance()).displayMessageHandler.sendMessage(msg);
-            return ;
-        }
-        super.onConfigurationChanged(newConfig);
-    }
 
 	protected void addConfigurationListener(RadioButton radioButton) {
 		radioButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {

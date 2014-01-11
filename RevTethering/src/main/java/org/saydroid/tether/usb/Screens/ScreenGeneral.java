@@ -42,6 +42,7 @@ public class ScreenGeneral  extends BaseScreen {
 	private CheckBox mCbVibrateOnConnect;
 	private CheckBox mCbDisableUpdateCheck;
 	private CheckBox mCbDisableWakeLock;
+    private CheckBox mCbDisableScreenOrientation;
 	
 	private final ISgsConfigurationService mConfigurationService;
 	
@@ -72,10 +73,12 @@ public class ScreenGeneral  extends BaseScreen {
         mCbVibrateOnConnect = (CheckBox)this.findViewById(R.id.screen_general_checkBox_VibrateOnConnected);
         mCbDisableUpdateCheck = (CheckBox)this.findViewById(R.id.screen_general_checkBox_DisableUpdateCheck);
         mCbDisableWakeLock = (CheckBox)this.findViewById(R.id.screen_general_checkBox_DisableWakeLock);
+        mCbDisableScreenOrientation = (CheckBox)this.findViewById(R.id.screen_general_checkBox_DisableScreenOrientation);
 
         mCbVibrateOnConnect.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.GENERAL_VOC,SgsConfigurationEntry.DEFAULT_GENERAL_VOC));
         mCbDisableUpdateCheck.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.GENERAL_DUC,SgsConfigurationEntry.DEFAULT_GENERAL_DUC));
         mCbDisableWakeLock.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.GENERAL_DWL,SgsConfigurationEntry.DEFAULT_GENERAL_DWL));
+        mCbDisableScreenOrientation.setChecked(mConfigurationService.getBoolean(SgsConfigurationEntry.GENERAL_DSO,SgsConfigurationEntry.DEFAULT_GENERAL_DSO));
 
         List<String> lsSpinnerNotificationRingtoneItems = SgsRingToneUtils.getInstance().getRingtoneTitleList(
                 RingtoneManager.TYPE_NOTIFICATION);
@@ -105,6 +108,7 @@ public class ScreenGeneral  extends BaseScreen {
         super.addConfigurationListener(mCbVibrateOnConnect);
         super.addConfigurationListener(mCbDisableUpdateCheck);
         super.addConfigurationListener(mCbDisableWakeLock);
+        super.addConfigurationListener(mCbDisableScreenOrientation);
 	}
 	
 	protected void onPause() {
@@ -113,6 +117,7 @@ public class ScreenGeneral  extends BaseScreen {
 			mConfigurationService.putBoolean(SgsConfigurationEntry.GENERAL_VOC, mCbVibrateOnConnect.isChecked());
 			mConfigurationService.putBoolean(SgsConfigurationEntry.GENERAL_DUC, mCbDisableUpdateCheck.isChecked());
 			mConfigurationService.putBoolean(SgsConfigurationEntry.GENERAL_DWL, mCbDisableWakeLock.isChecked());
+            mConfigurationService.putBoolean(SgsConfigurationEntry.GENERAL_DSO, mCbDisableScreenOrientation.isChecked());
 			// profile should be moved to another screen (e.g. Media)
 			//mConfigurationService.putString(SgsConfigurationEntry.MEDIA_PROFILE, sProfiles[mSpProfile.getSelectedItemPosition()].mValue.toString());
             mConfigurationService.putString(SgsConfigurationEntry.NETWORK_NOTIFICATION_RING_TONE,
