@@ -18,10 +18,12 @@
 
 package org.saydroid.tether.usb.Screens;
 
+import org.saydroid.tether.usb.CustomExtends.NetworkLinkStatus;
 import org.saydroid.tether.usb.SRTDroid;
 import org.saydroid.tether.usb.R;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -39,8 +41,8 @@ public class ScreenManual extends BaseScreen {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.screen_manual);
-                
-        
+
+        ConnectivityManager
 
 	}
 
@@ -52,5 +54,16 @@ public class ScreenManual extends BaseScreen {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    static class NetworkLinkStatusItem {
+        private final int mDrawableId;
+        private final NetworkLinkStatus mStatus;
+        //private final String mText;
+
+        private NetworkLinkStatusItem(int drawableId, NetworkLinkStatus status) {
+            mDrawableId = drawableId;
+            mStatus = status;
+        }
     }
 }
