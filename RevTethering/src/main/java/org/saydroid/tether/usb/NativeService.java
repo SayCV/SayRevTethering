@@ -157,7 +157,10 @@ public class NativeService extends SgsNativeService {
                             event.setTotalUpload(Long.toString(args.getTotalUpload()));
                             event.setTotalDownload(Long.toString(args.getTotalDownload()));
                             event.setStartTime(SgsDateTimeUtils.parseDate(dateString).getTime());
-                            if(mEngine.getHistoryService().getEvents().size() != 0 && mEngine.getHistoryService().getEvents().get(0).compareTo(event) == 0 ) { break; }
+                            if(mEngine.getHistoryService().getEvents().size() != 0 && mEngine.getHistoryService().getEvents().get(0).compareTo(event) == 0 ) {
+                                Log.d(TAG, "Found Redundant Traffic Count Event, will avoid this");
+                                break;
+                            }
                             mEngine.getHistoryService().addEvent(event);
                             break;
                         default:

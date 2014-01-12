@@ -48,7 +48,7 @@
     <CheckBox
         android:layout_height="wrap_content"
         android:layout_below="@+id/screen_manual_checkBox_enable_mobileDataAndFaked"
-        android:id="@+id/screen_manual_checkBox_autoConfigUsbTetherIP"
+        android:id="@+id/screen_manual_checkBox_enable_autoConfigUsbTetherIP"
         android:text="Auto Config USB Tether IP"
         android:layout_width="fill_parent">
 

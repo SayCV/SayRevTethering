@@ -86,7 +86,12 @@ public class SgsConfigurationEntry {
     public static final String NETWORK_GATE_WAY = "NETWORK_GATE_WAY." + TAG;
     public static final String NETWORK_PREFERRED_DNS = "NETWORK_PREFERRED_DNS." + TAG;
     public static final String NETWORK_SECONDARY_DNS = "NETWORK_SECONDARY_DNS." + TAG;
-	
+
+    // Manual
+    public static final String MANUAL_ENABLE_USB_TETHER_CONNECT = "MANUAL_ENABLE_USB_TETHER_CONNECT." + TAG;
+    public static final String MANUAL_ENABLE_MOBILE_DATA_AND_FAKED = "MANUAL_ENABLE_MOBILE_DATA_AND_FAKED." + TAG;
+    public static final String MANUAL_ENABLE_AUTO_CONFIG_USB_TETHER_IP = "MANUAL_ENABLE_AUTO_CONFIG_USB_TETHER_IP." + TAG;
+
 	// NAT Traversal
 	public static final String NATT_HACK_AOR = "NATT_HACK_AOR." + TAG;
 	public static final String NATT_HACK_AOR_TIMEOUT = "NATT_HACK_AOR_TIMEOUT." + TAG;
@@ -200,7 +205,11 @@ public class SgsConfigurationEntry {
     public static final String DEFAULT_NETWORK_GATE_WAY_WIN7 = "192.168.137.1";
     public static final String DEFAULT_NETWORK_PREFERRED_DNS = "8.8.8.4";
     public static final String DEFAULT_NETWORK_SECONDARY_DNS = "8.8.8.8";
-	
+
+    // Manual
+    public static final boolean DEFAULT_MANUAL_ENABLE_USB_TETHER_CONNECT = false;
+    public static final boolean DEFAULT_MANUAL_ENABLE_MOBILE_DATA_AND_FAKED = false;
+    public static final boolean DEFAULT_MANUAL_ENABLE_AUTO_CONFIG_USB_TETHER_IP = false;
 	
 	// NAT Traversal
 	public static final int DEFAULT_NATT_HACK_AOR_TIMEOUT = 2000;

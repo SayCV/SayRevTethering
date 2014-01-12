@@ -16,12 +16,14 @@
             android:layout_width="wrap_content"
             android:gravity="left"
             android:textColor="@color/color_white"
+            android:id="@+id/screen_manual_item_link_textView_linkName"
             android:text="Link0">
         </TextView>
         <LinearLayout
             android:orientation="vertical"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:id="@+id/screen_manual_item_link_linearLayout_linkContent"
             android:layout_marginLeft="25px">
             <LinearLayout
                 android:orientation="horizontal"
