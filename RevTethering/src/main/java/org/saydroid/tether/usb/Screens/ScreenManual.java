@@ -243,9 +243,11 @@ public class ScreenManual extends BaseScreen {
             ((TextView) view.findViewById(R.id.screen_presence_status_item_textView))
                     .setText(item.mText);*/
             if(position == NetworkLinkStatusItem.ITEM_TetheredFaceLink_POS){
-                if(SgsStringUtils.isNullOrEmpty(((TetheringService) mBaseScreen.mTetheringService).getTetheringStack().getTetheredIfaces())) {
+                if(((TetheringService) mBaseScreen.mTetheringService).getTetheringStack() == null ||
+                        SgsStringUtils.isNullOrEmpty(((TetheringService) mBaseScreen.mTetheringService).getTetheringStack().getTetheredIfaces())) {
                     ((TextView) view.findViewById(R.id.screen_manual_item_link_textView_linkName)).setText("TetheredIFace: Device Not Found");
-                    ((LinearLayout) view.findViewById(R.id.screen_manual_item_link_linearLayout_linkContent)).setVisibility(View.INVISIBLE);
+                    // Assuming using View.INVISIBLE constant, which hides a view but keeping the space it used. but use View.GONE instead.
+                    ((LinearLayout) view.findViewById(R.id.screen_manual_item_link_linearLayout_linkContent)).setVisibility(View.GONE);
                 }
             } else {
                 ((TextView) view.findViewById(R.id.screen_manual_item_link_textView_linkName)).setText("rmnet0");
