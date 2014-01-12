@@ -19,10 +19,13 @@
 package org.saydroid.tether.usb.Screens;
 
 import org.saydroid.logger.Log;
+import org.saydroid.sgs.events.SgsEventArgs;
+import org.saydroid.sgs.events.SgsRegistrationEventArgs;
 import org.saydroid.sgs.services.ISgsConfigurationService;
 import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsStringUtils;
 import org.saydroid.tether.usb.CustomExtends.NetworkLinkStatus;
+import org.saydroid.tether.usb.Events.TrafficCountEventArgs;
 import org.saydroid.tether.usb.SRTDroid;
 import org.saydroid.tether.usb.R;
 import org.saydroid.tether.usb.Services.ITetheringNetworkService;
@@ -30,8 +33,10 @@ import org.saydroid.tether.usb.Services.ITetheringService;
 import org.saydroid.tether.usb.Services.Impl.TetheringNetworkService;
 import org.saydroid.tether.usb.Services.Impl.TetheringService;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -66,6 +71,8 @@ public class ScreenManual extends BaseScreen {
     private final ITetheringService mTetheringService;
     private final ITetheringNetworkService mTetheringNetworkService;
     private final ISgsConfigurationService mConfigurationService;
+
+    private BroadcastReceiver mLinkUpdateBroadCastRecv;
 
     public ScreenManual() {
         super(SCREEN_TYPE.MANUAL_T, TAG);
@@ -106,6 +113,32 @@ public class ScreenManual extends BaseScreen {
         super.addConfigurationListener(mCbEnableAutoConfigUsbTetherIP);
 
         mCbEnableUsbTetherConnect.setOnCheckedChangeListener(rbLocal_OnCheckedChangeListener);
+
+        mLinkUpdateBroadCastRecv = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                final String action = intent.getAction();
+
+                // Registration Event
+                if(SgsRegistrationEventArgs.ACTION_REGISTRATION_EVENT.equals(action)){
+                    SgsRegistrationEventArgs args = intent.getParcelableExtra(SgsEventArgs.EXTRA_EMBEDDED);
+                    if(args == null){
+                        Log.e(TAG, "Invalid event args");
+                        return;
+                    }
+                    switch(args.getEventType()){
+                        default:
+                            ((ScreenNetworkLinkAdapter)mListView.getAdapter()).refresh();
+                            break;
+                    }
+                }
+            }
+        };
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SgsRegistrationEventArgs.ACTION_REGISTRATION_EVENT);
+        intentFilter.addAction(TrafficCountEventArgs.ACTION_TRAFFIC_COUNT_EVENT);
+        registerReceiver(mLinkUpdateBroadCastRecv, intentFilter);
+        setLinkUpdateThreadClassEnabled(true);
     }
 
     private CompoundButton.OnCheckedChangeListener rbLocal_OnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener(){
@@ -115,6 +148,17 @@ public class ScreenManual extends BaseScreen {
             }
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        setLinkUpdateThreadClassEnabled(false);
+        if(mLinkUpdateBroadCastRecv != null){
+            unregisterReceiver(mLinkUpdateBroadCastRecv);
+            mLinkUpdateBroadCastRecv = null;
+        }
+
+        super.onDestroy();
+    }
 
     protected void onPause() {
         if(super.mComputeConfiguration){
@@ -185,8 +229,8 @@ public class ScreenManual extends BaseScreen {
     }
     
     static class NetworkLinkStatusItem {
-        static final int ITEM_TetheredFaceLink_POS = 0;
-        static final int ITEM_MobileDataLink_POS = 1;
+        static final int ITEM_TETHERED_FACE_LINK_POS = 0;
+        static final int ITEM_MOBILE_DATA_LINK_POS = 1;
         private final int mDrawableId;
         private final NetworkLinkStatus mStatus;
         //private final String mText;
@@ -243,7 +287,7 @@ public class ScreenManual extends BaseScreen {
                     .setImageResource(item.mDrawableId);
             ((TextView) view.findViewById(R.id.screen_presence_status_item_textView))
                     .setText(item.mText);*/
-            if(position == NetworkLinkStatusItem.ITEM_TetheredFaceLink_POS){
+            if(position == NetworkLinkStatusItem.ITEM_TETHERED_FACE_LINK_POS){
                 String tetheredIfaces = "TetheredIFace: Device Not Found";
                 boolean tethered =false;
                 if(((TetheringService) mBaseScreen.mTetheringService).getTetheringStack() != null) {
@@ -256,15 +300,19 @@ public class ScreenManual extends BaseScreen {
                 }
                 if(tethered) {
                     ((TextView) view.findViewById(R.id.screen_manual_item_link_textView_linkName)).setText(tetheredIfaces);
+                    ((TextView) view.findViewById(R.id.screen_manual_item_link_textView_linkEncap)).setText("Ethernet");
+                    ((TextView) view.findViewById(R.id.screen_manual_item_link_textView_linkEncap)).setText("Ethernet");
                     // Assuming using View.INVISIBLE constant, which hides a view but keeping the space it used. but use View.GONE instead.
                     ((LinearLayout) view.findViewById(R.id.screen_manual_item_link_linearLayout_linkContent)).setVisibility(View.VISIBLE);
                 } else {
                     ((TextView) view.findViewById(R.id.screen_manual_item_link_textView_linkName)).setText(tetheredIfaces);
                     ((LinearLayout) view.findViewById(R.id.screen_manual_item_link_linearLayout_linkContent)).setVisibility(View.GONE);
                 }
-            } else {
+            } else if(position == NetworkLinkStatusItem.ITEM_MOBILE_DATA_LINK_POS){
                 ((TextView) view.findViewById(R.id.screen_manual_item_link_textView_linkName)).setText("rmnet0");
                 ((LinearLayout) view.findViewById(R.id.screen_manual_item_link_linearLayout_linkContent)).setVisibility(View.VISIBLE);
+            } else {
+                Log.d(TAG, "Error Screen Manual List View Item Position.");
             }
 
             return view;

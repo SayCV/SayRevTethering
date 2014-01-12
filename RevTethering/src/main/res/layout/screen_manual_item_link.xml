@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:id="@+id/screen_manual_item_link_linearLayout_linkContent"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:layout_marginLeft="25dp"
             android:weightSum="0"
             android:layout_weight="0">
@@ -34,37 +34,37 @@
                 android:layout_width="wrap_content">
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
-                    android:text="Link encap: ">
+                    android:text="Link encap: "
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
                     android:id="@+id/screen_manual_item_link_textView_linkEncap"
-                    android:text="Ethernet">
+                    android:text="Ethernet"
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
-                    android:text="HWaddr: ">
+                    android:text="HWaddr: "
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
                     android:id="@+id/screen_manual_item_link_textView_hwAddr"
-                    android:text="AB:CD:EF:GH:IJ:KL">
+                    android:text="AB:CD:EF:GH:IJ:KL"
+                    android:paddingRight="5dp">
                 </TextView>
             </LinearLayout>
 
@@ -74,20 +74,20 @@
                 android:layout_width="wrap_content">
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
-                    android:text="inet addr: ">
+                    android:text="inet addr: "
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
                     android:id="@+id/screen_manual_item_link_textView_inetAddr"
-                    android:text="192.168.100.252">
+                    android:text="192.168.100.252"
+                    android:paddingRight="5dp">
                 </TextView>
             </LinearLayout>
 
@@ -97,20 +97,20 @@
                 android:layout_width="wrap_content">
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
-                    android:text="Bcast: ">
+                    android:text="Bcast: "
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
                     android:id="@+id/screen_manual_item_link_textView_Bcast"
-                    android:text="255.255.255.255">
+                    android:text="255.255.255.255"
+                    android:paddingRight="5dp">
                 </TextView>
             </LinearLayout>
 
@@ -120,20 +120,20 @@
                 android:layout_width="wrap_content">
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
-                    android:text="Mask: ">
+                    android:text="Mask: "
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
                     android:id="@+id/screen_manual_item_link_textView_Mask"
-                    android:text="255.255.255.0">
+                    android:text="255.255.255.0"
+                    android:paddingRight="5dp">
                 </TextView>
             </LinearLayout>
 
@@ -143,45 +143,45 @@
                 android:layout_width="wrap_content">
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
-                    android:text="UP BROADCAST MULTICAST">
+                    android:text="UP BROADCAST MULTICAST"
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
-                    android:text="MTU: ">
+                    android:text="MTU: "
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
                     android:id="@+id/screen_manual_item_link_textView_mtu"
-                    android:text="0">
+                    android:text="0"
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
-                    android:text="Metric: ">
+                    android:text="Metric: "
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
                     android:id="@+id/screen_manual_item_link_textView_metric"
-                    android:text="1">
+                    android:text="1"
+                    android:paddingRight="5dp">
                 </TextView>
             </LinearLayout>
 
@@ -195,20 +195,20 @@
                     android:layout_width="wrap_content">
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
-                        android:text="RX Packets: ">
+                        android:text="RX Packets: "
+                        android:paddingRight="5dp">
                     </TextView>
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
                         android:id="@+id/screen_manual_item_link_textView_rxPackets"
-                        android:text="0">
+                        android:text="0"
+                        android:paddingRight="5dp">
                     </TextView>
                 </LinearLayout>
                 <LinearLayout
@@ -217,20 +217,20 @@
                     android:layout_width="wrap_content">
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
-                        android:text="errors: ">
+                        android:text="errors: "
+                        android:paddingRight="5dp">
                     </TextView>
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
                         android:id="@+id/screen_manual_item_link_textView_rxErrors"
-                        android:text="0">
+                        android:text="0"
+                        android:paddingRight="5dp">
                     </TextView>
                 </LinearLayout>
                 <LinearLayout
@@ -239,20 +239,20 @@
                     android:layout_width="wrap_content">
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
-                        android:text="dropped: ">
+                        android:text="dropped: "
+                        android:paddingRight="5dp">
                     </TextView>
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
                         android:id="@+id/screen_manual_item_link_textView_rxDropped"
-                        android:text="0">
+                        android:text="0"
+                        android:paddingRight="5dp">
                     </TextView>
                 </LinearLayout>
                 <LinearLayout
@@ -261,20 +261,20 @@
                     android:layout_width="wrap_content">
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
-                        android:text="overruns: ">
+                        android:text="overruns: "
+                        android:paddingRight="5dp">
                     </TextView>
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
                         android:id="@+id/screen_manual_item_link_textView_rxOverruns"
-                        android:text="0">
+                        android:text="0"
+                        android:paddingRight="5dp">
                     </TextView>
                 </LinearLayout>
                 <LinearLayout
@@ -283,20 +283,20 @@
                     android:layout_width="wrap_content">
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
-                        android:text="frame: ">
+                        android:text="frame: "
+                        android:paddingRight="5dp">
                     </TextView>
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
                         android:id="@+id/screen_manual_item_link_textView_rxFrame"
-                        android:text="0">
+                        android:text="0"
+                        android:paddingRight="5dp">
                     </TextView>
                 </LinearLayout>
             </LinearLayout>
@@ -311,20 +311,20 @@
                     android:layout_width="wrap_content">
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
-                        android:text="TX Packets: ">
+                        android:text="TX Packets: "
+                        android:paddingRight="5dp">
                     </TextView>
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
                         android:id="@+id/screen_manual_item_link_textView_txPackets"
-                        android:text="0">
+                        android:text="0"
+                        android:paddingRight="5dp">
                     </TextView>
                 </LinearLayout>
                 <LinearLayout
@@ -333,20 +333,20 @@
                     android:layout_width="wrap_content">
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
-                        android:text="errors: ">
+                        android:text="errors: "
+                        android:paddingRight="5dp">
                     </TextView>
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
                         android:id="@+id/screen_manual_item_link_textView_txErrors"
-                        android:text="0">
+                        android:text="0"
+                        android:paddingRight="5dp">
                     </TextView>
                 </LinearLayout>
                 <LinearLayout
@@ -355,20 +355,20 @@
                     android:layout_width="wrap_content">
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
-                        android:text="dropped: ">
+                        android:text="dropped: "
+                        android:paddingRight="5dp">
                     </TextView>
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
                         android:id="@+id/screen_manual_item_link_textView_txDropped"
-                        android:text="0">
+                        android:text="0"
+                        android:paddingRight="5dp">
                     </TextView>
                 </LinearLayout>
                 <LinearLayout
@@ -377,20 +377,20 @@
                     android:layout_width="wrap_content">
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
-                        android:text="overruns: ">
+                        android:text="overruns: "
+                        android:paddingRight="5dp">
                     </TextView>
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
                         android:id="@+id/screen_manual_item_link_textView_txOverruns"
-                        android:text="0">
+                        android:text="0"
+                        android:paddingRight="5dp">
                     </TextView>
                 </LinearLayout>
                 <LinearLayout
@@ -399,20 +399,20 @@
                     android:layout_width="wrap_content">
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
-                        android:text="carrier: ">
+                        android:text="carrier: "
+                        android:paddingRight="5dp">
                     </TextView>
                     <TextView
                         android:layout_height="wrap_content"
-                        android:padding="5px"
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:textColor="@color/color_white"
                         android:id="@+id/screen_manual_item_link_textView_txFrame"
-                        android:text="0">
+                        android:text="0"
+                        android:paddingRight="5dp">
                     </TextView>
                 </LinearLayout>
             </LinearLayout>
@@ -423,37 +423,37 @@
                 android:layout_width="wrap_content">
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
-                    android:text="collisions: ">
+                    android:text="collisions: "
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
                     android:id="@+id/screen_manual_item_link_textView_collisions"
-                    android:text="0">
+                    android:text="0"
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
-                    android:text="txqueuelen: ">
+                    android:text="txqueuelen: "
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
                     android:id="@+id/screen_manual_item_link_textView_txqueuelen"
-                    android:text="0">
+                    android:text="0"
+                    android:paddingRight="5dp">
                 </TextView>
             </LinearLayout>
 
@@ -463,37 +463,37 @@
                 android:layout_width="wrap_content">
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
-                    android:text="Rx bytes: ">
+                    android:text="Rx bytes: "
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
                     android:id="@+id/screen_manual_item_link_textView_rxBytes"
-                    android:text="0(0.0B)">
+                    android:text="0(0.0B)"
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
-                    android:text="Tx bytes: ">
+                    android:text="Tx bytes: "
+                    android:paddingRight="5dp">
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:textColor="@color/color_white"
                     android:id="@+id/screen_manual_item_link_textView_txBytes"
-                    android:text="0(0.0B)">
+                    android:text="0(0.0B)"
+                    android:paddingRight="5dp">
                 </TextView>
             </LinearLayout>
         </LinearLayout>
