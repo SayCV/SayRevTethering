@@ -187,7 +187,7 @@ public class TetheringRegistrationSession extends TetheringSession {
             //long [] trafficCount = getDataTraffic(mTetherNetworkDevice);
             //Log.d(TAG, "Traffic Count Thread previousUpload = " + this.previousUpload);
             //Log.d(TAG, "Traffic Count Thread previousDownload = " + this.previousDownload);
-            //Log.d(TAG, "Traffic Count Tx End date = " + this.firstTimeChecked);
+            Log.d(TAG, "Traffic Count Tx End date = " + this.firstTimeChecked);
             if(sTrafficCounterThreadEndWithOnce == false) {
                 sTrafficCounterThreadEndWithOnce = true;
                 ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
