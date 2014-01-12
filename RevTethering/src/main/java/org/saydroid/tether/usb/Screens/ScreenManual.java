@@ -250,6 +250,7 @@ public class ScreenManual extends BaseScreen {
                     tethered = true;
                     tetheredIfaces = ((TetheringService) mBaseScreen.mTetheringService).getTetheringStack().getTetheredIfaces();
                     if( SgsStringUtils.isNullOrEmpty(tetheredIfaces)) {
+                        tetheredIfaces = "TetheredIFace: Device Not Found";
                         tethered = false;
                     }
                 }

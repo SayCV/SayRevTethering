@@ -25,14 +25,15 @@
             android:layout_width="wrap_content"
             android:id="@+id/screen_manual_item_link_linearLayout_linkContent"
             android:visibility="invisible"
-            android:layout_marginLeft="25dp">
+            android:layout_marginLeft="25dp"
+            android:weightSum="0"
+            android:layout_weight="0">
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content">
                 <TextView
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
@@ -41,7 +42,6 @@
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
@@ -51,7 +51,6 @@
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
@@ -60,7 +59,6 @@
                 </TextView>
                 <TextView
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
@@ -76,7 +74,6 @@
                 android:layout_width="wrap_content">
                 <TextView
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
@@ -100,7 +97,6 @@
                 android:layout_width="wrap_content">
                 <TextView
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
@@ -124,7 +120,6 @@
                 android:layout_width="wrap_content">
                 <TextView
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:padding="5px"
                     android:layout_width="fill_parent"
                     android:gravity="center"
