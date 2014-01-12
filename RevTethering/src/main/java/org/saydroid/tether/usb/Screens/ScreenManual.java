@@ -228,6 +228,7 @@ public class ScreenManual extends BaseScreen {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView;
+
             final NetworkLinkStatusItem item = (NetworkLinkStatusItem)getItem(position);
 
             if (view == null) {
@@ -243,11 +244,22 @@ public class ScreenManual extends BaseScreen {
             ((TextView) view.findViewById(R.id.screen_presence_status_item_textView))
                     .setText(item.mText);*/
             if(position == NetworkLinkStatusItem.ITEM_TetheredFaceLink_POS){
-                if(((TetheringService) mBaseScreen.mTetheringService).getTetheringStack() == null ||
-                        SgsStringUtils.isNullOrEmpty(((TetheringService) mBaseScreen.mTetheringService).getTetheringStack().getTetheredIfaces())) {
-                    ((TextView) view.findViewById(R.id.screen_manual_item_link_textView_linkName)).setText("TetheredIFace: Device Not Found");
+                String tetheredIfaces = "TetheredIFace: Device Not Found";
+                boolean tethered =false;
+                if(((TetheringService) mBaseScreen.mTetheringService).getTetheringStack() != null) {
+                    tethered = true;
+                    tetheredIfaces = ((TetheringService) mBaseScreen.mTetheringService).getTetheringStack().getTetheredIfaces();
+                    if( SgsStringUtils.isNullOrEmpty(tetheredIfaces)) {
+                        tethered = false;
+                    }
+                }
+                if(tethered) {
+                    ((TextView) view.findViewById(R.id.screen_manual_item_link_textView_linkName)).setText(tetheredIfaces);
                     // Assuming using View.INVISIBLE constant, which hides a view but keeping the space it used. but use View.GONE instead.
                     ((LinearLayout) view.findViewById(R.id.screen_manual_item_link_linearLayout_linkContent)).setVisibility(View.GONE);
+                } else {
+                    ((TextView) view.findViewById(R.id.screen_manual_item_link_textView_linkName)).setText(tetheredIfaces);
+                    ((LinearLayout) view.findViewById(R.id.screen_manual_item_link_linearLayout_linkContent)).setVisibility(View.VISIBLE);
                 }
             } else {
                 ((TextView) view.findViewById(R.id.screen_manual_item_link_textView_linkName)).setText("rmnet0");
