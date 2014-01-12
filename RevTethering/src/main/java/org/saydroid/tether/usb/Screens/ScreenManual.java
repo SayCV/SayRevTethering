@@ -256,10 +256,10 @@ public class ScreenManual extends BaseScreen {
                 if(tethered) {
                     ((TextView) view.findViewById(R.id.screen_manual_item_link_textView_linkName)).setText(tetheredIfaces);
                     // Assuming using View.INVISIBLE constant, which hides a view but keeping the space it used. but use View.GONE instead.
-                    ((LinearLayout) view.findViewById(R.id.screen_manual_item_link_linearLayout_linkContent)).setVisibility(View.GONE);
+                    ((LinearLayout) view.findViewById(R.id.screen_manual_item_link_linearLayout_linkContent)).setVisibility(View.VISIBLE);
                 } else {
                     ((TextView) view.findViewById(R.id.screen_manual_item_link_textView_linkName)).setText(tetheredIfaces);
-                    ((LinearLayout) view.findViewById(R.id.screen_manual_item_link_linearLayout_linkContent)).setVisibility(View.VISIBLE);
+                    ((LinearLayout) view.findViewById(R.id.screen_manual_item_link_linearLayout_linkContent)).setVisibility(View.GONE);
                 }
             } else {
                 ((TextView) view.findViewById(R.id.screen_manual_item_link_textView_linkName)).setText("rmnet0");
