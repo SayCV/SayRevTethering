@@ -36,8 +36,8 @@ public class HistoryTrafficCountEvent extends SgsHistoryEvent {
     protected String mTotalUpload;
     @Element(name = "TotalDownload", required = true)
     protected String mTotalDownload;
-    @Element(name = "RealFirstTimeChecked", required = true)
-    protected String mRealFirstTimeChecked;
+    //@Element(name = "RealFirstTimeChecked", required = true)
+    //protected String mRealFirstTimeChecked;
 
     HistoryTrafficCountEvent(){
 		this(null, StatusType.Failed);
@@ -61,8 +61,8 @@ public class HistoryTrafficCountEvent extends SgsHistoryEvent {
     public String getTotalUpload() { return this.mTotalUpload; }
     public String getTotalDownload() { return this.mTotalDownload; }
 
-    public void setRealFirstTimeChecked(String content) { this.mRealFirstTimeChecked = content; }
-    public String getRealFirstTimeChecked() { return this.mRealFirstTimeChecked; }
+    //public void setRealFirstTimeChecked(String content) { this.mRealFirstTimeChecked = content; }
+    //public String getRealFirstTimeChecked() { return this.mRealFirstTimeChecked; }
 
 	public static class HistoryEventTrafficCountIntelligentFilter implements SgsPredicate<SgsHistoryEvent> {
 		private final List<String> mRemoteParties = new ArrayList<String>();
