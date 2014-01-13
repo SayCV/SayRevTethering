@@ -398,6 +398,7 @@ public class ScreenTabHistory extends BaseScreen {
                         final String startDate = DateTimeUtils.getFriendlyDateString(new Date(event.getStartTime()));
                         final String endDate = DateTimeUtils.getFriendlyDateString(new Date(event.getEndTime()));
                         tvNumber.setText(String.valueOf(getCount()-position));
+                        tvNumber.setTextSize(10f);
                         tvStartDate.setText(startDate);
                         tvEndDate.setText(endDate);
                         tvStartDate.setMinTextSize(4f);

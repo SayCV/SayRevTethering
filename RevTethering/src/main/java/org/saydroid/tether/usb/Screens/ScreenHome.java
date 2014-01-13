@@ -269,7 +269,7 @@ public class ScreenHome extends BaseScreen {
                         case UNREGISTRATION_OK:
                         case UNREGISTRATION_NOK:
                             //dismissDialog(ID_DIALOG_STOPPING);
-                            mStartStopProgressDialog.dismiss();
+                            if(mStartStopProgressDialog != null && mStartStopProgressDialog.isShowing()) { mStartStopProgressDialog.dismiss(); }
                             break;
                         default:
                             //if(mStartStopProgressDialog.isShowing()) { mStartStopProgressDialog.dismiss(); }
