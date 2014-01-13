@@ -193,7 +193,7 @@ public class SgsConfigurationEntry {
 	public static final String DEFAULT_NETWORK_IP_VERSION = "ipv4";
 	public static final boolean DEFAULT_NETWORK_USE_EARLY_IMS = false;
 
-    public static final int DEFAULT_NETWORK_TRAFFIC_THREAD_STATE = 0;
+    public static final int DEFAULT_NETWORK_TRAFFIC_COUNT_THREAD_STATE = 0;
     public static final String DEFAULT_NETWORK_TRAFFIC_COUNT_AT_START = "";
     public static final String DEFAULT_NETWORK_IP_STYLE = "ip_style_winxp";
     public static final boolean DEFAULT_NETWORK_CONNECTED = false;

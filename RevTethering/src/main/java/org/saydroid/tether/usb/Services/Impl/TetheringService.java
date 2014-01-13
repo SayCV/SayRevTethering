@@ -561,6 +561,11 @@ implements ITetheringService {
 
         mRegSession.setConnectionState(ConnectionState.TERMINATED);
         Engine.getInstance().getConfigurationService().putBoolean(SgsConfigurationEntry.NETWORK_CONNECTED, false);
+
+        ((Engine)Engine.getInstance()).getConfigurationService().putInt(
+                SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_THREAD_STATE,
+                SgsConfigurationEntry.DEFAULT_NETWORK_TRAFFIC_COUNT_THREAD_STATE);
+
         Engine.getInstance().getConfigurationService().commit();
         broadcastRegistrationEvent(new SgsRegistrationEventArgs(0, SgsRegistrationEventTypes.UNREGISTRATION_OK, (short)0, null));
         return true;

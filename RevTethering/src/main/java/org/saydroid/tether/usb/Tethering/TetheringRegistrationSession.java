@@ -133,7 +133,7 @@ public class TetheringRegistrationSession extends TetheringSession {
             this.lastTimeChecked = SgsDateTimeUtils.now();
             if( NETWORK_TRAFFIC_COUNT_THREAD_STATE_NONE == mConfigurationService.getInt(
                     SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_THREAD_STATE,
-                    SgsConfigurationEntry.DEFAULT_NETWORK_TRAFFIC_THREAD_STATE) ){
+                    SgsConfigurationEntry.DEFAULT_NETWORK_TRAFFIC_COUNT_THREAD_STATE) ){
                 // DEFAULT_NETWORK_TRAFFIC_COUNT_AT_START
                 mConfigurationService.putString(
                         SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_AT_START,

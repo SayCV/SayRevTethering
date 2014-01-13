@@ -80,9 +80,11 @@ public class MainActivity extends ActivityGroup {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if(((Engine)Engine.getInstance()).getConfigurationService().getBoolean(SgsConfigurationEntry.GENERAL_DSO,SgsConfigurationEntry.DEFAULT_GENERAL_DSO)) {
             setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT);
         }
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
