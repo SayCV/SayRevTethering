@@ -397,7 +397,7 @@ public class ScreenTabHistory extends BaseScreen {
                         final AutoResizeTextView tvEndDate = (AutoResizeTextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_endDate);
                         final String startDate = DateTimeUtils.getFriendlyDateString(new Date(event.getStartTime()));
                         final String endDate = DateTimeUtils.getFriendlyDateString(new Date(event.getEndTime()));
-                        tvNumber.setText(String.valueOf(position));
+                        tvNumber.setText(String.valueOf(getCount()-position));
                         tvStartDate.setText(startDate);
                         tvEndDate.setText(endDate);
                         tvStartDate.setMinTextSize(4f);
