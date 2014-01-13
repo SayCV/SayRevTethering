@@ -214,6 +214,14 @@ public class TetheringRegistrationSession extends TetheringSession {
             //Log.d(TAG, "Traffic Count Tx End date = " + this.firstTimeChecked);
             if(sTrafficCounterThreadEndWithOnce == false) {
                 sTrafficCounterThreadEndWithOnce = true;
+                /*mConfigurationService.putString(
+                        SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_AT_START,
+                        this.firstTimeChecked);*/
+                mConfigurationService.putInt(
+                        SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_THREAD_STATE,
+                        NETWORK_TRAFFIC_COUNT_THREAD_STATE_NONE);
+                mConfigurationService.commit();
+
                 ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
                         new TrafficCountEventArgs(TrafficCountEventTypes.END,
                                 this.previousUpload,
