@@ -3,7 +3,26 @@
  * on Mon Jan 13 23:21:07 2014.
  * Any changes made here will be LOST.
  *****************************************************/
-package org.hyperic.sigar;
+
+/*
+ * Copyright (C) 2013, sayDroid.
+ *
+ * Copyright 2013 The sayDroid Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.saydroid.tether.usb.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +42,7 @@ public class NetInterfaceStat implements java.io.Serializable {
      * This method is not intended to be called directly.
      * use Sigar.getNetInterfaceStat() instead.
      * @exception SigarException on failure.
-     * @see org.hyperic.sigar.Sigar#getNetInterfaceStat
+     * @see //org.hyperic.sigar.Sigar#getNetInterfaceStat
      */
     static NetInterfaceStat fetch(Sigar sigar, String name) throws SigarException {
         NetInterfaceStat netInterfaceStat = new NetInterfaceStat();

@@ -3,7 +3,26 @@
  * on Mon Jan 13 23:21:07 2014.
  * Any changes made here will be LOST.
  *****************************************************/
-package org.hyperic.sigar;
+
+/*
+ * Copyright (C) 2013, sayDroid.
+ *
+ * Copyright 2013 The sayDroid Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.saydroid.tether.usb.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,17 +36,17 @@ public class NetConnection implements java.io.Serializable {
 
     public NetConnection() { }
 
-    public native void gather(Sigar sigar) throws SigarException;
+    public native void gather() throws SigarException;
 
     /**
      * This method is not intended to be called directly.
      * use Sigar.getNetConnection() instead.
      * @exception SigarException on failure.
-     * @see org.hyperic.sigar.Sigar#getNetConnection
+     * @see //org.hyperic.sigar.Sigar#getNetConnection
      */
-    static NetConnection fetch(Sigar sigar) throws SigarException {
+    static NetConnection fetch() throws SigarException {
         NetConnection netConnection = new NetConnection();
-        netConnection.gather(sigar);
+        netConnection.gather();
         return netConnection;
     }
 
