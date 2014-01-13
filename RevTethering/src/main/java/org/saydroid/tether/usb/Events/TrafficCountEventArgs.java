@@ -43,6 +43,8 @@ public class TrafficCountEventArgs extends SgsEventArgs {
     // Current download rate
     public long mDownloadRate;
 
+    public String mRealFirstTimeChecked;
+
     public static final String ACTION_TRAFFIC_COUNT_EVENT = TAG + ".ACTION_TRAFFIC_COUNT_EVENT";
 
     public static final String EXTRA_EMBEDDED = SgsEventArgs.EXTRA_EMBEDDED;
@@ -81,6 +83,7 @@ public class TrafficCountEventArgs extends SgsEventArgs {
         mTotalDownload = totalDownload;
         mUploadRate = uploadRate;
         mDownloadRate = downloadRate;
+        //mRealFirstTimeChecked = realFirstTimeChecked;
     }
 
     public TrafficCountEventArgs(Parcel in){
@@ -107,6 +110,7 @@ public class TrafficCountEventArgs extends SgsEventArgs {
     public long getTotalDownload() { return mTotalDownload; }
     public long getUploadRate() { return mUploadRate; }
     public long getDownloadRate() { return mDownloadRate; }
+    public String getRealFirstTimeChecked() { return mRealFirstTimeChecked; }
 
 	@Override
 	protected void readFromParcel(Parcel in) {
@@ -117,6 +121,7 @@ public class TrafficCountEventArgs extends SgsEventArgs {
         mTotalDownload = in.readLong();
         mUploadRate = in.readLong();
         mDownloadRate = in.readLong();
+        //mRealFirstTimeChecked = in.readString();
         //mPayload = in.createByteArray();
 	}
 
@@ -129,6 +134,7 @@ public class TrafficCountEventArgs extends SgsEventArgs {
         dest.writeLong(mTotalDownload);
         dest.writeLong(mUploadRate);
         dest.writeLong(mDownloadRate);
+        //dest.writeString(mRealFirstTimeChecked);
         //dest.writeByteArray(mPayload);
 	}
 }

@@ -389,6 +389,7 @@ public class ScreenTabHistory extends BaseScreen {
 						}
 						break;
                     case TrafficCount:
+                        final TextView tvNumber = (TextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_number);
                         final ImageView ivTrafficCountType = (ImageView)view.findViewById(R.id.screen_tab_history_item_trafficCount_imageView_type);
                         final TextView tvSend = (TextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_upTotal);
                         final TextView tvReceive = (TextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_downloadTotal);
@@ -396,6 +397,7 @@ public class ScreenTabHistory extends BaseScreen {
                         final AutoResizeTextView tvEndDate = (AutoResizeTextView)view.findViewById(R.id.screen_tab_history_item_trafficCount_textView_endDate);
                         final String startDate = DateTimeUtils.getFriendlyDateString(new Date(event.getStartTime()));
                         final String endDate = DateTimeUtils.getFriendlyDateString(new Date(event.getEndTime()));
+                        tvNumber.setText(position);
                         tvStartDate.setText(startDate);
                         tvEndDate.setText(endDate);
                         tvStartDate.setMinTextSize(4f);
@@ -406,6 +408,9 @@ public class ScreenTabHistory extends BaseScreen {
                         tvEndDate.resizeText();
 
                         final HistoryTrafficCountEvent TrafficCountEvent = (HistoryTrafficCountEvent)event;
+                        /*final String startRealDate = DateTimeUtils.getFriendlyDateString(new Date(
+                                Long.parseLong(TrafficCountEvent.getRealFirstTimeChecked())));
+                        tvStartDate.setText(startRealDate);*/
                         //final String content = TrafficCountEvent.getContent();
                         //final boolean bIncoming = TrafficCountEvent.getStatus() == SgsHistoryEvent.StatusType.Incoming;
                         // Up and Download is defines by based on Tether

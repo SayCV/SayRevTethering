@@ -20,6 +20,7 @@ package org.saydroid.tether.usb.Tethering;
 
 
 import org.saydroid.logger.Log;
+import org.saydroid.sgs.services.ISgsConfigurationService;
 import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsDateTimeUtils;
 import org.saydroid.sgs.utils.SgsFileUtils;
@@ -42,6 +43,8 @@ public class TetheringRegistrationSession extends TetheringSession {
     private String mTetherNetworkDevice = "";
     private Thread mTrafficCounterThread = null;
 
+    private final ISgsConfigurationService mConfigurationService;
+
     /**
      * Creates new registration session
      * @param tetheringStack the stack to use to create the session
@@ -50,6 +53,7 @@ public class TetheringRegistrationSession extends TetheringSession {
         super(tetheringStack);
         //mSession = new TetheringRegistrationSession(tetheringStack);
 
+        this.mConfigurationService = Engine.getInstance().getConfigurationService();
         super.init();
     }
 
@@ -112,6 +116,9 @@ public class TetheringRegistrationSession extends TetheringSession {
     class TrafficCounterThreadClass implements Runnable {
         private static final int INTERVAL = 2;  // Sample rate in seconds.
 
+        private static final int NETWORK_TRAFFIC_COUNT_THREAD_STATE_NONE = 0;
+        private static final int NETWORK_TRAFFIC_COUNT_THREAD_STATE_START = 1;
+
         long previousDownload;
         long previousUpload;
         String firstTimeChecked;
@@ -124,6 +131,23 @@ public class TetheringRegistrationSession extends TetheringSession {
             this.previousDownload = this.previousUpload = 0;
             this.firstTimeChecked = SgsDateTimeUtils.now();// new Date().getTime();
             this.lastTimeChecked = SgsDateTimeUtils.now();
+            if( NETWORK_TRAFFIC_COUNT_THREAD_STATE_NONE == mConfigurationService.getInt(
+                    SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_THREAD_STATE,
+                    SgsConfigurationEntry.DEFAULT_NETWORK_TRAFFIC_THREAD_STATE) ){
+                // DEFAULT_NETWORK_TRAFFIC_COUNT_AT_START
+                mConfigurationService.putString(
+                        SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_AT_START,
+                        this.firstTimeChecked);
+                mConfigurationService.putInt(
+                        SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_THREAD_STATE,
+                        NETWORK_TRAFFIC_COUNT_THREAD_STATE_START);
+                mConfigurationService.commit();
+            } else {
+                this.firstTimeChecked = String.valueOf(mConfigurationService.getString(
+                        SgsConfigurationEntry.NETWORK_TRAFFIC_COUNT_AT_START,
+                        //SgsConfigurationEntry.DEFAULT_NETWORK_TRAFFIC_COUNT_AT_START));
+                        SgsDateTimeUtils.now()));
+            }
 
             try {
                 Thread.sleep(2000);
@@ -187,7 +211,7 @@ public class TetheringRegistrationSession extends TetheringSession {
             //long [] trafficCount = getDataTraffic(mTetherNetworkDevice);
             //Log.d(TAG, "Traffic Count Thread previousUpload = " + this.previousUpload);
             //Log.d(TAG, "Traffic Count Thread previousDownload = " + this.previousDownload);
-            Log.d(TAG, "Traffic Count Tx End date = " + this.firstTimeChecked);
+            //Log.d(TAG, "Traffic Count Tx End date = " + this.firstTimeChecked);
             if(sTrafficCounterThreadEndWithOnce == false) {
                 sTrafficCounterThreadEndWithOnce = true;
                 ((TetheringService)((Engine)Engine.getInstance()).getTetheringService()).broadcastTrafficCountEvent(
