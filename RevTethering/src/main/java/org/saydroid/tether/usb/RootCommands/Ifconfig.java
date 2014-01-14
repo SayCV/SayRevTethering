@@ -49,37 +49,18 @@ import org.sufficientlysecure.rootcommands.command.Command;
 /**
  * Display network interface configuration and metrics.
  */
-public class Ifconfig extends Command {
+public class Ifconfig extends NetCommand {
     private final static String TAG = Ifconfig.class.getCanonicalName();
 
     private StringBuilder sb = new StringBuilder();
     private int mExitCode;
-    private Sigar mSigar;
-
-    protected static Ifconfig sInstance;
-
-    private void Ifconfig() {
-    }
-
-    public static Ifconfig getInstance(){
-        if(sInstance == null){
-            sInstance = new Ifconfig();
-        }
-        return sInstance;
-    }
-
-    public static Sigar getSigar(){
-        return Sigar.getInstance();
-    }
 
     public Ifconfig(String... command) {
         super(command);
-        Ifconfig();
     }
 
     public Ifconfig(int timeout, String... command) {
         super(timeout, command);
-        Ifconfig();
     }
 
     @Override

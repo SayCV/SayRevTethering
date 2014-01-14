@@ -36,7 +36,7 @@ public class NetRoute implements java.io.Serializable {
 
     public NetRoute() { }
 
-    public native void gather() throws SigarException;
+    public native void gather(Sigar sigar) throws SigarException;
 
     /**
      * This method is not intended to be called directly.
@@ -44,9 +44,9 @@ public class NetRoute implements java.io.Serializable {
      * @exception SigarException on failure.
      * @see //org.hyperic.sigar.Sigar#getNetRoute
      */
-    static NetRoute fetch() throws SigarException {
+    static NetRoute fetch(Sigar sigar) throws SigarException {
         NetRoute netRoute = new NetRoute();
-        netRoute.gather();
+        netRoute.gather(sigar);
         return netRoute;
     }
 

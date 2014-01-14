@@ -50,7 +50,7 @@ import org.sufficientlysecure.rootcommands.command.Command;
 /**
  * Display network connections.
  */
-public class Netstat extends Command {
+public class Netstat extends NetCommand {
     private final static String TAG = Ifconfig.class.getCanonicalName();
 
     protected static Netstat sInstance;
@@ -70,30 +70,13 @@ public class Netstat extends Command {
 
     private StringBuilder sb = new StringBuilder();
     private int mExitCode;
-    private Sigar mSigar;
-
-    private void Netstat() {
-    }
-
-    public static Netstat getInstance(){
-        if(sInstance == null){
-            sInstance = new Netstat();
-        }
-        return sInstance;
-    }
-
-    public static Sigar getSigar(){
-        return getInstance().mSigar;
-    }
 
     public Netstat(String... command) {
         super(command);
-        Netstat();
     }
 
     public Netstat(int timeout, String... command) {
         super(timeout, command);
-        Netstat();
     }
 
     @Override
@@ -221,7 +204,7 @@ public class Netstat extends Command {
     }
 
     private void outputTcpStats() throws SigarException {
-        Tcp stat = getSigar().getTcp();
+        Tcp stat = super.getSigar().getTcp();
         final String dnt = "    ";
         Log.d(TAG, dnt + stat.getActiveOpens() + " active connections openings");
         Log.d(TAG, dnt + stat.getPassiveOpens() + " passive connection openings");

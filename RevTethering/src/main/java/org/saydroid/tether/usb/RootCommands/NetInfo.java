@@ -44,7 +44,7 @@ import org.sufficientlysecure.rootcommands.command.Command;
 /**
  * Display network info.
  */
-public class NetInfo extends Command {
+public class NetInfo extends NetCommand {
     private final static String TAG = Ifconfig.class.getCanonicalName();
 
     private StringBuilder sb = new StringBuilder();
@@ -53,28 +53,12 @@ public class NetInfo extends Command {
 
     protected static NetInfo sInstance;
 
-    private void NetInfo() {
-    }
-
-    public static NetInfo getInstance(){
-        if(sInstance == null){
-            sInstance = new NetInfo();
-        }
-        return sInstance;
-    }
-
-    public static Sigar getSigar(){
-        return getInstance().mSigar;
-    }
-
     public NetInfo(String... command) {
         super(command);
-        NetInfo();
     }
 
     public NetInfo(int timeout, String... command) {
         super(timeout, command);
-        NetInfo();
     }
 
     @Override
@@ -114,7 +98,7 @@ public class NetInfo extends Command {
                 config.getNetmask());
 
         org.saydroid.tether.usb.Utils.NetInfo info =
-            getSigar().getNetInfo();
+                getSigar().getNetInfo();
 
         Log.d(TAG, "host name............." +
                 info.getHostName());
