@@ -26,12 +26,14 @@ import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsStringUtils;
 import org.saydroid.tether.usb.CustomExtends.NetworkLinkStatus;
 import org.saydroid.tether.usb.Events.TrafficCountEventArgs;
+import org.saydroid.tether.usb.RootCommands.NetInfo;
 import org.saydroid.tether.usb.SRTDroid;
 import org.saydroid.tether.usb.R;
 import org.saydroid.tether.usb.Services.ITetheringNetworkService;
 import org.saydroid.tether.usb.Services.ITetheringService;
 import org.saydroid.tether.usb.Services.Impl.TetheringNetworkService;
 import org.saydroid.tether.usb.Services.Impl.TetheringService;
+import org.sufficientlysecure.rootcommands.Shell;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -139,6 +141,25 @@ public class ScreenManual extends BaseScreen {
         intentFilter.addAction(TrafficCountEventArgs.ACTION_TRAFFIC_COUNT_EVENT);
         registerReceiver(mLinkUpdateBroadCastRecv, intentFilter);
         setLinkUpdateThreadClassEnabled(true);
+
+        /*try {
+            NetInfo binaryCommand = new NetInfo(null);
+
+            // start root shell
+            //Shell shell = Shell.startRootShell();
+
+            //shell.add(binaryCommand);
+            shell.add(binaryCommand).waitForFinish();
+
+            Log.d(TAG, "Output of command: " + binaryCommand.getOutput());
+            returnCode = binaryCommand.getExitCode();
+            sb.append(binaryCommand.getOutput());
+
+            // close root shell
+            shell.close();
+        } catch (Exception e) {
+            Log.e(TAG, "Exception!", e);
+        }*/
     }
 
     private CompoundButton.OnCheckedChangeListener rbLocal_OnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener(){
