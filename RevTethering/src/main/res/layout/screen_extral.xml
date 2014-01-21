@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+    <TextView
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:padding="10px"
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:textColor="@color/color_white"
+        android:text="Extra"
+        android:background="@drawable/grad_dark">
+
+    </TextView>
+
+    <ListView android:id="@+id/screen_extra_listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingLeft="@dimen/page_margin"
+        android:paddingRight="@dimen/page_margin"
+        android:scrollbarStyle="outsideOverlay"
+        android:choiceMode="multipleChoice" />
+
+    <CheckBox
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/screen_manual_listView"
+        android:id="@+id/screen_manual_checkBox_enable_usbTetherConnect"
+        android:text="Enable USB Tether Connect"
+        android:layout_width="fill_parent">
+
+        </CheckBox>
+    <CheckBox
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/screen_manual_checkBox_enable_usbTetherConnect"
+        android:id="@+id/screen_manual_checkBox_enable_mobileDataAndFaked"
+        android:text="Enable MobileData and Faked"
+        android:layout_width="fill_parent">
+
+    </CheckBox>
+    <CheckBox
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/screen_manual_checkBox_enable_mobileDataAndFaked"
+        android:id="@+id/screen_manual_checkBox_enable_autoConfigUsbTetherIP"
+        android:text="Auto Config USB Tether IP"
+        android:layout_width="fill_parent">
+
+    </CheckBox>
+
+</LinearLayout>

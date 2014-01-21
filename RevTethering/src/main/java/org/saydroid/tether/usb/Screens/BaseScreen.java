@@ -58,6 +58,7 @@ public abstract class BaseScreen extends Activity implements IBaseScreen {
 		// Well-Known
 		ABOUT_T,
         MANUAL_T,
+        Extra_T,
 		AV_QUEUE_T,
 		CHAT_T,
 		CHAT_QUEUE_T,

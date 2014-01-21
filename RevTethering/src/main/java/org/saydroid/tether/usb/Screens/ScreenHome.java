@@ -399,7 +399,7 @@ public class ScreenHome extends BaseScreen {
      * ScreenHomeAdapter
      */
     static class ScreenHomeAdapter extends BaseAdapter{
-        static final int ALWAYS_VISIBLE_ITEMS_COUNT = 6;
+        static final int ALWAYS_VISIBLE_ITEMS_COUNT = 7;
         static final ScreenHomeItem[] sItems =  new ScreenHomeItem[]{
                 // always visible
                 //new ScreenHomeItem(R.drawable.start_48, "Start Tethering", null),
@@ -409,6 +409,7 @@ public class ScreenHome extends BaseScreen {
                 new ScreenHomeItem(R.drawable.exit_48, "Exit/Quit", null),
                 new ScreenHomeItem(R.drawable.history_48, "History", ScreenTabHistory.class),
                 new ScreenHomeItem(R.drawable.loaded_hand_truck_48, "Manual", ScreenManual.class),
+                new ScreenHomeItem(R.drawable.terminal_48, "Extra", ScreenExtra.class),
                 // visible only if connected
                 //new ScreenHomeItem(R.drawable.stop_48, "Stop Tethering", null),
                 //new ScreenHomeItem(R.drawable.dialer_48, "Dialer", ScreenTabDialer.class),
