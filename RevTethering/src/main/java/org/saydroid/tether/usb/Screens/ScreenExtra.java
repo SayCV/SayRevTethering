@@ -19,6 +19,7 @@
 package org.saydroid.tether.usb.Screens;
 
 import org.saydroid.logger.Log;
+import org.saydroid.rootcommands.RootCommands;
 import org.saydroid.sgs.events.SgsEventArgs;
 import org.saydroid.sgs.events.SgsRegistrationEventArgs;
 import org.saydroid.sgs.services.ISgsConfigurationService;
@@ -82,7 +83,13 @@ public class ScreenExtra extends BaseScreen {
     private final String no_file_system_access_message_text = "No File System Access";
 
     private boolean isFileExplorerEnabled = false;
+    private boolean isFileExplorerMultiChoiceEnabled = false;
     private File currentDirectory;
+
+    public StringBuilder sbMultiChoiceFileNames;
+    private final String mRunTestDirectory;
+    private final String SYSTEM_BIN_FOLDER = "/system/bin";
+    private final String SYSTEM_LIB_FOLDER = "/system/lib";
 
     //private final GenericFileExplorer mGenericFileExplorer;
     private final ISgsConfigurationService mConfigurationService;
@@ -93,6 +100,8 @@ public class ScreenExtra extends BaseScreen {
         super(SCREEN_TYPE.Extra_T, TAG);
 
         mConfigurationService = getEngine().getConfigurationService();
+        sbMultiChoiceFileNames = new StringBuilder();
+        mRunTestDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()).toString() + "/tests";
     }
 
     @Override
@@ -111,8 +120,88 @@ public class ScreenExtra extends BaseScreen {
         this.mRbFileExplorerSelectedAll = (RadioButton) findViewById(R.id.screen_extra_radioButton_fileExplorer_selectedAll);
         this.mRbFileExplorerUnselectedAll = (RadioButton) findViewById(R.id.screen_extra_radioButton_fileExplorer_unselectedAll);
 
+        mBtnFileExploreCopyAll.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                if(sbMultiChoiceFileNames.length() > 0) {
+                    for (String fileName : ((FileListAdapter)mLvFileExplorer.getAdapter()).getFileNames()) {
+                        String command;
+                        //command = "cp -rf " + mRunTestDirectory + "/" + sbMultiChoiceFileNames;
+                        if(fileName.endsWith(".so")) {
+                            command = "cp -rf " + mRunTestDirectory + "/" + fileName + " " + SYSTEM_BIN_FOLDER;
+                        } else {
+                            command = "cp -rf " + mRunTestDirectory + "/" + fileName + " " + SYSTEM_LIB_FOLDER;
+                        }
+                        Log.d(TAG, "command to RunTest is :" + command);
+                        if(RootCommands.run(10000, command)==false){ //10s
+                            Log.d(TAG, "command to RunTest failed");
+                        }
+                        Log.d(TAG, "command to RunTest successful");
+
+                        if(fileName.endsWith(".so")) {
+                            command = "chmod 0755 " + SYSTEM_LIB_FOLDER + "/" + fileName;
+                        } else {
+                            command = "chmod 0755 " + SYSTEM_BIN_FOLDER + "/" + fileName;
+                        }
+                        Log.d(TAG, "command to RunTest is :" + command);
+                        if(RootCommands.run(10000, command)==false){ //10s
+                            Log.d(TAG, "command to RunTest failed");
+                        }
+                        Log.d(TAG, "command to RunTest successful");
+                    }
+                }
+            }
+        });
+        mBtnFileExploreCopy.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                if(sbMultiChoiceFileNames.length() > 0) {
+                    for (String fileName : ((FileListAdapter)mLvFileExplorer.getAdapter()).getFileNames()) {
+                        String command;
+                        //command = "cp -rf " + mRunTestDirectory + "/" + sbMultiChoiceFileNames;
+                        if(fileName.endsWith(".so")) {
+                            command = "cp -rf " + mRunTestDirectory + "/" + fileName + " " + SYSTEM_BIN_FOLDER;
+                        } else {
+                            command = "cp -rf " + mRunTestDirectory + "/" + fileName + " " + SYSTEM_LIB_FOLDER;
+                        }
+                        Log.d(TAG, "command to RunTest is :" + command);
+                        if(RootCommands.run(10000, command)==false){ //10s
+                            Log.d(TAG, "command to RunTest failed");
+                        }
+                        Log.d(TAG, "command to RunTest successful");
+
+                        if(fileName.endsWith(".so")) {
+                            command = "chmod 0755 " + SYSTEM_LIB_FOLDER + "/" + fileName;
+                        } else {
+                            command = "chmod 0755 " + SYSTEM_BIN_FOLDER + "/" + fileName;
+                        }
+                        Log.d(TAG, "command to RunTest is :" + command);
+                        if(RootCommands.run(10000, command)==false){ //10s
+                            Log.d(TAG, "command to RunTest failed");
+                        }
+                        Log.d(TAG, "command to RunTest successful");
+                    }
+                }
+            }
+        });
+        mBtnFileExplorerRunTest.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                //if(sbMultiChoiceFileNames.length() > 0) {
+                    String command;
+                    command = "sigar_cpu";
+                    Log.d(TAG, "command to RunTest is :" + command);
+                    if(RootCommands.run(10000, command)==false){ //10s
+                        Log.d(TAG, "command to RunTest failed");
+                    }
+                    Log.d(TAG, "command to RunTest successful");
+                //}
+            }
+        });
+
         setFileExplorerEnabled(true);
-        setFileBrowsingDirectory(new File(Environment.getExternalStorageDirectory().getAbsolutePath()).toString() + "/tests");
+        setFileExplorerMultiChoiceEnabled(true);
+        setFileBrowsingDirectory(mRunTestDirectory);
         initializeFileExplorer();
 
         // add listeners (for the configuration)
@@ -171,7 +260,12 @@ public class ScreenExtra extends BaseScreen {
     private CompoundButton.OnCheckedChangeListener rbLocal_OnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener(){
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if(mRbFileExplorerSelectedAll.isChecked()) {
-                //
+                for (String fileName : ((FileListAdapter)mLvFileExplorer.getAdapter()).getFileNames()) {
+                    sbMultiChoiceFileNames.append(fileName).append(' ');
+                }
+            } else if(mRbFileExplorerUnselectedAll.isChecked()) {
+                int end = sbMultiChoiceFileNames.length();
+                sbMultiChoiceFileNames.delete(0, end);
             }
         }
     };
@@ -249,6 +343,14 @@ public class ScreenExtra extends BaseScreen {
                 }
             }
         }
+    }
+
+    public boolean isFileExplorerMultiChoiceEnabled() {
+        return isFileExplorerMultiChoiceEnabled;
+    }
+
+    public void setFileExplorerMultiChoiceEnabled(boolean isEnabled) {
+        isFileExplorerMultiChoiceEnabled = isEnabled;
     }
 
     public boolean isFileExplorerEnabled() {

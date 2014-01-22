@@ -87,6 +87,8 @@ public class FileListAdapter extends BaseAdapter {
 	public void setFileNames(String[] fileNames) {
 		this.fileNames = fileNames;
 	}
+
+    public String[] getFileNames() { return this.fileNames;}
 	
 	public void setFileTypes(HashMap<String, Integer> fileTypes) {
 		this.fileTypes = fileTypes;
@@ -147,7 +149,11 @@ public class FileListAdapter extends BaseAdapter {
 		
 		final String fileName = fileNames[position];
 		holder.getFileNameTextView().setText(fileName);
-		holder.getFileTypeImageView().setImageResource(getFileTypeImageResource(fileName));
+        if(mBaseScreen.isFileExplorerMultiChoiceEnabled()) {
+            mBaseScreen.sbMultiChoiceFileNames.append(fileName).append(' ');
+        } else {
+		    holder.getFileTypeImageView().setImageResource(getFileTypeImageResource(fileName));
+        }
 		holder.getRowView().setBackgroundColor((position != selectedIndex) 
 				? row_background_color
 				: row_background_color_selected);
@@ -170,6 +176,8 @@ public class FileListAdapter extends BaseAdapter {
 				return R.drawable.holo_collections_collection_48;
 			case FilePersistence.FILE_TYPE_PICTURE:
 				return R.drawable.holo_content_picture_48;
+            case FilePersistence.FILE_TYPE_RUNNABLE:
+                return R.drawable.ic_hideable_item;
 			case FilePersistence.FILE_TYPE_UNKNOWN:
 			default:
 				return android.R.drawable.ic_menu_help;
