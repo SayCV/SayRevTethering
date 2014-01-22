@@ -25,6 +25,10 @@ import org.saydroid.sgs.services.ISgsConfigurationService;
 import org.saydroid.sgs.utils.SgsConfigurationEntry;
 import org.saydroid.sgs.utils.SgsStringUtils;
 import org.saydroid.tether.usb.CustomExtends.NetworkLinkStatus;
+import org.saydroid.tether.usb.EmbeddedFileExplorer.EmbeddedFileExplorerConstants;
+import org.saydroid.tether.usb.EmbeddedFileExplorer.FileListAdapter;
+import org.saydroid.tether.usb.EmbeddedFileExplorer.FilePersistence;
+import org.saydroid.tether.usb.EmbeddedFileExplorer.GenericFileExplorer;
 import org.saydroid.tether.usb.Events.TrafficCountEventArgs;
 import org.saydroid.tether.usb.RootCommands.NetInfo;
 import org.saydroid.tether.usb.SRTDroid;
@@ -42,31 +46,45 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
 
 public class ScreenExtra extends BaseScreen {
     private static final String TAG = ScreenAbout.class.getCanonicalName();
 
     private Thread mLinkUpdateThread = null;
-    
-    private CheckBox mCbEnableUsbTetherConnect;
-    private CheckBox mCbEnableMobileDataAndFaked;
-    private CheckBox mCbEnableAutoConfigUsbTetherIP;
 
-    private ListView mListView;
-    private int mCanSpellableFilesCount;
+    private ListView mLvFileExplorer;
+    private TextView mTvFileExplorerNoMatchesIndicator;
+    private Button mBtnFileExploreCopyAll;
+    private Button mBtnFileExploreCopy;
+    private Button mBtnFileExplorerRunTest;
+    private RadioButton mRbFileExplorerSelectedAll;
+    private RadioButton mRbFileExplorerUnselectedAll;
 
+    private final String no_file_system_access_message_text = "No File System Access";
+
+    private boolean isFileExplorerEnabled = false;
+    private File currentDirectory;
+
+    //private final GenericFileExplorer mGenericFileExplorer;
     private final ISgsConfigurationService mConfigurationService;
 
     private BroadcastReceiver mLinkUpdateBroadCastRecv;
@@ -80,34 +98,29 @@ public class ScreenExtra extends BaseScreen {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.screen_manual);
+        setContentView(R.layout.screen_extral);
 
-        mListView = (ListView) findViewById(R.id.screen_extra_listView);
-        mListView.setAdapter(new ScreenExtraFileAdapter(this));
+        this.mLvFileExplorer = (ListView) findViewById(R.id.screen_extra_listView);
+        this.mLvFileExplorer.setAdapter(new FileListAdapter(this));
 
-        mCbEnableUsbTetherConnect = (CheckBox)findViewById(R.id.screen_manual_checkBox_enable_usbTetherConnect);
-        mCbEnableMobileDataAndFaked = (CheckBox)findViewById(R.id.screen_manual_checkBox_enable_mobileDataAndFaked);
-        mCbEnableAutoConfigUsbTetherIP = (CheckBox)findViewById(R.id.screen_manual_checkBox_enable_autoConfigUsbTetherIP);
+        this.mTvFileExplorerNoMatchesIndicator = (TextView) findViewById(R.id.screen_extra_textView_fileExplorer_noMatches_indicator);
 
-        mCbEnableUsbTetherConnect.setChecked(
-                mConfigurationService.getBoolean(
-                        SgsConfigurationEntry.MANUAL_ENABLE_USB_TETHER_CONNECT,
-                        SgsConfigurationEntry.DEFAULT_MANUAL_ENABLE_USB_TETHER_CONNECT));
-        mCbEnableMobileDataAndFaked.setChecked(
-                mConfigurationService.getBoolean(
-                        SgsConfigurationEntry.MANUAL_ENABLE_MOBILE_DATA_AND_FAKED,
-                        SgsConfigurationEntry.DEFAULT_MANUAL_ENABLE_MOBILE_DATA_AND_FAKED));
-        mCbEnableAutoConfigUsbTetherIP.setChecked(
-                mConfigurationService.getBoolean(
-                        SgsConfigurationEntry.MANUAL_ENABLE_AUTO_CONFIG_USB_TETHER_IP,
-                        SgsConfigurationEntry.DEFAULT_MANUAL_ENABLE_AUTO_CONFIG_USB_TETHER_IP));
+        this.mBtnFileExploreCopyAll = (Button) findViewById(R.id.screen_extra_button_fileExplorer_copyAll);
+        this.mBtnFileExploreCopy = (Button) findViewById(R.id.screen_extra_button_fileExplorer_copy);
+        this.mBtnFileExplorerRunTest = (Button) findViewById(R.id.screen_extra_button_fileExplorer_runTest);
+        this.mRbFileExplorerSelectedAll = (RadioButton) findViewById(R.id.screen_extra_radioButton_fileExplorer_selectedAll);
+        this.mRbFileExplorerUnselectedAll = (RadioButton) findViewById(R.id.screen_extra_radioButton_fileExplorer_unselectedAll);
+
+        setFileExplorerEnabled(true);
+        setFileBrowsingDirectory(new File(Environment.getExternalStorageDirectory().getAbsolutePath()).toString() + "/tests");
+        initializeFileExplorer();
 
         // add listeners (for the configuration)
-        super.addConfigurationListener(mCbEnableUsbTetherConnect);
-        super.addConfigurationListener(mCbEnableMobileDataAndFaked);
-        super.addConfigurationListener(mCbEnableAutoConfigUsbTetherIP);
+        //super.addConfigurationListener(mRbFileExplorerSelectedAll);
+        //super.addConfigurationListener(mRbFileExplorerUnselectedAll);
 
-        mCbEnableUsbTetherConnect.setOnCheckedChangeListener(rbLocal_OnCheckedChangeListener);
+        mRbFileExplorerSelectedAll.setOnCheckedChangeListener(rbLocal_OnCheckedChangeListener);
+        mRbFileExplorerUnselectedAll.setOnCheckedChangeListener(rbLocal_OnCheckedChangeListener);
 
         mLinkUpdateBroadCastRecv = new BroadcastReceiver() {
             @Override
@@ -157,7 +170,7 @@ public class ScreenExtra extends BaseScreen {
 
     private CompoundButton.OnCheckedChangeListener rbLocal_OnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener(){
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if(mCbEnableUsbTetherConnect.isChecked()) {
+            if(mRbFileExplorerSelectedAll.isChecked()) {
                 //
             }
         }
@@ -178,12 +191,8 @@ public class ScreenExtra extends BaseScreen {
         if(super.mComputeConfiguration){
 
 
-            mConfigurationService.putBoolean(SgsConfigurationEntry.MANUAL_ENABLE_USB_TETHER_CONNECT,
-                    mCbEnableUsbTetherConnect.isChecked());
-            mConfigurationService.putBoolean(SgsConfigurationEntry.MANUAL_ENABLE_MOBILE_DATA_AND_FAKED,
-                    mCbEnableMobileDataAndFaked.isChecked());
-            mConfigurationService.putBoolean(SgsConfigurationEntry.MANUAL_ENABLE_AUTO_CONFIG_USB_TETHER_IP,
-                    mCbEnableAutoConfigUsbTetherIP.isChecked());
+            //mConfigurationService.putBoolean(SgsConfigurationEntry.MANUAL_ENABLE_USB_TETHER_CONNECT,
+            //        mRbFileExplorerSelectedAll.isChecked());
 
             // Compute
             if(!mConfigurationService.commit()){
@@ -242,51 +251,134 @@ public class ScreenExtra extends BaseScreen {
         }
     }
 
-    static class ScreenExtraFileAdapter extends BaseAdapter {
+    public boolean isFileExplorerEnabled() {
+        return isFileExplorerEnabled;
+    }
 
-        private final LayoutInflater mInflater;
-        private final ScreenExtra mBaseScreen;
+    public void setFileExplorerEnabled(boolean isEnabled) {
+        isFileExplorerEnabled = isEnabled;
+    }
 
-        ScreenExtraFileAdapter(ScreenExtra baseScreen){
-            mInflater = LayoutInflater.from(baseScreen);
-            mBaseScreen = baseScreen;
-        }
+    public String getCurrentDirectoryPath() {
+        return (currentDirectory != null) ? currentDirectory.getAbsolutePath() : null;
+    }
 
-        void refresh(){
-            notifyDataSetChanged();
-        }
-
-        public int getCount() {
-            return mBaseScreen.mCanSpellableFilesCount;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return sListViewStatusItems[position];
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = convertView;
-
-            final NetworkLinkStatusItem item = (NetworkLinkStatusItem)getItem(position);
-
-            if (view == null) {
-                view = mInflater.inflate(R.layout.screen_manual_item_link, null);
+    public void setFileBrowsingDirectory(String directoryPath) {
+        if (directoryPath != null) {
+            File presetDirectory = new File(directoryPath);
+            if (presetDirectory.exists() && presetDirectory.isDirectory()) {
+                currentDirectory = presetDirectory;
             }
-
-            if (item == null) {
-                return view;
-            }
-
-            ((TextView) convertView.findViewById(android.R.id.text1))
-                    .setText(getItem(position));
-            return convertView;
         }
+    }
+
+    private void indicateThatFileSystemIsNotAccessible() {
+        //Toast.makeText(context, no_file_system_access_message_text, Toast.LENGTH_SHORT).show();
+        getEngine().showAppMessage(no_file_system_access_message_text);
+    }
+
+    public void initializeFileExplorer() {
+        if (currentDirectory == null) {
+            currentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+        }
+
+        FilePersistence filePersistence = new FilePersistence();
+        if (filePersistence.isExternalStorageDirectoryRoot(currentDirectory)) {
+            //fileExplorerUpButton.setEnabled(false);
+        }
+
+        FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
+        filePersistence.initializeFileListAdapter(fileListAdapter, currentDirectory, FilePersistence.FILE_TYPE_RUNNABLE);
+
+        //fileExplorerUseButton.setEnabled(fileListAdapter.getSelectedIndex() != EmbeddedFileExplorerConstants.INVALID_POSITION);
+        mLvFileExplorer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Object adapterObj = adapterView.getAdapter();
+                if (adapterObj != null && adapterObj instanceof FileListAdapter) {
+                    FileListAdapter fileListAdapter = (FileListAdapter) adapterObj;
+                    Object selectedFileName = fileListAdapter.getItem(position);
+                    if (selectedFileName != null) {
+                        int selectedFileType = fileListAdapter.getFileType(position);
+
+                        if (selectedFileType == FilePersistence.FILE_TYPE_DIRECTORY) {
+                            //fileExplorerUseButton.setEnabled(false);
+                            currentDirectory = new File(currentDirectory, (String) selectedFileName);
+
+                            FilePersistence filePersistence = new FilePersistence();
+                            if (!filePersistence.isExternalStorageDirectoryRoot(currentDirectory)) {
+                                //fileExplorerUpButton.setEnabled(true);
+                            }
+
+                            if (filePersistence.initializeFileListAdapter(fileListAdapter, currentDirectory, FilePersistence.FILE_TYPE_RUNNABLE)) {
+                                fileListAdapter.setSelectedIndex(EmbeddedFileExplorerConstants.INVALID_POSITION);
+                                fileListAdapter.notifyDataSetChanged();
+                                setNoMatchingFilesInDirectoryIndicatorVisibility(fileListAdapter.getCount() == 0);
+                            } else {
+                                indicateThatFileSystemIsNotAccessible();
+                            }
+                        } else {
+                            fileListAdapter.setSelectedIndex(position);
+                            fileListAdapter.notifyDataSetChanged();
+                            //fileExplorerUseButton.setEnabled(true);
+                        }
+
+                    } else {
+                        // log, ignore!?
+                    }
+                }
+            }
+        });
+    }
+
+    public void goToParentDirectory() {
+        if (currentDirectory != null) {
+            FilePersistence filePersistence = new FilePersistence();
+            if (!filePersistence.isExternalStorageDirectoryRoot(currentDirectory)) {
+                //fileExplorerUseButton.setEnabled(false);
+                FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
+
+                currentDirectory = currentDirectory.getParentFile();
+                if (filePersistence.initializeFileListAdapter(fileListAdapter, currentDirectory, FilePersistence.FILE_TYPE_RUNNABLE)) {
+                    fileListAdapter.setSelectedIndex(EmbeddedFileExplorerConstants.INVALID_POSITION);
+                    fileListAdapter.notifyDataSetChanged();
+                    setNoMatchingFilesInDirectoryIndicatorVisibility(fileListAdapter.getCount() == 0);
+                } else {
+                    indicateThatFileSystemIsNotAccessible();
+                }
+
+                if (filePersistence.isExternalStorageDirectoryRoot(currentDirectory)) {
+                    //fileExplorerUpButton.setEnabled(false);
+                }
+            }
+        }
+    }
+
+    public int getSelectedFileIndex() {
+        return ((FileListAdapter) mLvFileExplorer.getAdapter()).getSelectedIndex();
+    }
+
+    public String getSelectedFilePath() {
+        File selectedFile = getSelectedFile();
+        return (selectedFile != null) ? selectedFile.getAbsolutePath() : null;
+    }
+
+    public File getSelectedFile() {
+        if (currentDirectory != null) {
+            String selectedFileName = getSelectedFileName();
+            if (selectedFileName != null) {
+                return new File(currentDirectory, selectedFileName);
+            }
+        }
+        return null;
+    }
+
+    public String getSelectedFileName() {
+        FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
+        return fileListAdapter.getSelectedFileName();
+    }
+
+    public void setNoMatchingFilesInDirectoryIndicatorVisibility(boolean isDirectoryEmpty) {
+        mTvFileExplorerNoMatchesIndicator.setVisibility(isDirectoryEmpty ? View.VISIBLE : View.GONE);
+        mLvFileExplorer.setVisibility(isDirectoryEmpty ? View.GONE : View.VISIBLE);
     }
 }

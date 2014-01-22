@@ -30,6 +30,7 @@
         <activity android:name=".Screens.ScreenNetwork"></activity>
         <activity android:name=".Screens.ScreenTabHistory"></activity>
         <activity android:name=".Screens.ScreenManual"></activity>
+        <activity android:name=".Screens.ScreenExtra"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -19,6 +19,6 @@
     blue eye with iris (ic_hideable_item_checked) depending on its state (checked or not checked).
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_checked="false" android:drawable="@drawable/ic_hideable_item_unchecked" />
-    <item android:drawable="@drawable/ic_hideable_item_checked" />
+    <item android:state_checked="false" android:drawable="@drawable/ic_hideable_item_unchecked_64" />
+    <item android:drawable="@drawable/ic_hideable_item_checked_64" />
 </selector>

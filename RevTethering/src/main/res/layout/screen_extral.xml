@@ -25,30 +25,77 @@
         android:paddingRight="@dimen/page_margin"
         android:scrollbarStyle="outsideOverlay"
         android:choiceMode="multipleChoice" />
-
-    <CheckBox
+    <TextView
+        android:id="@+id/screen_extra_textView_fileExplorer_noMatches_indicator"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/screen_extra_buttonBar_fileExplorer"
+        android:layout_margin="10dip"
+        android:text="No matching files in this directory"
+        android:visibility="gone"
+        />
+    <LinearLayout
+        android:id="@+id/screen_extra_buttonBar_fileExplorer"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/screen_manual_listView"
-        android:id="@+id/screen_manual_checkBox_enable_usbTetherConnect"
-        android:text="Enable USB Tether Connect"
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/screen_extra_button_fileExplorer_copyAll"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:text="CopyAll"
+            android:onClick="ScreenExtraFileExplorerCopyAll"
+            />
+        <Button
+            android:id="@+id/screen_extra_button_fileExplorer_copy"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:text="Copy"
+            android:onClick="ScreenExtraFileExplorerCopy"
+            />
+        <Button
+            android:id="@+id/screen_extra_button_fileExplorer_runTest"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:text="RunTest"
+            android:onClick="ScreenExtraFileExplorerRunTestSelectedFile"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:id="@+id/screen_extra_fileExplorer_linearLayout_select"
         android:layout_width="fill_parent">
 
-        </CheckBox>
-    <CheckBox
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/screen_manual_checkBox_enable_usbTetherConnect"
-        android:id="@+id/screen_manual_checkBox_enable_mobileDataAndFaked"
-        android:text="Enable MobileData and Faked"
-        android:layout_width="fill_parent">
+        <RadioGroup
+            android:layout_height="wrap_content"
+            android:id="@+id/screen_network_radioGroup_select"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_marginBottom="5px">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Selected All"
+                android:id="@+id/screen_extra_radioButton_fileExplorer_selectedAll"
+                android:layout_marginLeft="5px"
+                android:checked="true">
 
-    </CheckBox>
-    <CheckBox
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/screen_manual_checkBox_enable_mobileDataAndFaked"
-        android:id="@+id/screen_manual_checkBox_enable_autoConfigUsbTetherIP"
-        android:text="Auto Config USB Tether IP"
-        android:layout_width="fill_parent">
+            </RadioButton>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/screen_extra_radioButton_fileExplorer_unselectedAll"
+                android:text="Unselected All"
+                android:layout_marginLeft="5px">
 
-    </CheckBox>
+            </RadioButton>
+        </RadioGroup>
+    </LinearLayout>
+
 
 </LinearLayout>

@@ -36,7 +36,8 @@
         used in the textColor attribute causes its text color to change when its parent
         is checked or unchecked.
     -->
-    <TextView android:id="@+id/text"
+    <TextView
+        android:id="@+id/screen_extra_item_file_textView_fileName"
         android:duplicateParentState="true"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -53,7 +54,9 @@
         ?android:listChoiceIndicatorMultiple or ?android:listChoiceIndicatorSingle. These
         are system theme attributes that reference a state list drawable.
     -->
-    <ImageView android:src="@drawable/ic_hideable_item"
+    <ImageView
+        android:id="@+id/screen_extra_item_file_imageView_fileType"
+        android:src="@drawable/ic_hideable_item"
         android:duplicateParentState="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
