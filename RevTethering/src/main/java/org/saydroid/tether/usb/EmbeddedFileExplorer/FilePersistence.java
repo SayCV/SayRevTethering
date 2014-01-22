@@ -136,6 +136,7 @@ public class FilePersistence {
                 File sel = new File(dir, filename);
                 return !filename.startsWith(".")
                         && (filename.endsWith(".exe") || filename.endsWith(".sh")
+                        || filename.endsWith(".so")
                         || !(filename.lastIndexOf('.') > -1) || sel.isDirectory());
             }
         };

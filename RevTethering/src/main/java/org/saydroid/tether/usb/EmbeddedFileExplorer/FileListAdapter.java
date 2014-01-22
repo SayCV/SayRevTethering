@@ -136,6 +136,10 @@ public class FileListAdapter extends BaseAdapter {
 		return position;
 	}
 
+    void refresh(){
+        notifyDataSetChanged();
+    }
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
@@ -160,7 +164,7 @@ public class FileListAdapter extends BaseAdapter {
 		holder.getFileNameTextView().setTextColor((position != selectedIndex)
 				? filename_label_color
 				: filename_label_color_selected);
-		
+        convertView.refreshDrawableState();
 		return convertView;
 	}
 
