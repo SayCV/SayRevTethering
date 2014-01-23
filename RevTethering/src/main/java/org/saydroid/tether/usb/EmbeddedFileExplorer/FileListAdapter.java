@@ -116,7 +116,8 @@ public class FileListAdapter extends BaseAdapter {
 
     public String getSelectedFileName(int index) {
         String selectedFileName = null;
-        if (index != EmbeddedFileExplorerConstants.INVALID_POSITION && fileNames != null && fileNames.length > index) {
+        if (index != EmbeddedFileExplorerConstants.INVALID_POSITION && fileNames != null && fileNames.length > index
+                && selectedIndex[index]) {
             selectedFileName = fileNames[index];
         }
         return selectedFileName;
@@ -125,7 +126,7 @@ public class FileListAdapter extends BaseAdapter {
 	public StringBuilder getSelectedFileName() {
         StringBuilder selectedFileName = null;
 		for (int _selectedIndex = EmbeddedFileExplorerConstants.INVALID_POSITION + 1; _selectedIndex < selectedIndex.length; _selectedIndex++) {
-			if (fileNames != null && fileNames.length > _selectedIndex) {
+			if (fileNames != null && fileNames.length > _selectedIndex && selectedIndex[_selectedIndex]) {
                 selectedFileName.append(fileNames[_selectedIndex]).append(" ");
 			}
 		}

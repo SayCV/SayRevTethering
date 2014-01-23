@@ -201,15 +201,17 @@ public class ScreenExtra extends BaseScreen {
         mBtnFileExplorerRunTest.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                //if(sbMultiChoiceFileNames.length() > 0) {
+                if(sbMultiChoiceFileNames.length() == 1) {
                     String command;
-                    command = "sigar_cpu";
+                    command = sbMultiChoiceFileNames.substring(0);
                     //Log.d(TAG, "command to RunTest is :" + command);
                     if(RootCommands.run(10000, command)==false){ //10s
                         Log.d(TAG, "command to RunTest failed");
                     }
                     //Log.d(TAG, "command to RunTest successful");
-                //}
+                } else {
+                    getEngine().showAppMessage("Only operated when selected only one file!");
+                }
             }
         });
 
@@ -445,6 +447,9 @@ public class ScreenExtra extends BaseScreen {
                             fileListAdapter.setSelectedIndex(position, !fileListAdapter.getSelectedIndex()[position]);
                             fileListAdapter.notifyDataSetChanged();
                             //fileExplorerUseButton.setEnabled(true);
+                            if(fileListAdapter.getSelectedIndex()[position]) {
+                                sbMultiChoiceFileNames.append(fileListAdapter.getSelectedFileName(position)).append(" ");
+                            }
                         }
 
                     } else {
