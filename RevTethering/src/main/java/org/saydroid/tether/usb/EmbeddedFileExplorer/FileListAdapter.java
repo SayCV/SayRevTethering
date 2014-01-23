@@ -82,8 +82,11 @@ public class FileListAdapter extends BaseAdapter {
 		filename_label_color = filenameLabelColor;
 		filename_label_color_selected = filenameLabelColorSelected;
 	}
-	
-	
+
+    public void initSelectableIndex(int count) {
+        this.selectedIndex = new boolean[count];
+    }
+
 	public void setFileNames(String[] fileNames) {
 		this.fileNames = fileNames;
 	}

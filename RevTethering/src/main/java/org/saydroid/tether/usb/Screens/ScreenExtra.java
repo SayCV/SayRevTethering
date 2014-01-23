@@ -434,7 +434,6 @@ public class ScreenExtra extends BaseScreen {
                             if (!filePersistence.isExternalStorageDirectoryRoot(currentDirectory)) {
                                 //fileExplorerUpButton.setEnabled(true);
                             }
-
                             if (filePersistence.initializeFileListAdapter(fileListAdapter, currentDirectory, FilePersistence.FILE_TYPE_RUNNABLE)) {
                                 fileListAdapter.setSelectedIndex(EmbeddedFileExplorerConstants.INVALID_POSITION, true);
                                 fileListAdapter.notifyDataSetChanged();
