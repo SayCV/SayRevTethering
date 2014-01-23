@@ -100,7 +100,7 @@ public class ScreenExtra extends BaseScreen {
         super(SCREEN_TYPE.Extra_T, TAG);
 
         mConfigurationService = getEngine().getConfigurationService();
-        sbMultiChoiceFileNames = new StringBuilder();
+
         mRunTestDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()).toString() + "/tests";
     }
 
@@ -417,6 +417,7 @@ public class ScreenExtra extends BaseScreen {
 
         FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
         filePersistence.initializeFileListAdapter(fileListAdapter, currentDirectory, FilePersistence.FILE_TYPE_RUNNABLE);
+        sbMultiChoiceFileNames = new StringBuilder(fileListAdapter.getCount());
 
         //fileExplorerUseButton.setEnabled(fileListAdapter.getSelectedIndex() != EmbeddedFileExplorerConstants.INVALID_POSITION);
         mLvFileExplorer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -447,8 +448,24 @@ public class ScreenExtra extends BaseScreen {
                             fileListAdapter.setSelectedIndex(position, !fileListAdapter.getSelectedIndex()[position]);
                             fileListAdapter.notifyDataSetChanged();
                             //fileExplorerUseButton.setEnabled(true);
+                            String fileName = fileListAdapter.getSelectedFileName(position);
                             if(fileListAdapter.getSelectedIndex()[position]) {
-                                sbMultiChoiceFileNames.append(fileListAdapter.getSelectedFileName(position)).append(" ");
+                                int index;
+                                for(index = EmbeddedFileExplorerConstants.INVALID_POSITION + 1; index < fileListAdapter.getCount(); index++) {
+                                    if(fileName == sbMultiChoiceFileNames.substring(index)){
+                                        break;
+                                    }
+                                }
+                                if(index == fileListAdapter.getCount()) {
+                                    sbMultiChoiceFileNames.append(fileListAdapter.getSelectedFileName(position)).append(" ");
+                                }
+                            } else {
+                                for( int index = EmbeddedFileExplorerConstants.INVALID_POSITION + 1; index < fileListAdapter.getCount(); index++) {
+                                    if(fileName == sbMultiChoiceFileNames.substring(index)){
+                                        sbMultiChoiceFileNames.delete(index, index + 1);
+                                        break;
+                                    }
+                                }
                             }
                         }
 

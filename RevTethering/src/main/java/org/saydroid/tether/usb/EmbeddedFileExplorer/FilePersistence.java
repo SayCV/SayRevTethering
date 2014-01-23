@@ -87,6 +87,7 @@ public class FilePersistence {
 			fileListAdapter.setFileNames(fileNames);
 			fileListAdapter.setFileTypes(fileTypes);
             fileListAdapter.initSelectableIndex(fileListAdapter.getCount());
+
 			successful = true;
 		}
 		return successful;
