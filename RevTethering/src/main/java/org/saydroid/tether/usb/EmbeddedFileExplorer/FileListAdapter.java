@@ -125,10 +125,11 @@ public class FileListAdapter extends BaseAdapter {
 
 	public String[] getSelectedFileName() {
         String[] selectedFileName = new String[getCount()];
+        int index = 0;
 		for (int _selectedIndex = EmbeddedFileExplorerConstants.INVALID_POSITION + 1; _selectedIndex < selectedIndex.length; _selectedIndex++) {
 			if (fileNames != null && fileNames.length > _selectedIndex && selectedIndex[_selectedIndex]) {
                 //selectedFileName.append(fileNames[_selectedIndex]).append(" ");
-                selectedFileName[_selectedIndex] = fileNames[_selectedIndex];
+                selectedFileName[index++] = fileNames[_selectedIndex];
 			}
 		}
 		return selectedFileName;
