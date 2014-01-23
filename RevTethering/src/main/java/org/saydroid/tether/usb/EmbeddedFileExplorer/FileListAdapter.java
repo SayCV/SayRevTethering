@@ -142,8 +142,8 @@ public class FileListAdapter extends BaseAdapter {
 
     public int getSelectedCount() {
         int _selectedCount = 0;
-        for(_selectedCount = EmbeddedFileExplorerConstants.INVALID_POSITION + 1; _selectedCount < selectedIndex.length; _selectedCount++) {
-            if(selectedIndex[_selectedCount]) _selectedCount++;
+        for(int _selectedIndex = EmbeddedFileExplorerConstants.INVALID_POSITION + 1; _selectedIndex < selectedIndex.length; _selectedIndex++) {
+            if(selectedIndex[_selectedIndex]) _selectedCount++;
         }
         return _selectedCount;
         //return (getSelectedFileName() != null) ? getSelectedFileName().length : 0;
