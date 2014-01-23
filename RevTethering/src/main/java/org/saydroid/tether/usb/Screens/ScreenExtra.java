@@ -123,14 +123,21 @@ public class ScreenExtra extends BaseScreen {
         mBtnFileExploreCopyAll.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
+                String command;
+                command = "mount -o remount /dev/block/mtdblock0 /system";
+                Log.d(TAG, "command to RunTest is :" + command);
+                if(RootCommands.run(10000, command)==false){ //10s
+                    Log.d(TAG, "command to RunTest failed");
+                }
+                Log.d(TAG, "command to RunTest successful");
                 if(sbMultiChoiceFileNames.length() > 0) {
                     for (String fileName : ((FileListAdapter)mLvFileExplorer.getAdapter()).getFileNames()) {
-                        String command;
+
                         //command = "cp -rf " + mRunTestDirectory + "/" + sbMultiChoiceFileNames;
                         if(fileName.endsWith(".so")) {
-                            command = "cp -rf " + mRunTestDirectory + "/" + fileName + " " + SYSTEM_BIN_FOLDER;
-                        } else {
                             command = "cp -rf " + mRunTestDirectory + "/" + fileName + " " + SYSTEM_LIB_FOLDER;
+                        } else {
+                            command = "cp -rf " + mRunTestDirectory + "/" + fileName + " " + SYSTEM_BIN_FOLDER;
                         }
                         Log.d(TAG, "command to RunTest is :" + command);
                         if(RootCommands.run(10000, command)==false){ //10s
