@@ -124,7 +124,7 @@ public class FileListAdapter extends BaseAdapter {
     }
 
 	public String[] getSelectedFileName() {
-        String[] selectedFileName = new String[getCount()];
+        String[] selectedFileName = new String[getSelectedCount()];
         int index = 0;
 		for (int _selectedIndex = EmbeddedFileExplorerConstants.INVALID_POSITION + 1; _selectedIndex < selectedIndex.length; _selectedIndex++) {
 			if (fileNames != null && fileNames.length > _selectedIndex && selectedIndex[_selectedIndex]) {
@@ -141,7 +141,12 @@ public class FileListAdapter extends BaseAdapter {
 	}
 
     public int getSelectedCount() {
-        return (getSelectedFileName() != null) ? getSelectedFileName().length : 0;
+        int _selectedCount = 0;
+        for(_selectedCount = EmbeddedFileExplorerConstants.INVALID_POSITION + 1; _selectedCount < selectedIndex.length; _selectedCount++) {
+            if(selectedIndex[_selectedCount]) _selectedCount++;
+        }
+        return _selectedCount;
+        //return (getSelectedFileName() != null) ? getSelectedFileName().length : 0;
     }
 
 	@Override

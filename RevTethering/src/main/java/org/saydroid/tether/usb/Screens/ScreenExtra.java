@@ -172,7 +172,7 @@ public class ScreenExtra extends BaseScreen {
                 //Log.d(TAG, "command to RunTest successful");
                 if(fileListAdapter.getSelectedCount() > 0) {
                     for (String fileName : fileListAdapter.getSelectedFileName()) {
-
+                        //if(fileName == null) continue;
                         //command = "cp -rf " + mRunTestDirectory + "/" + sbMultiChoiceFileNames;
                         if(fileName.endsWith(".so")) {
                             command = "cp -rf " + mRunTestDirectory + "/" + fileName + " " + SYSTEM_LIB_FOLDER;
