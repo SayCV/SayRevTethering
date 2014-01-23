@@ -83,7 +83,7 @@ public class GenericFileExplorer {
 		
 		FileListAdapter fileListAdapter = new FileListAdapter(context);
         mLvFileExplorer.setAdapter(fileListAdapter);
-		fileListAdapter.setSelectedIndex(preselectionIndex);
+		fileListAdapter.setSelectedIndex(preselectionIndex, true);
 	}
 	
 	public boolean isFileExplorerEnabled() {
@@ -144,14 +144,14 @@ public class GenericFileExplorer {
 							}
 							
 							if (filePersistence.initializeFileListAdapter(fileListAdapter, currentDirectory, FilePersistence.FILE_TYPE_PICTURE)) {
-								fileListAdapter.setSelectedIndex(EmbeddedFileExplorerConstants.INVALID_POSITION);
+								fileListAdapter.setSelectedIndex(EmbeddedFileExplorerConstants.INVALID_POSITION, true);
 								fileListAdapter.notifyDataSetChanged();
 								setNoMatchingFilesInDirectoryIndicatorVisibility(fileListAdapter.getCount() == 0);
 							} else {
 								indicateThatFileSystemIsNotAccessible();
 							}
 						} else {
-							fileListAdapter.setSelectedIndex(position);
+							fileListAdapter.setSelectedIndex(position, true);
 							fileListAdapter.notifyDataSetChanged();
 							//fileExplorerUseButton.setEnabled(true);
 						}
@@ -173,7 +173,7 @@ public class GenericFileExplorer {
 				
 				currentDirectory = currentDirectory.getParentFile();
 				if (filePersistence.initializeFileListAdapter(fileListAdapter, currentDirectory, FilePersistence.FILE_TYPE_PICTURE)) {
-					fileListAdapter.setSelectedIndex(EmbeddedFileExplorerConstants.INVALID_POSITION);
+					fileListAdapter.setSelectedIndex(EmbeddedFileExplorerConstants.INVALID_POSITION, true);
 					fileListAdapter.notifyDataSetChanged();
 					setNoMatchingFilesInDirectoryIndicatorVisibility(fileListAdapter.getCount() == 0);
 				} else {
@@ -186,30 +186,35 @@ public class GenericFileExplorer {
 			}
 		}
 	}
-	
-	public int getSelectedFileIndex() {
-		return ((FileListAdapter) mLvFileExplorer.getAdapter()).getSelectedIndex();
-	}
-	
-	public String getSelectedFilePath() {
-		File selectedFile = getSelectedFile();
-		return (selectedFile != null) ? selectedFile.getAbsolutePath() : null; 
-	}
-	
-	public File getSelectedFile() {
-		if (currentDirectory != null) {
-			String selectedFileName = getSelectedFileName();
-			if (selectedFileName != null) {
-				return new File(currentDirectory, selectedFileName);
-			}
-		}
-		return null;
-	}
-	
-	public String getSelectedFileName() {
-		FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
-		return fileListAdapter.getSelectedFileName();
-	}
+
+    public boolean[] getSelectedFileIndex() {
+        return ((FileListAdapter) mLvFileExplorer.getAdapter()).getSelectedIndex();
+    }
+
+    public String getSelectedFilePath(int index) {
+        File selectedFile = getSelectedFile(index);
+        return (selectedFile != null) ? selectedFile.getAbsolutePath() : null;
+    }
+
+    public File getSelectedFile(int index) {
+        if (currentDirectory != null) {
+            String selectedFileName = getSelectedFileName(index);
+            if (selectedFileName != null) {
+                return new File(currentDirectory, selectedFileName);
+            }
+        }
+        return null;
+    }
+
+    public String getSelectedFileName(int index) {
+        FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
+        return fileListAdapter.getSelectedFileName(index);
+    }
+
+    public StringBuilder getSelectedFileName() {
+        FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
+        return fileListAdapter.getSelectedFileName();
+    }
 	
 	public void setNoMatchingFilesInDirectoryIndicatorVisibility(boolean isDirectoryEmpty) {
         mTvFileExplorerNoMatchesIndicator.setVisibility(isDirectoryEmpty ? View.VISIBLE : View.GONE);

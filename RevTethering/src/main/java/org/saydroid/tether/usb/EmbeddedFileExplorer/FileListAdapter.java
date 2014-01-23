@@ -60,7 +60,7 @@ public class FileListAdapter extends BaseAdapter {
 	// list adapter model
 	private String[] fileNames;
 	private HashMap<String, Integer> fileTypes;
-	private int selectedIndex = EmbeddedFileExplorerConstants.INVALID_POSITION;
+	private boolean[] selectedIndex;// = EmbeddedFileExplorerConstants.INVALID_POSITION;
 
     public FileListAdapter(ScreenExtra baseScreen){
         mBaseScreen = baseScreen;
@@ -94,8 +94,8 @@ public class FileListAdapter extends BaseAdapter {
 		this.fileTypes = fileTypes;
 	}
 	
-	public void setSelectedIndex(int index) {
-		this.selectedIndex = index;
+	public void setSelectedIndex(int index, boolean checked) {
+		this.selectedIndex[index] = checked;
 	}
 	
 	public int getFileType(int position) {
@@ -107,15 +107,23 @@ public class FileListAdapter extends BaseAdapter {
 		return fileType;
 	}
 	
-	public int getSelectedIndex() {
+	public boolean[] getSelectedIndex() {
 		return selectedIndex;
 	}
-	
-	public String getSelectedFileName() {
-		String selectedFileName = null;
-		if (selectedIndex != EmbeddedFileExplorerConstants.INVALID_POSITION) {
-			if (fileNames != null && fileNames.length > selectedIndex) {
-				selectedFileName  = fileNames[selectedIndex];
+
+    public String getSelectedFileName(int index) {
+        String selectedFileName = null;
+        if (index != EmbeddedFileExplorerConstants.INVALID_POSITION && fileNames != null && fileNames.length > index) {
+            selectedFileName = fileNames[index];
+        }
+        return selectedFileName;
+    }
+
+	public StringBuilder getSelectedFileName() {
+        StringBuilder selectedFileName = null;
+		for (int _selectedIndex = EmbeddedFileExplorerConstants.INVALID_POSITION + 1; _selectedIndex < selectedIndex.length; _selectedIndex++) {
+			if (fileNames != null && fileNames.length > _selectedIndex) {
+                selectedFileName.append(fileNames[_selectedIndex]).append(" ");
 			}
 		}
 		return selectedFileName;
@@ -158,10 +166,10 @@ public class FileListAdapter extends BaseAdapter {
         } else {
 		    holder.getFileTypeImageView().setImageResource(getFileTypeImageResource(fileName));
         }
-		holder.getRowView().setBackgroundColor((position != selectedIndex) 
+		holder.getRowView().setBackgroundColor((!selectedIndex[position])
 				? row_background_color
 				: row_background_color_selected);
-		holder.getFileNameTextView().setTextColor((position != selectedIndex)
+		holder.getFileNameTextView().setTextColor((!selectedIndex[position])
 				? filename_label_color
 				: filename_label_color_selected);
         convertView.refreshDrawableState();

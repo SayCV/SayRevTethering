@@ -125,11 +125,11 @@ public class ScreenExtra extends BaseScreen {
                 // Perform action on click
                 String command;
                 command = "mount -o remount /dev/block/mtdblock0 /system";
-                Log.d(TAG, "command to RunTest is :" + command);
+                //Log.d(TAG, "command to RunTest is :" + command);
                 if(RootCommands.run(10000, command)==false){ //10s
                     Log.d(TAG, "command to RunTest failed");
                 }
-                Log.d(TAG, "command to RunTest successful");
+                //Log.d(TAG, "command to RunTest successful");
                 if(sbMultiChoiceFileNames.length() > 0) {
                     for (String fileName : ((FileListAdapter)mLvFileExplorer.getAdapter()).getFileNames()) {
 
@@ -139,22 +139,22 @@ public class ScreenExtra extends BaseScreen {
                         } else {
                             command = "cp -rf " + mRunTestDirectory + "/" + fileName + " " + SYSTEM_BIN_FOLDER;
                         }
-                        Log.d(TAG, "command to RunTest is :" + command);
+                        //Log.d(TAG, "command to RunTest is :" + command);
                         if(RootCommands.run(10000, command)==false){ //10s
                             Log.d(TAG, "command to RunTest failed");
                         }
-                        Log.d(TAG, "command to RunTest successful");
+                        //Log.d(TAG, "command to RunTest successful");
 
                         if(fileName.endsWith(".so")) {
                             command = "chmod 0755 " + SYSTEM_LIB_FOLDER + "/" + fileName;
                         } else {
                             command = "chmod 0755 " + SYSTEM_BIN_FOLDER + "/" + fileName;
                         }
-                        Log.d(TAG, "command to RunTest is :" + command);
+                        //Log.d(TAG, "command to RunTest is :" + command);
                         if(RootCommands.run(10000, command)==false){ //10s
                             Log.d(TAG, "command to RunTest failed");
                         }
-                        Log.d(TAG, "command to RunTest successful");
+                        //Log.d(TAG, "command to RunTest successful");
                     }
                 }
             }
@@ -164,11 +164,11 @@ public class ScreenExtra extends BaseScreen {
                 // Perform action on click
                 String command;
                 command = "mount -o remount /dev/block/mtdblock0 /system";
-                Log.d(TAG, "command to RunTest is :" + command);
+                //Log.d(TAG, "command to RunTest is :" + command);
                 if(RootCommands.run(10000, command)==false){ //10s
                     Log.d(TAG, "command to RunTest failed");
                 }
-                Log.d(TAG, "command to RunTest successful");
+                //Log.d(TAG, "command to RunTest successful");
                 if(sbMultiChoiceFileNames.length() > 0) {
                     for (String fileName : ((FileListAdapter)mLvFileExplorer.getAdapter()).getFileNames()) {
 
@@ -178,22 +178,22 @@ public class ScreenExtra extends BaseScreen {
                         } else {
                             command = "cp -rf " + mRunTestDirectory + "/" + fileName + " " + SYSTEM_BIN_FOLDER;
                         }
-                        Log.d(TAG, "command to RunTest is :" + command);
+                        //Log.d(TAG, "command to RunTest is :" + command);
                         if(RootCommands.run(10000, command)==false){ //10s
                             Log.d(TAG, "command to RunTest failed");
                         }
-                        Log.d(TAG, "command to RunTest successful");
+                        //Log.d(TAG, "command to RunTest successful");
 
                         if(fileName.endsWith(".so")) {
                             command = "chmod 0755 " + SYSTEM_LIB_FOLDER + "/" + fileName;
                         } else {
                             command = "chmod 0755 " + SYSTEM_BIN_FOLDER + "/" + fileName;
                         }
-                        Log.d(TAG, "command to RunTest is :" + command);
+                        //Log.d(TAG, "command to RunTest is :" + command);
                         if(RootCommands.run(10000, command)==false){ //10s
                             Log.d(TAG, "command to RunTest failed");
                         }
-                        Log.d(TAG, "command to RunTest successful");
+                        //Log.d(TAG, "command to RunTest successful");
                     }
                 }
             }
@@ -204,11 +204,11 @@ public class ScreenExtra extends BaseScreen {
                 //if(sbMultiChoiceFileNames.length() > 0) {
                     String command;
                     command = "sigar_cpu";
-                    Log.d(TAG, "command to RunTest is :" + command);
+                    //Log.d(TAG, "command to RunTest is :" + command);
                     if(RootCommands.run(10000, command)==false){ //10s
                         Log.d(TAG, "command to RunTest failed");
                     }
-                    Log.d(TAG, "command to RunTest successful");
+                    //Log.d(TAG, "command to RunTest successful");
                 //}
             }
         });
@@ -273,13 +273,23 @@ public class ScreenExtra extends BaseScreen {
 
     private CompoundButton.OnCheckedChangeListener rbLocal_OnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener(){
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            int selectedIndex = EmbeddedFileExplorerConstants.INVALID_POSITION;
             if(mRbFileExplorerSelectedAll.isChecked()) {
                 for (String fileName : ((FileListAdapter)mLvFileExplorer.getAdapter()).getFileNames()) {
+                    selectedIndex++;
+                    ((FileListAdapter)mLvFileExplorer.getAdapter()).setSelectedIndex(selectedIndex, true);
                     sbMultiChoiceFileNames.append(fileName).append(' ');
                 }
+                ((FileListAdapter)mLvFileExplorer.getAdapter()).notifyDataSetChanged();
             } else if(mRbFileExplorerUnselectedAll.isChecked()) {
                 int end = sbMultiChoiceFileNames.length();
                 sbMultiChoiceFileNames.delete(0, end);
+                for (String fileName : ((FileListAdapter)mLvFileExplorer.getAdapter()).getFileNames()) {
+                    selectedIndex++;
+                    ((FileListAdapter)mLvFileExplorer.getAdapter()).setSelectedIndex(selectedIndex, false);
+                    sbMultiChoiceFileNames.append(fileName).append(' ');
+                }
+                ((FileListAdapter)mLvFileExplorer.getAdapter()).notifyDataSetChanged();
             }
         }
     };
@@ -426,14 +436,14 @@ public class ScreenExtra extends BaseScreen {
                             }
 
                             if (filePersistence.initializeFileListAdapter(fileListAdapter, currentDirectory, FilePersistence.FILE_TYPE_RUNNABLE)) {
-                                fileListAdapter.setSelectedIndex(EmbeddedFileExplorerConstants.INVALID_POSITION);
+                                fileListAdapter.setSelectedIndex(EmbeddedFileExplorerConstants.INVALID_POSITION, true);
                                 fileListAdapter.notifyDataSetChanged();
                                 setNoMatchingFilesInDirectoryIndicatorVisibility(fileListAdapter.getCount() == 0);
                             } else {
                                 indicateThatFileSystemIsNotAccessible();
                             }
                         } else {
-                            fileListAdapter.setSelectedIndex(position);
+                            fileListAdapter.setSelectedIndex(position, !fileListAdapter.getSelectedIndex()[position]);
                             fileListAdapter.notifyDataSetChanged();
                             //fileExplorerUseButton.setEnabled(true);
                         }
@@ -455,7 +465,7 @@ public class ScreenExtra extends BaseScreen {
 
                 currentDirectory = currentDirectory.getParentFile();
                 if (filePersistence.initializeFileListAdapter(fileListAdapter, currentDirectory, FilePersistence.FILE_TYPE_RUNNABLE)) {
-                    fileListAdapter.setSelectedIndex(EmbeddedFileExplorerConstants.INVALID_POSITION);
+                    fileListAdapter.setSelectedIndex(EmbeddedFileExplorerConstants.INVALID_POSITION, true);
                     fileListAdapter.notifyDataSetChanged();
                     setNoMatchingFilesInDirectoryIndicatorVisibility(fileListAdapter.getCount() == 0);
                 } else {
@@ -469,18 +479,18 @@ public class ScreenExtra extends BaseScreen {
         }
     }
 
-    public int getSelectedFileIndex() {
+    public boolean[] getSelectedFileIndex() {
         return ((FileListAdapter) mLvFileExplorer.getAdapter()).getSelectedIndex();
     }
 
-    public String getSelectedFilePath() {
-        File selectedFile = getSelectedFile();
+    public String getSelectedFilePath(int index) {
+        File selectedFile = getSelectedFile(index);
         return (selectedFile != null) ? selectedFile.getAbsolutePath() : null;
     }
 
-    public File getSelectedFile() {
+    public File getSelectedFile(int index) {
         if (currentDirectory != null) {
-            String selectedFileName = getSelectedFileName();
+            String selectedFileName = getSelectedFileName(index);
             if (selectedFileName != null) {
                 return new File(currentDirectory, selectedFileName);
             }
@@ -488,7 +498,12 @@ public class ScreenExtra extends BaseScreen {
         return null;
     }
 
-    public String getSelectedFileName() {
+    public String getSelectedFileName(int index) {
+        FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
+        return fileListAdapter.getSelectedFileName(index);
+    }
+
+    public StringBuilder getSelectedFileName() {
         FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
         return fileListAdapter.getSelectedFileName();
     }
