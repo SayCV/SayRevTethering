@@ -123,11 +123,12 @@ public class FileListAdapter extends BaseAdapter {
         return selectedFileName;
     }
 
-	public StringBuilder getSelectedFileName() {
-        StringBuilder selectedFileName = null;
+	public String[] getSelectedFileName() {
+        String[] selectedFileName = new String[getCount()];
 		for (int _selectedIndex = EmbeddedFileExplorerConstants.INVALID_POSITION + 1; _selectedIndex < selectedIndex.length; _selectedIndex++) {
 			if (fileNames != null && fileNames.length > _selectedIndex && selectedIndex[_selectedIndex]) {
-                selectedFileName.append(fileNames[_selectedIndex]).append(" ");
+                //selectedFileName.append(fileNames[_selectedIndex]).append(" ");
+                selectedFileName[_selectedIndex] = fileNames[_selectedIndex];
 			}
 		}
 		return selectedFileName;
@@ -137,6 +138,10 @@ public class FileListAdapter extends BaseAdapter {
 	public int getCount() {
 		return (fileNames != null) ? fileNames.length : 0;
 	}
+
+    public int getSelectedCount() {
+        return (getSelectedFileName() != null) ? getSelectedFileName().length : 0;
+    }
 
 	@Override
 	public Object getItem(int position) {
@@ -166,7 +171,7 @@ public class FileListAdapter extends BaseAdapter {
 		final String fileName = fileNames[position];
 		holder.getFileNameTextView().setText(fileName);
         if(mBaseScreen.isFileExplorerMultiChoiceEnabled()) {
-            mBaseScreen.sbMultiChoiceFileNames.append(fileName).append(' ');
+            //
         } else {
 		    holder.getFileTypeImageView().setImageResource(getFileTypeImageResource(fileName));
         }

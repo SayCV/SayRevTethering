@@ -211,7 +211,7 @@ public class GenericFileExplorer {
         return fileListAdapter.getSelectedFileName(index);
     }
 
-    public StringBuilder getSelectedFileName() {
+    public String[] getSelectedFileName() {
         FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
         return fileListAdapter.getSelectedFileName();
     }

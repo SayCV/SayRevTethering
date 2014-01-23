@@ -86,7 +86,6 @@ public class ScreenExtra extends BaseScreen {
     private boolean isFileExplorerMultiChoiceEnabled = false;
     private File currentDirectory;
 
-    public StringBuilder sbMultiChoiceFileNames;
     private final String mRunTestDirectory;
     private final String SYSTEM_BIN_FOLDER = "/system/bin";
     private final String SYSTEM_LIB_FOLDER = "/system/lib";
@@ -123,6 +122,7 @@ public class ScreenExtra extends BaseScreen {
         mBtnFileExploreCopyAll.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
+                FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
                 String command;
                 command = "mount -o remount /dev/block/mtdblock0 /system";
                 //Log.d(TAG, "command to RunTest is :" + command);
@@ -130,8 +130,8 @@ public class ScreenExtra extends BaseScreen {
                     Log.d(TAG, "command to RunTest failed");
                 }
                 //Log.d(TAG, "command to RunTest successful");
-                if(sbMultiChoiceFileNames.length() > 0) {
-                    for (String fileName : ((FileListAdapter)mLvFileExplorer.getAdapter()).getFileNames()) {
+                if(fileListAdapter.getSelectedCount() > 0) {
+                    for (String fileName : fileListAdapter.getSelectedFileName()) {
 
                         //command = "cp -rf " + mRunTestDirectory + "/" + sbMultiChoiceFileNames;
                         if(fileName.endsWith(".so")) {
@@ -162,6 +162,7 @@ public class ScreenExtra extends BaseScreen {
         mBtnFileExploreCopy.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
+                FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
                 String command;
                 command = "mount -o remount /dev/block/mtdblock0 /system";
                 //Log.d(TAG, "command to RunTest is :" + command);
@@ -169,8 +170,8 @@ public class ScreenExtra extends BaseScreen {
                     Log.d(TAG, "command to RunTest failed");
                 }
                 //Log.d(TAG, "command to RunTest successful");
-                if(sbMultiChoiceFileNames.length() > 0) {
-                    for (String fileName : ((FileListAdapter)mLvFileExplorer.getAdapter()).getFileNames()) {
+                if(fileListAdapter.getSelectedCount() > 0) {
+                    for (String fileName : fileListAdapter.getSelectedFileName()) {
 
                         //command = "cp -rf " + mRunTestDirectory + "/" + sbMultiChoiceFileNames;
                         if(fileName.endsWith(".so")) {
@@ -201,9 +202,10 @@ public class ScreenExtra extends BaseScreen {
         mBtnFileExplorerRunTest.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                if(sbMultiChoiceFileNames.length() == 1) {
+                FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
+                if(fileListAdapter.getSelectedCount() > 0) {
                     String command;
-                    command = sbMultiChoiceFileNames.substring(0);
+                    command = fileListAdapter.getSelectedFileName()[0];
                     //Log.d(TAG, "command to RunTest is :" + command);
                     if(RootCommands.run(10000, command)==false){ //10s
                         Log.d(TAG, "command to RunTest failed");
@@ -275,24 +277,21 @@ public class ScreenExtra extends BaseScreen {
 
     private CompoundButton.OnCheckedChangeListener rbLocal_OnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener(){
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
             int selectedIndex = EmbeddedFileExplorerConstants.INVALID_POSITION;
             if(mRbFileExplorerSelectedAll.isChecked()) {
-                for (String fileName : ((FileListAdapter)mLvFileExplorer.getAdapter()).getFileNames()) {
+                for (String fileName : fileListAdapter.getFileNames()) {
                     selectedIndex++;
-                    ((FileListAdapter)mLvFileExplorer.getAdapter()).setSelectedIndex(selectedIndex, true);
-                    sbMultiChoiceFileNames.append(fileName).append(' ');
+                    fileListAdapter.setSelectedIndex(selectedIndex, true);
+                    //sbMultiChoiceFileNames.append(fileName).append(' ');
                 }
-                ((FileListAdapter)mLvFileExplorer.getAdapter()).notifyDataSetChanged();
             } else if(mRbFileExplorerUnselectedAll.isChecked()) {
-                int end = sbMultiChoiceFileNames.length();
-                sbMultiChoiceFileNames.delete(0, end);
-                for (String fileName : ((FileListAdapter)mLvFileExplorer.getAdapter()).getFileNames()) {
+                for (String fileName : fileListAdapter.getFileNames()) {
                     selectedIndex++;
                     ((FileListAdapter)mLvFileExplorer.getAdapter()).setSelectedIndex(selectedIndex, false);
-                    sbMultiChoiceFileNames.append(fileName).append(' ');
                 }
-                ((FileListAdapter)mLvFileExplorer.getAdapter()).notifyDataSetChanged();
             }
+            fileListAdapter.notifyDataSetChanged();
         }
     };
 
@@ -417,7 +416,6 @@ public class ScreenExtra extends BaseScreen {
 
         FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
         filePersistence.initializeFileListAdapter(fileListAdapter, currentDirectory, FilePersistence.FILE_TYPE_RUNNABLE);
-        sbMultiChoiceFileNames = new StringBuilder(fileListAdapter.getCount());
 
         //fileExplorerUseButton.setEnabled(fileListAdapter.getSelectedIndex() != EmbeddedFileExplorerConstants.INVALID_POSITION);
         mLvFileExplorer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -448,25 +446,6 @@ public class ScreenExtra extends BaseScreen {
                             fileListAdapter.setSelectedIndex(position, !fileListAdapter.getSelectedIndex()[position]);
                             fileListAdapter.notifyDataSetChanged();
                             //fileExplorerUseButton.setEnabled(true);
-                            String fileName = fileListAdapter.getSelectedFileName(position);
-                            if(fileListAdapter.getSelectedIndex()[position]) {
-                                int index;
-                                for(index = EmbeddedFileExplorerConstants.INVALID_POSITION + 1; index < fileListAdapter.getCount(); index++) {
-                                    if(fileName == sbMultiChoiceFileNames.substring(index)){
-                                        break;
-                                    }
-                                }
-                                if(index == fileListAdapter.getCount()) {
-                                    sbMultiChoiceFileNames.append(fileListAdapter.getSelectedFileName(position)).append(" ");
-                                }
-                            } else {
-                                for( int index = EmbeddedFileExplorerConstants.INVALID_POSITION + 1; index < fileListAdapter.getCount(); index++) {
-                                    if(fileName == sbMultiChoiceFileNames.substring(index)){
-                                        sbMultiChoiceFileNames.delete(index, index + 1);
-                                        break;
-                                    }
-                                }
-                            }
                         }
 
                     } else {
@@ -524,7 +503,7 @@ public class ScreenExtra extends BaseScreen {
         return fileListAdapter.getSelectedFileName(index);
     }
 
-    public StringBuilder getSelectedFileName() {
+    public String[] getSelectedFileName() {
         FileListAdapter fileListAdapter = (FileListAdapter) mLvFileExplorer.getAdapter();
         return fileListAdapter.getSelectedFileName();
     }
