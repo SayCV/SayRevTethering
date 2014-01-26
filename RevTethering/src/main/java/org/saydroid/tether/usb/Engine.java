@@ -456,7 +456,7 @@ public class Engine extends SgsEngine{
          * do not use new thread to run it now.
          */
     private boolean dumpGlobalSettings(){
-        String dumpGlobalSettings = "echo \'.dump global\' | sqlite3 " +
+        String dumpGlobalSettings = "echo \'.dump global\' | " + this.DATA_FOLDER + "/bin/sqlite3 " +
                 this.SETTING_DB_PATH + "settings.db  > " +
                 this.DATA_FOLDER + "/setting.txt";
         Log.d(TAG, "command for dumping the GlobalSettings is: " + dumpGlobalSettings);
@@ -474,7 +474,7 @@ public class Engine extends SgsEngine{
     }
 
     private boolean dumpGlobalSettingsMaxID(){
-        String dumpGlobalSettingsMaxId = "sqlite3 " + this.SETTING_DB_PATH +
+        String dumpGlobalSettingsMaxId = this.DATA_FOLDER + "/bin/sqlite3 " + this.SETTING_DB_PATH +
                 "settings.db \'select max(_id) from global\'"+  " > " +
                 this.DATA_FOLDER + "/maxid_exit.txt";
         Log.d(TAG, "command for dumping the max id is: " + dumpGlobalSettingsMaxId);
@@ -533,7 +533,7 @@ public class Engine extends SgsEngine{
         boolean enabled = false;
         String command;
         String secureSettingFile = this.SETTING_DB_PATH + "settings.db"; //this is the dumped secure table
-        command = "sqlite3 "+ this.SETTING_DB_PATH + "settings.db "+ "\"update global set value ="+ String.valueOf(iValue) + "where name = " + "\'"+stringSetting +"\'"+"\"" ;
+        command = this.DATA_FOLDER + "/bin/sqlite3 "+ this.SETTING_DB_PATH + "settings.db "+ "\"update global set value ="+ String.valueOf(iValue) + "where name = " + "\'"+stringSetting +"\'"+"\"" ;
         Log.d(TAG, "command for enable globalSetting is : " + command);
         if(RootCommands.run(command)==false){
             Log.e(TAG, "Unable to enable the global Setting for the setting of " + stringSetting);
@@ -554,7 +554,7 @@ public class Engine extends SgsEngine{
         int intTmpId;
         String command;
         String secureSettingFile = this.SETTING_DB_PATH+"settings.db"; //this is the dumped secure table
-        command = "sqlite3 "+ this.SETTING_DB_PATH + "settings.db "+ "\'select max(_id) from global\'  > " + this.DATA_FOLDER + "/maxid.txt"; ;
+        command = this.DATA_FOLDER + "/bin/sqlite3 "+ this.SETTING_DB_PATH + "settings.db "+ "\'select max(_id) from global\'  > " + this.DATA_FOLDER + "/maxid.txt"; ;
         Log.d(TAG, "command for dump the max is: " + command);
         if(RootCommands.run(command)==false){
             Log.d(TAG, "Unable to get the global setting maxid from" + this.SETTING_DB_PATH + "/settings.db");
@@ -588,7 +588,7 @@ public class Engine extends SgsEngine{
         String command;
 
         //String secureSettingFile = this.SETTING_DB_PATH+"settings.db"; //this is the dumped secure table
-        command = "sqlite3 "+ this.SETTING_DB_PATH + "settings.db "+ "\'insert into global values(" +String.valueOf(intId)+","+ "\""+ stringSetting +"\","+ String.valueOf(iValue) + ")\'" ;
+        command = this.DATA_FOLDER + "/bin/sqlite3 "+ this.SETTING_DB_PATH + "settings.db "+ "\'insert into global values(" +String.valueOf(intId)+","+ "\""+ stringSetting +"\","+ String.valueOf(iValue) + ")\'" ;
         Log.d(TAG, "command to insert" + stringSetting + "is :" + command);
         if(RootCommands.run(command)==false){
             Log.e(TAG, "Unable to insert " + stringSetting + " global Setting for the setting of" + stringSetting);
