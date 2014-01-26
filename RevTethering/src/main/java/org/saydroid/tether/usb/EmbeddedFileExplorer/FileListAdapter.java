@@ -98,7 +98,7 @@ public class FileListAdapter extends BaseAdapter {
 	}
 	
 	public void setSelectedIndex(int index, boolean checked) {
-		this.selectedIndex[index] = checked;
+		if(index != EmbeddedFileExplorerConstants.INVALID_POSITION) this.selectedIndex[index] = checked;
 	}
 	
 	public int getFileType(int position) {
